@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Respostas — Solicitações KB/Macros</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:#f0ede8;min-height:100vh}
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:#fff;border-radius:18px;width:100%;max-width:380px;padding:40px 36px 44px;box-shadow:0 2px 24px rgba(0,0,0,.07);text-align:center}
+.login-logo{height:40px;object-fit:contain;margin-bottom:24px}
+.login-title{font-family:'DM Serif Display',serif;font-size:22px;color:#1a1916;margin-bottom:6px}
+.login-sub{font-size:13px;color:#9a9690;margin-bottom:28px;line-height:1.5}
+.login-input{width:100%;padding:11px 14px;border:1px solid #ddd9d2;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:15px;text-align:center;letter-spacing:.08em;outline:none;transition:border-color .18s,box-shadow .18s;margin-bottom:12px}
+.login-input:focus{border-color:#E8612A;box-shadow:0 0 0 3px rgba(232,97,42,.10)}
+.login-input.shake{animation:shake .4s;border-color:#d93025}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.login-btn{width:100%;padding:12px;background:#E8612A;color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s}
+.login-btn:hover{background:#d4531f}.login-btn:disabled{background:#c0bbb4;cursor:default}
+.login-error{font-size:12px;color:#d93025;margin-top:10px;min-height:16px}
+.login-form-link{display:inline-flex;align-items:center;gap:5px;margin-top:20px;font-size:12px;color:#9a9690;text-decoration:none;transition:color .15s}
+.login-form-link:hover{color:#E8612A}
+#mainApp{display:none}
+.topbar{background:#fff;border-bottom:1px solid #e8e4de;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.topbar-logo{height:34px;object-fit:contain}
+.topbar-title{font-size:15px;font-weight:600;color:#1a1916}
+.topbar-subtitle{font-size:12px;color:#9a9690;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:transparent;border:1px solid #ddd9d2;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:#4a4744;cursor:pointer;text-decoration:none;transition:background .15s}
+.topbar-btn:hover{background:#f5f2ed}.topbar-btn svg{width:14px;height:14px;flex-shrink:0}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;padding:24px 32px 0;max-width:1100px;margin:0 auto}
+.stat-card{background:#fff;border-radius:12px;padding:14px 18px;border:1px solid #e8e4de}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#9a9690;margin-bottom:4px}
+.stat-value{font-size:26px;font-weight:600;color:#1a1916;line-height:1}
+.stat-value.orange{color:#E8612A}.stat-value.red{color:#d93025}.stat-value.amber{color:#b8860b}.stat-value.green{color:#1e7e3e}
+.filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:20px 32px 0;max-width:1100px;margin:0 auto}
+.filter-search{flex:1;min-width:200px;padding:9px 14px;border:1px solid #ddd9d2;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;outline:none;transition:border-color .15s}
+.filter-search:focus{border-color:#E8612A}
+.filter-select{padding:9px 14px;border:1px solid #ddd9d2;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:#fff;color:#4a4744;outline:none;cursor:pointer}
+.list-wrap{padding:20px 32px 60px;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.card{background:#fff;border:1px solid #e8e4de;border-radius:14px;overflow:hidden;transition:box-shadow .15s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;user-select:none;gap:12px}
+.card-header-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.urgency-badge{flex-shrink:0;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.urgency-critica{background:#fde8e8;color:#9b1c1c}.urgency-alta{background:#fef0e6;color:#92400e}
+.urgency-media{background:#fefce8;color:#78350f}.urgency-baixa{background:#ecfdf5;color:#065f46}.urgency-default{background:#f3f0ea;color:#5a5651}
+.tipo-badge{flex-shrink:0;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:#eef3fd;color:#1e40af;white-space:nowrap}
+.card-title{font-size:14px;font-weight:600;color:#1a1916;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{font-size:12px;color:#9a9690;white-space:nowrap;flex-shrink:0}
+.chevron{width:18px;height:18px;color:#9a9690;transition:transform .2s;flex-shrink:0}
+.card.open .chevron{transform:rotate(180deg)}
+.card-body{display:none;padding:0 20px 20px;border-top:1px solid #f0ede8}
+.card.open .card-body{display:block}
+.fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;padding-top:18px}
+.field-full{grid-column:1 / -1}
+.field-item label{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#9a9690;margin-bottom:4px}
+.field-item .field-val{font-size:14px;color:#1a1916;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.field-val.empty{color:#c0bbb4;font-style:italic}
+.email-chip{display:inline-flex;align-items:center;gap:6px;background:#eef3fd;border-radius:99px;padding:4px 12px;font-size:13px;font-weight:500;color:#1e40af}
+.attachments-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.attach-thumb{position:relative;border:1px solid #e8e4de;border-radius:8px;overflow:hidden;background:#faf8f5;cursor:pointer}
+.attach-thumb img{display:block;width:120px;height:90px;object-fit:cover}
+.attach-download{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #e8e4de;border-radius:8px;background:#faf8f5;font-size:13px;color:#1a1916;text-decoration:none;cursor:pointer;transition:background .15s}
+.attach-download:hover{background:#f0ede8}
+.attach-icon{width:28px;height:28px;background:#E8612A;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.attach-name{max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loading-state,.empty-state{text-align:center;padding:60px 20px;color:#9a9690}
+.loading-spinner{width:32px;height:32px;border:3px solid #e8e4de;border-top-color:#E8612A;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-icon{font-size:40px;margin-bottom:12px}.empty-title{font-size:16px;font-weight:600;color:#4a4744;margin-bottom:4px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-img-wrap{background:#fff;border-radius:12px;overflow:hidden;max-width:90vw;max-height:90vh;display:flex;flex-direction:column}
+.modal-img-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e8e4de;font-size:13px;font-weight:500;color:#1a1916;gap:12px}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#9a9690;padding:0 4px;line-height:1}
+.modal-close:hover{color:#1a1916}
+.modal-img-wrap img{display:block;max-width:100%;max-height:calc(90vh - 52px);object-fit:contain}
+.responded-btn{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;border:1.5px solid #ddd9d2;background:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#9a9690;cursor:pointer;transition:all .18s;white-space:nowrap;user-select:none;}
+.responded-btn:hover{border-color:#1e7e3e;color:#1e7e3e;background:#f0faf4;}
+.responded-btn.active{border-color:#1e7e3e;color:#1e7e3e;background:#ecfdf5;}
+.responded-btn.loading{opacity:.5;cursor:default;pointer-events:none;}
+.responded-btn .check-icon{font-size:13px;}
+.card.is-responded{opacity:.72;}.card.is-responded .card-header{background:#fafaf8;}
+.template-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1.5px dashed #ddd9d2;border-radius:8px;background:#faf8f5;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#9a9690;cursor:not-allowed;transition:all .18s;margin-top:6px;user-select:none;}
+.template-btn.active{border-color:#E8612A;border-style:solid;color:#E8612A;background:#fdf6f2;cursor:pointer;}
+.template-btn.active:hover{background:#fbeee6;}
+.tpl-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:20px;}
+.tpl-overlay.open{display:flex;}
+.tpl-modal{background:#fff;border-radius:16px;width:100%;max-width:620px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+.tpl-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #e8e4de;flex-shrink:0;}
+.tpl-header-left{display:flex;flex-direction:column;gap:2px;}
+.tpl-title{font-size:15px;font-weight:600;color:#1a1916;}
+.tpl-subtitle{font-size:12px;color:#9a9690;}
+.tpl-close{background:none;border:none;font-size:20px;cursor:pointer;color:#9a9690;padding:0 4px;line-height:1;}
+.tpl-close:hover{color:#1a1916;}
+.tpl-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 20px 0;flex-shrink:0;}
+.tpl-meta-item label{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#9a9690;margin-bottom:3px;}
+.tpl-meta-input{width:100%;padding:8px 12px;border:1px solid #ddd9d2;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1a1916;background:#faf8f5;outline:none;}
+.tpl-meta-input:focus{border-color:#E8612A;background:#fff;}
+.tpl-body{padding:16px 20px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;}
+.tpl-body label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#9a9690;}
+.tpl-textarea{width:100%;min-height:220px;padding:12px 14px;border:1px solid #ddd9d2;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:#1a1916;line-height:1.7;resize:vertical;outline:none;transition:border-color .15s;}
+.tpl-textarea:focus{border-color:#E8612A;}
+.tpl-footer{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid #e8e4de;flex-shrink:0;}
+.tpl-btn-secondary{padding:9px 18px;background:transparent;border:1px solid #ddd9d2;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:#4a4744;cursor:pointer;transition:background .15s;}
+.tpl-btn-secondary:hover{background:#f5f2ed;}
+.tpl-btn-primary{padding:9px 18px;background:#E8612A;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#fff;cursor:pointer;transition:background .15s;}
+.tpl-btn-primary:hover{background:#d4531f;}
+@media(max-width:640px){.stats-bar,.filters,.list-wrap{padding-left:16px;padding-right:16px}.topbar{padding:0 16px}.fields-grid{grid-template-columns:1fr}.card-meta{display:none}}
+</style>
+</head>
+<body>
+<div id="loginScreen">
+  <div class="login-card">
+    <img src="logo-hotmart.jpg" alt="Logo" class="login-logo" />
+    <div class="login-title">Área Restrita</div>
+    <p class="login-sub">Painel de respostas — Solicitações KB/Macros.<br>Acesso somente para a equipe eNotas.</p>
+    <input class="login-input" type="password" id="pwdInput" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password" />
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="loginError"></div>
+    <a href="https://calaisrafael-cell.github.io/forms-solicitacao/" class="login-form-link" target="_blank">&#8599; Ir para o formulário de solicitação</a>
+  </div>
+</div>
+<div id="mainApp">
+  <header class="topbar">
+    <div class="topbar-left">
+      <img src="logo-hotmart.jpg" alt="Logo" class="topbar-logo" />
+      <div style="border-left:1px solid #ddd9d2;padding-left:16px">
+        <div class="topbar-title">Solicitações KB / Macros</div>
+        <div class="topbar-subtitle" id="lastUpdated">Carregando...</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a href="https://calaisrafael-cell.github.io/forms-solicitacao/" target="_blank" class="topbar-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Abrir formulário</a>
+      <a href="https://docs.google.com/spreadsheets/d/1_utFELdHG7_bTLPrPJkBq7IRurbQ6L93lXcB6bYLbCU/edit" target="_blank" class="topbar-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Acessar planilha</a>
+      <button class="topbar-btn" onclick="loadData()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>Atualizar</button>
+      <button class="topbar-btn" onclick="doLogout()" style="color:#9a9690"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sair</button>
+    </div>
+  </header>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">—</div></div>
+    <div class="stat-card"><div class="stat-label">Critica</div><div class="stat-value red" id="statCritica">—</div></div>
+    <div class="stat-card"><div class="stat-label">Alta</div><div class="stat-value orange" id="statAlta">—</div></div>
+    <div class="stat-card"><div class="stat-label">Media</div><div class="stat-value amber" id="statMedia">—</div></div>
+    <div class="stat-card"><div class="stat-label">Baixa</div><div class="stat-value green" id="statBaixa">—</div></div>
+    <div class="stat-card"><div class="stat-label">Artigos</div><div class="stat-value" id="statArtigo">—</div></div>
+    <div class="stat-card"><div class="stat-label">Macros</div><div class="stat-value" id="statMacro">—</div></div>
+    <div class="stat-card"><div class="stat-label">eNotas</div><div class="stat-value orange" id="statEnotas">—</div></div>
+    <div class="stat-card"><div class="stat-label">DG</div><div class="stat-value" id="statDG">—</div></div>
+    <div class="stat-card"><div class="stat-label">Respondidos</div><div class="stat-value green" id="statRespondido">—</div></div>
+    <div class="stat-card"><div class="stat-label">Pendentes</div><div class="stat-value orange" id="statPendente">—</div></div>
+  </div>
+  <div class="filters">
+    <input class="filter-search" type="text" id="searchInput" placeholder="Buscar por e-mail, titulo ou topico..." oninput="renderList()" />
+    <select class="filter-select" id="filterArea" onchange="renderList()"><option value="">Todas as áreas</option><option value="enotas">eNotas</option><option value="dg">DG</option></select>
+    <select class="filter-select" id="filterTipo" onchange="renderList()"><option value="">Todos os tipos</option><option value="artigo">Artigos</option><option value="macro">Macros</option></select>
+    <select class="filter-select" id="filterUrgencia" onchange="renderList()"><option value="">Todas as urgencias</option><option value="critica">Critica</option><option value="alta">Alta</option><option value="media">Media</option><option value="baixa">Baixa</option></select>
+    <select class="filter-select" id="filterMes" onchange="renderList()"><option value="">Todos os meses</option></select>
+    <select class="filter-select" id="filterStatus" onchange="renderList()"><option value="">Todos os status</option><option value="pendente">Pendentes</option><option value="respondido">Respondidos</option></select>
+  </div>
+  <div class="list-wrap" id="listWrap"><div class="loading-state"><div class="loading-spinner"></div><p>Carregando solicitacoes...</p></div></div>
+</div>
+<div class="tpl-overlay" id="tplModal">
+  <div class="tpl-modal">
+    <div class="tpl-header"><div class="tpl-header-left"><div class="tpl-title">Template de E-mail</div><div class="tpl-subtitle">Edite o texto antes de copiar ou baixar</div></div><button class="tpl-close" onclick="closeTplModal()">&#x2715;</button></div>
+    <div class="tpl-meta">
+      <div class="tpl-meta-item" style="grid-column:1/-1"><label>Para</label><input class="tpl-meta-input" type="text" id="tplPara" placeholder="solicitante@hotmart.com" /></div>
+      <div class="tpl-meta-item" style="grid-column:1/-1"><label>Assunto</label><input class="tpl-meta-input" type="text" id="tplAssunto" placeholder="Assunto do e-mail" /></div>
+    </div>
+    <div class="tpl-body"><label>Corpo do e-mail</label><textarea class="tpl-textarea" id="tplBody"></textarea></div>
+    <div class="tpl-footer"><button class="tpl-btn-secondary" onclick="copyTemplate()">Copiar texto</button><button class="tpl-btn-primary" onclick="downloadTemplate()">Baixar .txt</button></div>
+  </div>
+</div>
+<div class="modal-overlay" id="imgModal" onclick="closeModal(event)">
+  <div class="modal-img-wrap">
+    <div class="modal-img-header"><span id="modalFileName">—</span><button class="modal-close" onclick="document.getElementById('imgModal').classList.remove('open')">&#x2715;</button></div>
+    <img id="modalImg" src="" alt="preview" />
+  </div>
+</div>
+<script>
+const SHEETDB_URL="https://sheetdb.io/api/v1/l177y1jebi4sl";
+const PWD_HASH="a77ba58ad71b869ebfc970d043ec0efd6e776d7ad74f76640d8a530a26a7e9f3";
+const SESS_KEY="kb_auth_v1";
+async function sha256(str){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(str));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
+async function doLogin(){const inp=document.getElementById("pwdInput"),btn=document.getElementById("loginBtn"),err=document.getElementById("loginError");if(!inp.value){err.textContent="Digite a senha.";return;}btn.disabled=true;btn.textContent="Verificando...";const hash=await sha256(inp.value);if(hash===PWD_HASH){sessionStorage.setItem(SESS_KEY,"1");showApp();}else{err.textContent="Senha incorreta.";inp.classList.add("shake");inp.value="";btn.disabled=false;btn.textContent="Entrar";setTimeout(()=>inp.classList.remove("shake"),500);}}
+function doLogout(){sessionStorage.removeItem(SESS_KEY);document.getElementById("mainApp").style.display="none";document.getElementById("loginScreen").style.display="flex";document.getElementById("pwdInput").value="";document.getElementById("loginError").textContent="";}
+function showApp(){document.getElementById("loginScreen").style.display="none";document.getElementById("mainApp").style.display="block";loadData();}
+if(sessionStorage.getItem(SESS_KEY)==="1")showApp();
+let allRows=[];
+async function loadData(){
+  document.getElementById("listWrap").innerHTML='<div class="loading-state"><div class="loading-spinner"></div><p>Carregando...</p></div>';
+  try{
+    const[resEnotas,resDG]=await Promise.all([fetch(SHEETDB_URL+"?limit=500&sheet=eNotas"),fetch(SHEETDB_URL+"?limit=500&sheet=DG")]);
+    if(!resEnotas.ok)throw new Error("Status "+resEnotas.status);
+    if(!resDG.ok)throw new Error("Status "+resDG.status);
+    const rowsEnotas=await resEnotas.json();const rowsDG=await resDG.json();
+    allRows=[...rowsEnotas,...rowsDG];allRows.reverse();
+    updateStats();renderList();
+    document.getElementById("lastUpdated").textContent="Atualizado as "+new Date().toLocaleTimeString("pt-BR");
+  }catch(e){document.getElementById("listWrap").innerHTML='<div class="empty-state"><div class="empty-icon">&#9888;</div><div class="empty-title">Erro ao carregar</div><p>'+e.message+'</p></div>';}
+}
+function normalizeStr(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();}
+function urgKey(r){const u=normalizeStr(r["Urgencia"]||"");if(u.includes("critica"))return"critica";if(u.includes("alta"))return"alta";if(u.includes("media"))return"media";if(u.includes("baixa"))return"baixa";return"default";}
+function tipoKey(r){const t=(r["Tipo de Solicitacao"]||"").toLowerCase();if(t.includes("artigo"))return"artigo";if(t.includes("macro"))return"macro";return"outro";}
+function areaKey(r){const a=normalizeStr(r["Area"]||"");if(a.includes("dg")||a.includes("demand"))return"dg";return"enotas";}
+function isRespondido(r){return(r["Status"]||"").toLowerCase().includes("respondido");}
+function updateStats(){
+  document.getElementById("statTotal").textContent=allRows.length;
+  document.getElementById("statCritica").textContent=allRows.filter(r=>urgKey(r)==="critica").length;
+  document.getElementById("statAlta").textContent=allRows.filter(r=>urgKey(r)==="alta").length;
+  document.getElementById("statMedia").textContent=allRows.filter(r=>urgKey(r)==="media").length;
+  document.getElementById("statBaixa").textContent=allRows.filter(r=>urgKey(r)==="baixa").length;
+  document.getElementById("statArtigo").textContent=allRows.filter(r=>tipoKey(r)==="artigo").length;
+  document.getElementById("statMacro").textContent=allRows.filter(r=>tipoKey(r)==="macro").length;
+  document.getElementById("statEnotas").textContent=allRows.filter(r=>areaKey(r)==="enotas").length;
+  document.getElementById("statDG").textContent=allRows.filter(r=>areaKey(r)==="dg").length;
+  document.getElementById("statRespondido").textContent=allRows.filter(r=>isRespondido(r)).length;
+  document.getElementById("statPendente").textContent=allRows.filter(r=>!isRespondido(r)).length;
+  buildMesOptions();
+}
+function parseDateFromRow(r){const dh=r["Data/Hora"]||"";const parts=dh.split(" ")[0].split("/");if(parts.length===3)return new Date(+parts[2],+parts[1]-1,+parts[0]);return null;}
+function buildMesOptions(){const sel=document.getElementById("filterMes");const current=sel.value;const months=new Set();allRows.forEach(r=>{const d=parseDateFromRow(r);if(d)months.add(d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,"0"));});const sorted=Array.from(months).sort().reverse();const ptMonths=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];sel.innerHTML='<option value="">Todos os meses</option>';sorted.forEach(ym=>{const[y,m]=ym.split("-");const label=ptMonths[+m]+" "+y;const opt=document.createElement("option");opt.value=ym;opt.textContent=label;if(ym===current)opt.selected=true;sel.appendChild(opt);});}
+function getFilteredRows(){const search=document.getElementById("searchInput").value.toLowerCase().trim();const fA=document.getElementById("filterArea").value;const fT=document.getElementById("filterTipo").value;const fU=document.getElementById("filterUrgencia").value;const fM=document.getElementById("filterMes").value;const fSt=document.getElementById("filterStatus").value;return allRows.filter(r=>{const text=[r["E-mail"]||"",r["Titulo do Artigo (se artigo)"]||"",r["Titulo da Macro (se macro)"]||"",r["Topico(s) de Abrangencia"]||"",r["Conteudo Detalhado"]||""].join(" ").toLowerCase();if(search&&!text.includes(search))return false;if(fA&&areaKey(r)!==fA)return false;if(fT&&tipoKey(r)!==fT)return false;if(fU&&urgKey(r)!==fU)return false;if(fM){const d=parseDateFromRow(r);if(!d)return false;const ym=d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,"0");if(ym!==fM)return false;}if(fSt==="respondido"&&!isRespondido(r))return false;if(fSt==="pendente"&&isRespondido(r))return false;return true;});}
+function renderList(){const rows=getFilteredRows();const wrap=document.getElementById("listWrap");if(!rows.length){wrap.innerHTML='<div class="empty-state"><div class="empty-icon">&#128237;</div><div class="empty-title">Nenhuma solicitacao encontrada</div></div>';return;}wrap.innerHTML=rows.map((r,i)=>buildCard(r,i)).join("");}
+function buildCard(r,idx){const uk=urgKey(r),tk=tipoKey(r),ak=areaKey(r);const urgL={critica:"Critica",alta:"Alta",media:"Media",baixa:"Baixa",default:"—"};const areaL={enotas:"eNotas",dg:"DG"};const email=r["E-mail"]||"—";const tA=r["Titulo do Artigo (se artigo)"]||"";const tM=r["Titulo da Macro (se macro)"]||"";const titulo=tA||tM||"Sem titulo";const dh=r["Data/Hora"]||"—";const topicos=r["Topico(s) de Abrangencia"]||"—";const outro=r["Especificacao do Topico Outro"]||"";const desc=r["Conteudo Detalhado"]||"";const urg=r["Urgencia"]||"—";const area=r["Area"]||"—";const tipoL=tk==="artigo"?"Artigo":tk==="macro"?"Macro":"—";const att=buildAttachments(r["Anexos_Data"]||"",r["Anexos"]||"",idx);const resp=isRespondido(r);
+return`<div class="card ${resp?"is-responded":""}" id="card-${idx}"><div class="card-header" onclick="toggleCard(${idx})"><button class="responded-btn ${resp?"active":""}" id="rbtn-${idx}" onclick="event.stopPropagation();toggleRespondido(${idx})" title="${resp?"Marcar como pendente":"Marcar como respondido"}"><span class="check-icon">${resp?"✓":"○"}</span>${resp?"Respondido":"Pendente"}</button><div class="card-header-left"><span class="urgency-badge urgency-${uk}">${urgL[uk]}</span><span class="tipo-badge">${tipoL}</span><span class="tipo-badge" style="background:#f0faf4;color:#1e7e3e">${areaL[ak]||ak}</span><span class="card-title">${esc(titulo)}</span></div><span class="card-meta">${esc(email)} &middot; ${esc(dh)}</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="card-body"><div class="fields-grid"><div class="field-item"><label>Solicitante</label><div class="field-val"><span class="email-chip">&#9993; ${esc(email)}</span></div></div><div class="field-item"><label>ID da Solicitação</label><div class="field-val" style="font-family:monospace;font-weight:600;color:#E8612A">${esc(r["ID"]||"sem ID")}</div></div><div class="field-item"><label>Data / Hora</label><div class="field-val">${esc(dh)}</div></div><div class="field-item"><label>Área</label><div class="field-val">${esc(area)}</div></div><div class="field-item"><label>Tipo de Solicitacao</label><div class="field-val">${esc(r["Tipo de Solicitacao"]||"—")}</div></div><div class="field-item"><label>Template E-mail</label><button class="template-btn ${resp?"active":""}" onclick="event.stopPropagation();openTemplate(${idx})" ${resp?"":"disabled title='Marque como Respondido para liberar o template'"}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>${resp?"Gerar template":"Disponivel apos resolver"}</button></div><div class="field-item"><label>Urgencia</label><div class="field-val"><span class="urgency-badge urgency-${uk}">${esc(urg)}</span></div></div><div class="field-item field-full"><label>Topico(s) de Abrangencia</label><div class="field-val">${esc(topicos)}</div></div>${outro?`<div class="field-item field-full"><label>Especificacao do Topico Outro</label><div class="field-val">${esc(outro)}</div></div>`:""}${tA?`<div class="field-item field-full"><label>Titulo do Artigo</label><div class="field-val">${esc(tA)}</div></div>`:""}${tM?`<div class="field-item field-full"><label>Titulo da Macro</label><div class="field-val">${esc(tM)}</div></div>`:""}<div class="field-item field-full"><label>Conteudo Detalhado</label><div class="field-val ${!desc?"empty":""}">${desc?esc(desc):"Nao informado"}</div></div><div class="field-item field-full"><label>Anexos</label>${att}</div></div></div></div>`;}
+const _fileStore={};
+function buildAttachments(raw,nomes,idx){if(!raw&&(!nomes||nomes==="Sem anexos"))return'<div class="field-val empty">Sem anexos</div>';const entries=[];if(raw&&raw.startsWith("||")){raw.slice(2).split("||").forEach(chunk=>{try{const o=JSON.parse(chunk);if(o&&o.name)entries.push(o);}catch(e){}});}if(!entries.length){const names=nomes.split(",").map(n=>n.trim()).filter(Boolean);if(!names.length)return'<div class="field-val empty">Sem anexos</div>';return'<div class="attachments-grid">'+names.map(n=>`<div class="attach-download"><div class="attach-icon">${extIcon(n)}</div><span class="attach-name">${esc(n)}</span></div>`).join("")+'</div>';}return'<div class="attachments-grid">'+entries.map((e,ei)=>{const{name,data}=e;if(!data)return`<div class="attach-download"><div class="attach-icon">${extIcon(name)}</div><span class="attach-name">${esc(name)}</span><span style="font-size:11px;color:#9a9690;margin-left:6px">(indisponível)</span></div>`;const key="f_"+idx+"_"+ei;_fileStore[key]={name,data};if(/^data:image\//i.test(data)){return`<div class="attach-thumb" onclick="openImg(_fileStore['${key}'].data,_fileStore['${key}'].name)"><img src="${data}" alt="${esc(name)}" title="Clique para ampliar"/></div>`;}return`<div class="attach-download" style="cursor:pointer" onclick="blobDownload('${key}')"><div class="attach-icon">${extIcon(name)}</div><span class="attach-name">${esc(name)}</span><span style="font-size:11px;color:#9a9690;margin-left:auto">&#8595;</span></div>`;}).join("")+'</div>';}
+function extIcon(n){const ext=(n.split(".").pop()||"").toLowerCase();return{pdf:"PDF",doc:"DOC",docx:"DOC",xls:"XLS",xlsx:"XLS",png:"IMG",jpg:"IMG",jpeg:"IMG",gif:"GIF",webp:"IMG",txt:"TXT",zip:"ZIP",rar:"ZIP",mp4:"VID",mov:"VID"}[ext]||ext.toUpperCase().slice(0,3)||"ARQ";}
+function toggleCard(i){document.getElementById("card-"+i).classList.toggle("open");}
+async function toggleRespondido(idx){const btn=document.getElementById("rbtn-"+idx);const card=document.getElementById("card-"+idx);if(!btn||!card)return;const rows=getFilteredRows();const row=rows[idx];if(!row)return;const nowRespondido=isRespondido(row);const newStatus=nowRespondido?"Pendente":"Respondido";btn.classList.add("loading");try{const rowId=(row["ID"]||"").trim();if(!rowId){alert("Esta solicitação não possui ID.");btn.classList.remove("loading");return;}const sheetName=areaKey(row)==="dg"?"DG":"eNotas";const patchUrl=SHEETDB_URL+"/ID/"+encodeURIComponent(rowId)+"?sheet="+sheetName;const res=await fetch(patchUrl,{method:"PATCH",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({data:{"Status":newStatus}})});const patchJson=await res.json().catch(()=>({}));if(!res.ok)throw new Error("HTTP "+res.status+": "+JSON.stringify(patchJson));if(patchJson.updated===0)throw new Error("Nenhuma linha encontrada com ID="+rowId);row["Status"]=newStatus;const isNowResp=!nowRespondido;btn.classList.remove("loading");btn.classList.toggle("active",isNowResp);btn.innerHTML=`<span class="check-icon">${isNowResp?"✓":"○"}</span>${isNowResp?"Respondido":"Pendente"}`;btn.title=isNowResp?"Marcar como pendente":"Marcar como respondido";card.classList.toggle("is-responded",isNowResp);const tplBtn=card.querySelector(".template-btn");if(tplBtn){tplBtn.classList.toggle("active",isNowResp);tplBtn.disabled=!isNowResp;tplBtn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>${isNowResp?"Gerar template":"Disponivel apos resolver"}`;}updateStats();}catch(e){btn.classList.remove("loading");alert("Erro ao salvar status: "+e.message);}}
+function openImg(src,name){document.getElementById("modalImg").src=src;document.getElementById("modalFileName").textContent=name;document.getElementById("imgModal").classList.add("open");}
+function closeModal(e){if(e.target===document.getElementById("imgModal"))document.getElementById("imgModal").classList.remove("open");}
+function blobDownload(key){const entry=_fileStore[key];if(!entry){alert("Arquivo sem dados armazenados.");return;}const{name,data}=entry;if(!data){alert("O arquivo \""+name+"\" não possui dados para download.");return;}try{const arr=data.split(",");const mime=arr[0].match(/:(.*?);/)[1];const raw=atob(arr[1]);const bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);const blob=new Blob([bytes],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1000);}catch(e){alert("Não foi possível baixar o arquivo: "+e.message);}}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+let _tplCurrentIdx=null;
+function openTemplate(idx){const rows=getFilteredRows();const r=rows[idx];if(!r)return;_tplCurrentIdx=idx;const email=r["E-mail"]||"";const tipo=r["Tipo de Solicitacao"]||"";const topicos=r["Topico(s) de Abrangencia"]||"";const tA=r["Titulo do Artigo (se artigo)"]||"";const tM=r["Titulo da Macro (se macro)"]||"";const isMacro=tipoKey(r)==="macro";const isDG=areaKey(r)==="dg";const assinatura=isDG?"Gestão de conhecimento - Demand Generation":"Gestão de conhecimento - eNotas";document.getElementById("tplPara").value=email;document.getElementById("tplAssunto").value=isMacro?"Inclusão/Alteração de Macro":"Inclusão/Alteração de Artigo";let body;if(!isMacro){body=`Olá!\n\nInformamos que a sua solicitação referente a ${tipo} referente ao(s) tópico(s) ${topicos} com o título "${tA}", foi concluída.\n\nPara visualizar o conteúdo, clique aqui: [INSERIR LINK DO ARTIGO]\n\nCaso seja necessário adicionar mais alguma informação, abra uma nova solicitação.\n\nAtenciosamente,\n${assinatura}`;}else{body=`Olá!\n\nInformamos que a sua solicitação referente a ${tipo} referente ao(s) tópico(s) ${topicos} com o título "${tM}", foi concluída.\n\nAbaixo o conteúdo incluído:\n[INSERIR CONTEÚDO DA MACRO]\n\nCaso seja necessário adicionar mais alguma informação, abra uma nova solicitação.\n\nAtenciosamente,\n${assinatura}`;}document.getElementById("tplBody").value=body;document.getElementById("tplModal").classList.add("open");}
+function closeTplModal(){document.getElementById("tplModal").classList.remove("open");_tplCurrentIdx=null;}
+function copyTemplate(){const para=document.getElementById("tplPara").value;const assunto=document.getElementById("tplAssunto").value;const body=document.getElementById("tplBody").value;const full="Para: "+para+"\nAssunto: "+assunto+"\n\n"+body;navigator.clipboard.writeText(full).then(()=>{const btn=document.querySelector(".tpl-btn-secondary");const orig=btn.textContent;btn.textContent="Copiado!";setTimeout(()=>{btn.textContent=orig;},2000);}).catch(()=>alert("Não foi possível copiar automaticamente."));}
+function downloadTemplate(){const para=document.getElementById("tplPara").value;const assunto=document.getElementById("tplAssunto").value;const body=document.getElementById("tplBody").value;const full="Para: "+para+"\nAssunto: "+assunto+"\n\n"+body;const blob=new Blob([full],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="template_email_"+(assunto.replace(/[^a-zA-Z0-9]/g,"_")||"resposta")+".txt";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1000);}
+document.getElementById("tplModal").addEventListener("click",function(e){if(e.target===this)closeTplModal();});
+</script>
+</body>
+</html>

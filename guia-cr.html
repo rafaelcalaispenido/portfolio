@@ -1,0 +1,1760 @@
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Operacional</title>
+<link rel="icon" type="image/jpeg" href="logo-hotmart.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<style>
+/* ── SPLASH ─────────────────────────────────────────────────── */
+#splash-screen{position:fixed;inset:0;background:#fff;z-index:99999;display:flex;align-items:center;justify-content:center;transition:opacity .45s ease;}
+#splash-screen.hide{opacity:0;pointer-events:none;}
+.splash-inner{position:relative;width:88px;height:88px;display:flex;align-items:center;justify-content:center;}
+.splash-ring{position:absolute;inset:0;border-radius:50%;border:2.5px solid rgba(240,76,33,.15);border-top-color:#F04C21;animation:splash-spin .9s linear infinite;}
+.splash-ring-2{position:absolute;inset:8px;border-radius:50%;border:1.5px solid rgba(240,76,33,.08);border-bottom-color:rgba(240,76,33,.35);animation:splash-spin 1.6s linear infinite reverse;}
+@keyframes splash-spin{to{transform:rotate(360deg);}}
+.splash-logo{width:46px;height:46px;object-fit:contain;display:block;}
+
+:root{
+  --orange:#F04C21;--orange-light:#FF6B45;--orange-dark:#C93D18;
+  --orange-bg:#FFF3F0;--orange-border:#FFDDD5;
+  --gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;
+  --gray-400:#9CA3AF;--gray-500:#6B7280;--gray-600:#4B5563;--gray-700:#374151;
+  --gray-800:#1F2937;--gray-900:#111827;
+  --green:#059669;--green-bg:#ECFDF5;--green-border:#A7F3D0;
+  --blue:#2563EB;--blue-bg:#EFF6FF;--blue-border:#BFDBFE;
+  --indigo:#4F46E5;--indigo-light:#6366F1;--indigo-bg:#EEF2FF;--indigo-border:#C7D2FE;
+  --yellow:#D97706;--yellow-bg:#FFFBEB;--yellow-border:#FDE68A;
+  --red:#DC2626;--red-bg:#FEF2F2;
+  --purple:#7C3AED;--purple-bg:#F5F3FF;--purple-border:#DDD6FE;
+  --radius:10px;--radius-lg:16px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.1);
+  --shadow:0 4px 6px rgba(0,0,0,.05),0 10px 20px rgba(0,0,0,.08);
+  --transition:.22s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth;height:100%;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);height:100%;overflow:hidden;}
+#app-scroll{height:100vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.header{background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(229,231,235,.7);position:sticky;top:0;left:0;right:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.header-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.logo-area{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-icon img{width:36px;height:36px;object-fit:contain;display:block;}
+.logo-text{font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:var(--gray-900);line-height:1.2;}
+.logo-sub{font-size:11px;font-weight:500;color:var(--gray-500);}
+.header-nav{display:flex;gap:4px;align-items:center;}
+.nav-btn{padding:7px 16px;border:none;border-radius:8px;font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:var(--transition);background:transparent;color:var(--gray-600);display:inline-flex;align-items:center;gap:6px;}
+.nav-btn:hover{background:var(--gray-100);color:var(--gray-900);}
+.nav-btn.active{background:var(--orange-bg);color:var(--orange);}
+.hero{background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 55%,var(--orange-light) 100%);padding:36px 24px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 60%,rgba(255,255,255,.14) 0%,transparent 55%),radial-gradient(ellipse at 80% 15%,rgba(255,255,255,.09) 0%,transparent 50%);pointer-events:none;}
+.hero h1{font-family:'Nunito',sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:6px;}
+.hero p{font-size:14px;color:rgba(255,255,255,.88);font-weight:500;}
+.main{max-width:900px;margin:0 auto;padding:32px 24px 60px;}
+.admin-main{max-width:1080px;margin:0 auto;padding:32px 24px 60px;}
+.page{display:none;}.page.active{display:block;}
+.card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gray-200);box-shadow:var(--shadow-sm);margin-bottom:20px;}
+.card-header{padding:18px 24px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;gap:12px;}
+.card-title{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--gray-900);}
+.card-subtitle{font-size:12px;color:var(--gray-500);margin-top:1px;font-weight:500;}
+.card-body{padding:20px 24px;}
+.step-badge{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(240,76,33,.3);transition:background .2s ease,color .2s ease,box-shadow .2s ease;}
+.step-badge.done{background:var(--green);}
+label.field-label{display:block;font-size:12px;font-weight:700;color:var(--gray-600);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
+.field-group{margin-bottom:16px;}.field-group:last-child{margin-bottom:0;}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.row-2{grid-template-columns:1fr;}}
+@media(max-width:480px){
+  .header-inner{padding:0 16px;}
+  .hero{padding:24px 16px 20px;}
+  .hero h1{font-size:20px;}
+  .main,.admin-main{padding:20px 16px 48px;}
+  .card-body{padding:16px;}
+  .card-header{padding:14px 16px 12px;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .nav-btn{padding:6px 10px;font-size:12.5px;}
+  .admin-tabs{gap:2px;}
+  .admin-tab{font-size:11.5px;padding:8px 6px;}
+}
+/* CUSTOM SELECT */
+.custom-select-wrap{position:relative;user-select:none;}
+.custom-select-trigger{width:100%;padding:11px 40px 11px 16px;border:1.5px solid var(--gray-200);border-radius:12px;background:#fff;cursor:pointer;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--gray-800);display:flex;align-items:center;justify-content:space-between;transition:border-color var(--transition),box-shadow var(--transition);position:relative;}
+.custom-select-trigger::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);width:12px;height:7px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23F04C21' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:contain;transition:transform var(--transition);}
+.custom-select-wrap.open .custom-select-trigger::after{transform:translateY(-50%) rotate(180deg);}
+.custom-select-wrap.open .custom-select-trigger,.custom-select-trigger:hover{border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,76,33,.10);}
+.custom-select-trigger.placeholder{color:var(--gray-400);}
+.custom-select-trigger.disabled{background:var(--gray-50);color:var(--gray-400);border-color:var(--gray-100);cursor:not-allowed;pointer-events:none;}
+.custom-select-trigger.disabled::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D1D5DB' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}
+.custom-select-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:9999;background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);overflow:hidden;display:none;max-height:260px;overflow-y:auto;}
+.custom-select-wrap.open{z-index:9999;}
+.custom-select-wrap.open .custom-select-dropdown{display:block;animation:dropIn .15s ease;}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.custom-select-option{padding:11px 16px;font-size:14px;font-family:'Nunito Sans',sans-serif;color:var(--gray-700);cursor:pointer;transition:background var(--transition);font-weight:500;}
+.custom-select-option:hover{background:var(--orange-bg);color:var(--orange);}
+.custom-select-option.selected{background:var(--orange-bg);color:var(--orange);font-weight:700;}
+.custom-select-option.placeholder-opt{color:var(--gray-400);font-style:italic;}
+.custom-select-dropdown::-webkit-scrollbar{width:5px;}.custom-select-dropdown::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:10px;}
+.flow-search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:500;background:#fff;border:1.5px solid var(--gray-200);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);max-height:260px;overflow-y:auto;display:none;}
+.flow-search-item{padding:11px 16px;font-size:13.5px;color:var(--gray-700);cursor:pointer;border-bottom:1px solid var(--gray-100);font-weight:500;}
+.flow-search-item:last-child{border-bottom:none;}
+.flow-search-item:hover{background:var(--orange-bg);color:var(--orange);}
+.flow-search-empty{padding:14px 16px;font-size:12.5px;color:var(--gray-400);text-align:center;}
+/* GUIDE RESULT */
+.guide-empty{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);border-radius:var(--radius-lg);padding:40px 24px;text-align:center;margin-bottom:20px;position:relative;overflow:hidden;}
+.guide-empty::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(240,76,33,.18) 0%,transparent 65%);pointer-events:none;}
+.guide-empty-text{font-size:14px;color:rgba(255,255,255,.6);font-weight:500;}
+.guide-result{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gray-200);box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden;}
+.guide-result-header{padding:18px 24px;background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);display:flex;align-items:center;gap:12px;}
+.guide-result-title{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#fff;}
+.guide-result-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px;}
+.guide-badge{background:var(--orange);color:#fff;font-size:11px;font-weight:800;font-family:'Nunito',sans-serif;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.guide-steps{padding:24px;}
+.guide-step{border-radius:12px;border:1px solid var(--gray-100);transition:border-color .15s ease,background .15s ease,box-shadow .2s ease;margin-bottom:10px;overflow:hidden;}
+.guide-step:hover{border-color:var(--orange-border);}
+.guide-step-hdr{display:flex;gap:14px;align-items:center;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.guide-step-hdr:hover{background:var(--orange-bg);}
+.guide-step-chev{margin-left:auto;flex-shrink:0;color:var(--gray-400);transition:transform .2s ease;}
+.guide-step.open .guide-step-chev{transform:rotate(90deg);color:var(--orange);}
+.guide-step-num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(240,76,33,.35);}
+.guide-step-content{flex:1;}
+.guide-step-title{font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;color:var(--gray-900);}
+.guide-step-body{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+.guide-step.open .guide-step-body{max-height:2000px;}
+.guide-step-desc{font-size:13px;color:var(--gray-600);line-height:1.7;padding:0 16px 16px 60px;}
+.guide-step-desc a{color:var(--orange);font-weight:600;text-decoration:underline;}
+.guide-step-desc a:hover{opacity:.75;}
+.guide-step-desc strong{font-weight:700;color:var(--gray-900);}
+.guide-step-desc em{font-style:italic;}
+.guide-steps-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-bottom:10px;}
+.guide-steps-actions button{background:none;border:none;color:var(--orange);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito Sans',sans-serif;padding:4px 8px;border-radius:6px;}
+.guide-steps-actions button:hover{background:var(--orange-bg);}
+.macro-from-wrap{width:100%;margin-bottom:2px;}
+.macro-from-wrap label{font-size:10px;font-weight:700;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:5px;}
+.macro-from-wrap .custom-select-trigger{padding:9px 36px 9px 12px;font-size:12.5px;border-radius:9px;}
+.macro-from-wrap .custom-select-option{padding:9px 12px;font-size:12.5px;}
+.escalate-box{margin-top:20px;padding:16px 20px;background:var(--yellow-bg);border:1px solid var(--yellow-border);border-radius:var(--radius);display:flex;gap:10px;align-items:flex-start;}
+.escalate-box-icon{color:var(--yellow);flex-shrink:0;margin-top:1px;}
+.escalate-box-text{font-size:13px;color:var(--gray-700);line-height:1.6;}
+.escalate-box-text strong{font-weight:700;color:var(--gray-900);display:block;margin-bottom:3px;}
+.rovo-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:var(--transition);text-decoration:none;box-shadow:0 4px 12px rgba(240,76,33,.28);}
+.rovo-btn:hover{background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 100%);box-shadow:0 6px 18px rgba(240,76,33,.38);color:#fff;}
+.guide-result-body{display:grid;grid-template-columns:1fr 300px;gap:0;align-items:start;}
+.guide-macro-panel{background:var(--orange-bg);border-left:1px solid var(--orange-border);padding:18px 16px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:12px;position:sticky;top:60px;align-self:start;}
+.guide-macro-icon{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(240,76,33,.3);flex-shrink:0;align-self:center;}
+.guide-macro-title{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--orange-dark);margin-bottom:3px;text-align:center;}
+.guide-macro-desc{font-size:11.5px;color:var(--gray-600);line-height:1.5;text-align:center;}
+.macro-steps-wrap{width:100%;background:#fff;border:1px solid var(--orange-border);border-radius:8px;padding:10px 12px;}
+.macro-steps-hdr{font-size:10px;font-weight:700;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.macro-step-item{display:flex;align-items:flex-start;gap:7px;padding:3px 0;cursor:pointer;width:100%;}
+.macro-step-item.always{cursor:default;}
+.macro-step-cb{width:13px;height:13px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;margin-top:2px;}
+.macro-step-lbl{font-size:11.5px;color:var(--gray-700);line-height:1.4;font-weight:500;}
+.macro-step-lbl.ctx{color:var(--gray-500);font-style:italic;}
+.macro-bots{display:flex;flex-direction:column;gap:8px;width:100%;}
+.baymax-btn{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%)!important;box-shadow:0 4px 12px rgba(15,23,42,.28)!important;}
+.baymax-btn:hover{background:linear-gradient(135deg,#1E293B 0%,#334155 100%)!important;box-shadow:0 6px 18px rgba(15,23,42,.38)!important;}
+@media(max-width:680px){.guide-result-body{grid-template-columns:1fr;}.guide-macro-panel{border-left:none;border-top:1px solid var(--orange-border);position:static;max-height:none;}}
+.copy-guide-btn{display:inline-flex;align-items:center;gap:7px;padding:11px 20px;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:var(--transition);box-shadow:0 4px 12px rgba(240,76,33,.28);}
+.copy-guide-btn:hover{background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 100%);box-shadow:0 6px 18px rgba(240,76,33,.38);}.copy-guide-btn.success{background:var(--green);box-shadow:0 4px 12px rgba(5,150,105,.28);}
+/* ADMIN */
+.admin-tabs{display:flex;gap:4px;padding:4px;background:var(--gray-200);border-radius:10px;flex:1;}
+.admin-topbar{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
+.admin-tab{flex:1;padding:9px 8px;border:none;border-radius:7px;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;transition:var(--transition);background:transparent;color:var(--gray-600);text-align:center;}
+.admin-tab.active{background:#fff;color:var(--gray-900);box-shadow:var(--shadow-sm);}
+.admin-tab-content.hidden{display:none;}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px;}
+.admin-table th{text-align:left;padding:10px 14px;background:var(--gray-50);border-bottom:2px solid var(--gray-200);font-weight:700;color:var(--gray-600);font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
+.admin-table td{padding:11px 14px;border-bottom:1px solid var(--gray-100);color:var(--gray-700);font-weight:500;vertical-align:top;}
+.admin-table tr:last-child td{border-bottom:none;}.admin-table tr:hover td{background:var(--gray-50);}
+.scroll-table{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--gray-200);max-height:480px;overflow-y:auto;}
+.scroll-table::-webkit-scrollbar{width:5px;height:6px;}.scroll-table::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:10px;}
+.scroll-table table thead th{position:sticky;top:0;z-index:2;background:var(--gray-50);}
+.action-btns{display:flex;gap:6px;align-items:center;}
+.action-btn{width:30px;height:30px;border:none;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);flex-shrink:0;}
+.action-btn.edit{background:#EFF6FF;color:#2563EB;}.action-btn.edit:hover{background:#2563EB;color:#fff;}
+.action-btn.del{background:#FEF2F2;color:#DC2626;}.action-btn.del:hover{background:#DC2626;color:#fff;}
+.add-btn{display:block;width:100%;margin-top:12px;padding:11px 20px;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:var(--transition);box-shadow:0 4px 12px rgba(240,76,33,.28);}
+.add-btn:hover{background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 100%);box-shadow:0 6px 18px rgba(240,76,33,.38);}
+.edit-input{width:100%;padding:6px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:12.5px;font-family:'Nunito Sans',sans-serif;background:#fff;transition:border-color var(--transition);}
+.edit-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 2px rgba(240,76,33,.10);}
+.info-box{background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:var(--radius);padding:12px 14px;font-size:13px;color:#1D4ED8;font-weight:500;margin-bottom:16px;}
+.flow-key-badge{font-family:'Courier New',monospace;font-size:11px;color:var(--gray-500);background:var(--gray-100);padding:2px 7px;border-radius:6px;}
+/* STEP EDITOR */
+.step-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;padding:14px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200);}
+.step-item-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;font-size:11px;font-weight:800;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;box-shadow:0 2px 5px rgba(240,76,33,.3);}
+.step-item-fields{flex:1;display:flex;flex-direction:column;gap:8px;}
+.step-item-del{padding:4px;background:var(--red-bg);color:var(--red);border:none;border-radius:6px;cursor:pointer;transition:var(--transition);flex-shrink:0;margin-top:2px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.step-item-del:hover{background:var(--red);color:#fff;}
+.step-add-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;transition:var(--transition);margin-top:8px;}
+.step-add-btn:hover{background:var(--blue);color:#fff;}
+/* RICH TEXT */
+.rte-wrap{border:1.5px solid var(--gray-200);border-radius:10px;overflow:hidden;background:#fff;transition:border-color var(--transition),box-shadow var(--transition);}
+.rte-wrap:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,76,33,.10);}
+.rte-toolbar{display:flex;align-items:center;gap:1px;padding:5px 8px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);flex-wrap:wrap;}
+.rte-sep{width:1px;height:18px;background:var(--gray-300);margin:0 3px;}
+.rte-btn{min-width:28px;height:28px;padding:0 5px;border:none;border-radius:5px;background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--gray-600);font-size:12px;font-weight:700;font-family:'Nunito Sans',sans-serif;transition:var(--transition);}
+.rte-btn:hover{background:var(--gray-200);color:var(--gray-900);}
+.rte-editor{min-height:80px;padding:10px 14px;outline:none;font-family:'Nunito Sans',sans-serif;font-size:13px;line-height:1.7;color:var(--gray-800);}
+.rte-editor a{color:var(--orange);text-decoration:underline;}
+.rte-editor:empty:before{content:attr(data-placeholder);color:var(--gray-400);}
+/* LINK MODAL */
+.link-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:20000;display:flex;align-items:center;justify-content:center;}
+.link-modal{background:#fff;border-radius:14px;padding:24px;max-width:400px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,.2);}
+.link-modal-title{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:var(--gray-900);margin-bottom:16px;display:flex;align-items:center;gap:7px;}
+.link-modal input{width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:9px;font-size:13px;font-family:'Nunito Sans',sans-serif;margin-bottom:10px;outline:none;transition:border-color var(--transition);display:block;}
+.link-modal input:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(240,76,33,.08);}
+.link-modal-label{font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;}
+.link-modal-btns{display:flex;gap:8px;margin-top:8px;}
+.link-modal-ok{flex:1;padding:10px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+.link-modal-ok:hover{background:var(--orange-dark);}
+.link-modal-cancel{padding:10px 16px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.link-modal-cancel:hover{background:var(--gray-200);}
+.esc-textarea{width:100%;min-height:80px;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:13px;font-family:'Nunito Sans',sans-serif;resize:vertical;transition:border-color var(--transition);outline:none;}
+.esc-textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,76,33,.10);}
+/* CONFIRM / SYNC */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:10000;display:flex;align-items:center;justify-content:center;}
+.confirm-box{background:#fff;border-radius:16px;padding:28px 28px 24px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.confirm-title{font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;color:var(--gray-900);margin-bottom:8px;}
+.confirm-msg{font-size:13.5px;color:var(--gray-600);line-height:1.6;margin-bottom:22px;}
+.confirm-btns{display:flex;gap:10px;}
+.confirm-yes{flex:1;padding:11px;background:var(--orange);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+.confirm-yes.danger{background:#DC2626;}.confirm-no{flex:1;padding:11px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
+.sync-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;transform:translateY(100%);transition:transform .3s ease;pointer-events:none;}
+.sync-bar.show{transform:translateY(0);pointer-events:auto;}
+.sync-bar.saving{background:#1E293B;color:rgba(255,255,255,.85);}.sync-bar.saved{background:var(--green);color:#fff;}.sync-bar.error{background:#DC2626;color:#fff;}.sync-bar.loading{background:#1E293B;color:rgba(255,255,255,.85);}
+/* DASHBOARD */
+.dash-section-title{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em;margin:28px 0 14px;}
+.dash-section-title:first-child{margin-top:0;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:700px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-card{background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow-sm);transition:transform .2s ease,box-shadow .2s ease;}
+.stat-card:not(.accent):hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.stat-card.accent{background:linear-gradient(135deg,var(--orange-dark),var(--orange) 55%,var(--orange-light));border-color:transparent;box-shadow:0 6px 20px rgba(240,76,33,.3);}
+.stat-card-label{font-size:12px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.stat-card.accent .stat-card-label{color:rgba(255,255,255,.8);}
+.stat-card-value{font-family:'Nunito',sans-serif;font-size:32px;font-weight:800;color:var(--gray-900);line-height:1;}
+.stat-card.accent .stat-card-value{color:#fff;}
+.stat-card-sub{font-size:12px;color:var(--gray-500);margin-top:4px;font-weight:500;}
+.stat-card.accent .stat-card-sub{color:rgba(255,255,255,.75);}
+.chart-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:700px){.chart-grid-2{grid-template-columns:1fr;}}
+.chart-card{background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:20px;box-shadow:var(--shadow-sm);margin-bottom:16px;}
+.chart-card-title{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--gray-800);margin-bottom:16px;}
+.chart-card-title span{font-size:12px;font-weight:600;color:var(--gray-400);margin-left:6px;}
+.filter-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px;padding:16px 20px;background:#fff;border-radius:12px;border:1px solid var(--gray-200);}
+.filter-group{display:flex;flex-direction:column;gap:4px;}
+.filter-label{font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;}
+.filter-select{padding:8px 32px 8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:'Nunito Sans',sans-serif;font-size:13px;color:var(--gray-700);background:#fff;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.filter-select:focus{outline:none;border-color:var(--orange);}
+.filter-btn{padding:9px 18px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);white-space:nowrap;}
+.filter-btn:hover{background:var(--orange-dark);}
+.filter-btn.secondary{background:var(--gray-100);color:var(--gray-700);}.filter-btn.secondary:hover{background:var(--gray-200);}
+.no-flow-box{background:var(--gray-100);border:1.5px dashed var(--gray-300);border-radius:var(--radius-lg);padding:32px 24px;text-align:center;}
+.no-flow-text{font-size:13px;color:var(--gray-500);font-weight:500;}
+.cr-label-badge{font-size:11px;font-weight:700;background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border);padding:2px 8px;border-radius:20px;}
+@keyframes icon-spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.icon-spin{animation:icon-spin 1s linear infinite;}
+.fade-in{animation:fadeIn .35s cubic-bezier(.22,.68,0,1.2);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+.dash-period-btn{padding:6px 14px;border:1.5px solid var(--gray-200);border-radius:8px;background:#fff;color:var(--gray-600);font-size:12px;font-weight:700;cursor:pointer;transition:var(--transition);}
+.dash-period-btn:hover{border-color:var(--orange);color:var(--orange);}
+.dash-period-btn.active{background:var(--orange);color:#fff;border-color:var(--orange);}
+
+/* QUILL RTE */
+.ql-container.ql-snow{border:none;font-family:'Nunito Sans',sans-serif;font-size:13px;}
+.ql-toolbar.ql-snow{border:none;border-bottom:1px solid var(--gray-200);padding:5px 8px;background:var(--gray-50);flex-wrap:wrap;}
+.ql-editor{min-height:80px;padding:10px 14px;line-height:1.7;color:var(--gray-800);}
+.ql-editor a{color:var(--orange);text-decoration:underline;}
+.ql-editor.ql-blank::before{color:var(--gray-400);font-style:normal;font-size:13px;}
+.ql-snow .ql-stroke{stroke:var(--gray-600);}
+.ql-snow .ql-fill{fill:var(--gray-600);}
+.ql-snow .ql-picker{color:var(--gray-600);}
+.ql-snow .ql-toolbar button:hover .ql-stroke,.ql-snow .ql-toolbar button.ql-active .ql-stroke{stroke:var(--orange);}
+.ql-snow .ql-toolbar button:hover .ql-fill,.ql-snow .ql-toolbar button.ql-active .ql-fill{fill:var(--orange);}
+.ql-snow .ql-picker-label:hover,.ql-snow .ql-picker-label.ql-active{color:var(--orange);}
+.ql-snow .ql-picker-options{border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.ql-snow .ql-tooltip{z-index:99999;}
+/* guide step desc – Quill output tags */
+.guide-step-desc p{margin-bottom:3px;}.guide-step-desc p:last-child{margin-bottom:0;}
+.guide-step-desc h3{font-size:13.5px;font-weight:800;color:var(--gray-900);margin-bottom:3px;}
+.guide-step-desc blockquote{border-left:3px solid var(--gray-300);padding-left:10px;color:var(--gray-500);font-style:italic;margin:4px 0;}
+.guide-step-desc ul,.guide-step-desc ol{padding-left:18px;margin:3px 0;}
+/* CATEGORIES TAB */
+.cat-add-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;}
+.cat-add-input{flex:1;min-width:120px;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'Nunito Sans',sans-serif;outline:none;transition:border-color var(--transition);}
+.cat-add-input:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(240,76,33,.10);}
+.cat-add-btn{padding:8px 16px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:var(--transition);}
+.cat-add-btn:hover{background:var(--orange-dark);}
+.cat-tag{font-family:'Courier New',monospace;font-size:10px;color:var(--gray-400);background:var(--gray-100);padding:1px 5px;border-radius:4px;}
+.cat-cell-editable{cursor:pointer;padding:2px 4px;border-radius:4px;transition:background var(--transition);}
+/* SCROLLBAR GLOBAL */
+*{scrollbar-width:thin;scrollbar-color:var(--gray-300) transparent;}
+*::-webkit-scrollbar{width:5px;height:5px;}
+*::-webkit-scrollbar-track{background:transparent;}
+*::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:10px;}
+*::-webkit-scrollbar-thumb:hover{background:var(--gray-400);}
+/* ACCESSIBILITY */
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px;border-radius:4px;}
+button:focus-visible,a:focus-visible{outline:2px solid var(--orange);outline-offset:3px;}
+.custom-select-trigger:focus-visible{outline:none;}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
+}
+.add-btn:active,.copy-guide-btn:active,.filter-btn:active,.link-modal-ok:active,.confirm-yes:active,.cat-add-btn:active{transform:scale(.97);}
+.action-btn[title]{position:relative;}
+.cat-cell-editable:hover{background:var(--orange-bg);color:var(--orange);}
+.cat-edit-input{padding:5px 8px;border:1.5px solid var(--orange);border-radius:6px;font-size:12.5px;font-family:'Nunito Sans',sans-serif;outline:none;width:100%;box-sizing:border-box;}
+/* ── HELP PAGE ─────────────────────────────────────────────── */
+#page-help{background:var(--gray-50);}
+#page-help .help-wrap{max-width:900px;margin:0 auto;padding:32px 24px 60px;}
+#page-help .help-card{background:#fff;border-radius:20px;border:1px solid var(--gray-200);box-shadow:var(--shadow);overflow:hidden;position:relative;}
+#page-help .hov{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:200;}
+#page-help .hov.fading{opacity:1;pointer-events:all;}
+#page-help .hcard-header{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--gray-100);}
+#page-help .hbrand{display:flex;align-items:center;gap:10px;}
+#page-help .hbrand-logo{width:32px;height:32px;object-fit:contain;}
+#page-help .hbrand-title{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--gray-900);}
+#page-help .hbrand-sub{font-size:11px;color:var(--gray-400);font-weight:500;}
+#page-help .hbadge{font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border);padding:4px 12px;border-radius:20px;}
+#page-help .hstepper{display:flex;align-items:center;justify-content:center;gap:0;padding:14px 24px;border-bottom:1px solid var(--gray-100);}
+#page-help .hstep-item{display:flex;align-items:center;}
+#page-help .hstep-cwrap{position:relative;display:flex;flex-direction:column;align-items:center;}
+#page-help .hstep-circle{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:transform .15s;user-select:none;}
+#page-help .hstep-circle:hover{transform:scale(1.08);}
+#page-help .hstep-circle.active{background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 100%);color:#fff;box-shadow:0 4px 10px rgba(240,76,33,.35);}
+#page-help .hstep-circle.done{background:var(--gray-900);color:#fff;}
+#page-help .hstep-circle.inactive{background:var(--gray-100);color:var(--gray-400);}
+#page-help .hstep-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--gray-900);color:#fff;font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:10;}
+#page-help .hstep-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--gray-900);}
+#page-help .hstep-cwrap:hover .hstep-tip{opacity:1;}
+#page-help .hstep-line{width:64px;height:2px;background:var(--gray-200);margin:0 4px;transition:background .3s;}
+#page-help .hstep-line.done{background:var(--gray-900);}
+#page-help .hbody{display:flex;min-height:420px;}
+#page-help .hcontent{flex:1;padding:28px 32px;overflow-y:auto;}
+#page-help .hsidebar{width:260px;background:var(--gray-50);border-left:1px solid var(--gray-100);padding:24px 18px;flex-shrink:0;}
+#page-help .hpage{display:none;}
+#page-help .hpage.active{display:block;}
+#page-help .hlabel{font-size:11px;font-weight:700;color:var(--gray-400);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+#page-help .htitle{font-family:'Nunito',sans-serif;font-size:26px;font-weight:800;color:var(--gray-900);line-height:1.25;margin-bottom:10px;}
+#page-help .hsubtitle{font-size:15px;color:var(--gray-600);line-height:1.65;margin-bottom:22px;}
+#page-help .hlist{list-style:none;margin:4px 0 18px 0;}
+#page-help .hlist li{position:relative;padding-left:18px;font-size:14.5px;color:var(--gray-700);line-height:1.6;margin-bottom:11px;}
+#page-help .hlist li::before{content:'–';position:absolute;left:0;color:var(--gray-400);}
+#page-help .hlist li strong{color:var(--gray-900);font-weight:700;}
+#page-help .hcallout{display:flex;gap:12px;background:var(--orange-bg);border:1px solid var(--orange-border);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;}
+#page-help .hcallout svg{flex-shrink:0;width:20px;height:20px;margin-top:1px;color:var(--orange);}
+#page-help .hcallout p{font-size:13.5px;color:var(--gray-700);line-height:1.6;}
+#page-help .hcallout p strong{color:var(--orange-dark);}
+#page-help .hcallout.gray{background:var(--gray-50);border-color:var(--gray-200);}
+#page-help .hcallout.gray svg{color:var(--gray-500);}
+#page-help .hcallout.gray p strong{color:var(--gray-800);}
+#page-help .hcallout.green{background:var(--green-bg);border-color:#A7F3D0;}
+#page-help .hcallout.green svg{color:var(--green);}
+#page-help .hcallout.green p strong{color:var(--green);}
+#page-help .hfield{margin-bottom:18px;}
+#page-help .hfield-label{font-size:11px;font-weight:700;color:var(--gray-600);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;}
+#page-help .hfield-box{border:1.5px solid var(--gray-200);border-radius:10px;padding:10px 14px;font-size:13.5px;color:var(--gray-500);background:#fff;display:flex;align-items:center;justify-content:space-between;}
+#page-help .hfield-box.filled{border-color:var(--orange-border);color:var(--gray-800);background:var(--orange-bg);}
+#page-help .hfield-box .htag{font-size:11px;font-weight:700;background:var(--orange);color:#fff;border-radius:6px;padding:2px 8px;}
+#page-help .hreq{font-size:10px;font-weight:700;color:var(--orange);margin-left:6px;text-transform:uppercase;}
+#page-help .hdivider{height:1px;background:var(--gray-100);margin:18px 0;}
+#page-help .hresmock{border:1px solid var(--gray-200);border-radius:12px;overflow:hidden;margin-bottom:18px;}
+#page-help .hresmock-hdr{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);padding:14px 18px;display:flex;align-items:center;gap:10px;}
+#page-help .hresmock-hdr span{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#fff;}
+#page-help .hresmock-hdr small{font-size:11px;color:rgba(255,255,255,.5);}
+#page-help .hresmock-body{display:grid;grid-template-columns:1fr 200px;}
+#page-help .hrsteps{padding:16px 18px;}
+#page-help .hrstep{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
+#page-help .hrstep-num{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);}
+#page-help .hrstep-num.ctx{background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);}
+#page-help .hrstep-txt{font-size:12.5px;color:var(--gray-700);line-height:1.5;font-weight:600;padding-top:3px;}
+#page-help .hrmacro{background:var(--orange-bg);border-left:1px solid var(--orange-border);padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;}
+#page-help .hrmacro-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);display:flex;align-items:center;justify-content:center;}
+#page-help .hrmacro h4{font-size:11px;font-weight:800;font-family:'Nunito',sans-serif;color:var(--orange-dark);}
+#page-help .hrmacro p{font-size:10.5px;color:var(--gray-600);line-height:1.5;}
+#page-help .hrmacro-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px 10px;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;border:none;border-radius:8px;font-size:11.5px;font-weight:700;font-family:'Nunito Sans',sans-serif;}
+#page-help .hescmock{display:flex;gap:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:12px 14px;margin-top:4px;margin-bottom:18px;}
+#page-help .hescmock p{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+#page-help .hescmock p strong{color:#92400E;font-weight:700;display:block;margin-bottom:2px;}
+#page-help .hsb-label{font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;}
+#page-help .hsb-step{display:flex;flex-direction:column;padding:10px 0;border-bottom:1px solid var(--gray-100);}
+#page-help .hsb-step:last-child{border-bottom:none;}
+#page-help .hsb-row{display:flex;align-items:flex-start;gap:10px;width:100%;}
+#page-help .hsb-icon{width:22px;height:22px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;margin-top:1px;}
+#page-help .hsb-icon.active{background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 100%);border-color:var(--orange);}
+#page-help .hsb-icon.done{background:var(--gray-900);border-color:var(--gray-900);}
+#page-help .hsb-text{font-size:12.5px;color:var(--gray-400);font-weight:500;line-height:1.4;}
+#page-help .hsb-text.active{color:var(--orange-dark);font-weight:700;}
+#page-help .hsb-text.done{color:var(--gray-800);font-weight:600;}
+#page-help .hsb-tip{font-size:11px;color:var(--gray-500);line-height:1.5;margin-top:6px;padding-left:32px;}
+#page-help .hnav-row{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-top:1px solid var(--gray-100);}
+#page-help .hnav-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;font-family:'Nunito Sans',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .18s;border:none;}
+#page-help .hnav-btn.prev{background:var(--gray-100);color:var(--gray-600);}
+#page-help .hnav-btn.prev:hover{background:var(--gray-200);color:var(--gray-900);}
+#page-help .hnav-btn.next{background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 100%);color:#fff;box-shadow:0 4px 12px rgba(240,76,33,.28);}
+#page-help .hnav-btn.next:hover{box-shadow:0 6px 18px rgba(240,76,33,.38);}
+#page-help .hnav-btn:disabled{opacity:.35;cursor:not-allowed;}
+#page-help .hcounter{font-size:12px;color:var(--gray-400);font-weight:600;}
+@media(max-width:640px){#page-help .hsidebar{display:none;}#page-help .hcontent{padding:20px 18px;}#page-help .htitle{font-size:21px;}#page-help .hresmock-body{grid-template-columns:1fr;}#page-help .hrmacro{border-left:none;border-top:1px solid var(--orange-border);}}
+</style>
+</head>
+<body>
+<!-- SPLASH -->
+<div id="splash-screen" role="status" aria-label="Carregando...">
+  <div class="splash-inner">
+    <div class="splash-ring"></div>
+    <div class="splash-ring-2"></div>
+    <img src="logo-hotmart.jpg" alt="Hotmart" class="splash-logo">
+  </div>
+</div>
+
+<div id="app-scroll">
+
+<div class="sync-bar" id="sync-bar" role="status" aria-live="polite" aria-atomic="true"><span id="sync-icon"></span><span id="sync-msg">Carregando...</span></div>
+<header class="header" role="banner"><div class="header-inner">
+  <div class="logo-area"><div class="logo-icon"><img src="logo-hotmart.jpg" alt="eNotas"></div><div><div class="logo-text">Guia Operacional</div><div class="logo-sub">eNotas · Zendesk</div></div></div>
+  <nav class="header-nav" role="navigation" aria-label="Navegação principal">
+    <button class="nav-btn active" onclick="showPage('guide')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Guia</button>
+    <button class="nav-btn" onclick="showPage('help')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Ajuda</button>
+    <button class="nav-btn" onclick="goToAdmin()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Administração</button>
+  </nav>
+</div></header>
+<!-- GUIDE PAGE -->
+<div id="page-guide" class="page active">
+  <div class="hero"><h1>Guia Operacional</h1><p>Selecione o tipo de atendimento para visualizar o passo a passo antes de escalar</p></div>
+  <div class="main" role="main">
+    <div class="card fade-in">
+      <div class="card-header"><div class="step-badge" id="badge-step1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div><div class="card-title">Identificar o Atendimento</div><div class="card-subtitle">Preencha os campos conforme o ticket no Zendesk</div></div></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="field-group" style="margin:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><label class="field-label" for="ticket-input" style="margin:0">Número do Ticket</label><span class="cr-label-badge" style="background:var(--blue-bg);color:var(--blue);border-color:var(--blue-border)">Obrigatório</span></div>
+          <input type="text" id="ticket-input" inputmode="numeric" pattern="[0-9]*" placeholder="Digite o número do ticket..." oninput="this.value=this.value.replace(/[^0-9]/g,'');onTicketChange()" style="width:100%;padding:11px 16px;border:1.5px solid var(--gray-200);border-radius:12px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--gray-800);outline:none;transition:border-color var(--transition),box-shadow var(--transition);" onfocus="this.style.borderColor='var(--orange)';this.style.boxShadow='0 0 0 3px rgba(240,76,33,.10)'" onblur="this.style.borderColor='var(--gray-200)';this.style.boxShadow=''">
+        </div>
+        <div class="field-group" style="margin:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><label class="field-label" style="margin:0">Categoria do Atendimento</label><span class="cr-label-badge">Campo 1</span></div><div class="custom-select-wrap" id="cs-sc"><div class="custom-select-trigger placeholder" onclick="toggleCS('cs-sc')">Selecione a categoria...</div><div class="custom-select-dropdown" id="cs-sc-list"></div></div></div>
+        <div id="post-sc-fields" style="display:none;flex-direction:column;gap:16px;">
+        <div class="field-group" style="margin:0;position:relative" id="flow-search-wrap">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><label class="field-label" style="margin:0">Buscar fluxo por texto</label></div>
+          <input type="text" id="flow-search-input" placeholder="Digite para buscar (ex: reembolso, nota fiscal...)" autocomplete="off" oninput="onFlowSearchInput(this.value)" onfocus="this.style.borderColor='var(--orange)';this.style.boxShadow='0 0 0 3px rgba(240,76,33,.10)';if(this.value)onFlowSearchInput(this.value)" onblur="this.style.borderColor='var(--gray-200)';this.style.boxShadow=''" style="width:100%;padding:11px 16px;border:1.5px solid var(--gray-200);border-radius:12px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--gray-800);outline:none;transition:border-color var(--transition),box-shadow var(--transition);">
+          <div id="flow-search-results" class="flow-search-results"></div>
+        </div>
+        <div class="field-group" style="margin:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><label class="field-label" style="margin:0">eNotas | Agent Contact Reason</label><span class="cr-label-badge">Campo 2</span></div><div class="custom-select-wrap" id="cs-al1"><div class="custom-select-trigger placeholder" onclick="toggleCS('cs-al1')">Selecione a categoria...</div><div class="custom-select-dropdown" id="cs-al1-list"></div></div></div>
+        <div id="group-al2" style="display:none;" class="field-group" style="margin:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><label class="field-label" style="margin:0">Agent Contact Reason — Subcategoria</label><span class="cr-label-badge">Campo 3</span></div><div class="custom-select-wrap" id="cs-al2"><div class="custom-select-trigger placeholder" onclick="toggleCS('cs-al2')">Selecione a subcategoria...</div><div class="custom-select-dropdown" id="cs-al2-list"></div></div></div>
+        </div>
+        <!-- CR2.0 DESABILITADO — remover este comentário e o fechamento abaixo para reativar
+        <div class="field-group" style="margin:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><label class="field-label" style="margin:0">eNotas | Contact Reason 2.0</label><span class="cr-label-badge">Campo 3</span></div><div class="custom-select-wrap" id="cs-cl1"><div class="custom-select-trigger placeholder" onclick="toggleCS('cs-cl1')">Selecione a categoria...</div><div class="custom-select-dropdown" id="cs-cl1-list"></div></div></div>
+        <div id="group-cl2" style="display:none;" class="field-group" style="margin:0"><label class="field-label">Contact Reason 2.0 — Subcategoria</label><div class="custom-select-wrap" id="cs-cl2"><div class="custom-select-trigger placeholder" onclick="toggleCS('cs-cl2')">Selecione a subcategoria...</div><div class="custom-select-dropdown" id="cs-cl2-list"></div></div></div>
+        FIM CR2.0 -->
+      </div>
+    </div>
+    <div id="guide-result-area"></div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="page-admin" class="page">
+  <div class="hero"><h1>Administração</h1><p>Crie e edite os fluxos de atendimento N1 para cada Agent Contact Reason</p></div>
+  <div class="admin-main">
+    <div class="admin-topbar"><div class="admin-tabs">
+      <button class="admin-tab active" onclick="showAdminTab('tab-flows')">Fluxos</button>
+      <button class="admin-tab" onclick="resetFlowForm();showAdminTab('tab-new-flow')">+ Novo Fluxo</button>
+      <button class="admin-tab" onclick="showAdminTab('tab-dashboard');buildDashboard()">Dashboard</button>
+      <button class="admin-tab" onclick="showAdminTab('tab-categories');renderCategoriesTab()">Categorias</button>
+    </div></div>
+    <!-- FLOWS LIST -->
+    <div id="tab-flows" class="admin-tab-content">
+      <div class="card"><div class="card-header"><div class="card-title">Fluxos Cadastrados</div><button onclick="exportFlows()" style="margin-left:auto;padding:7px 16px;background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar CSV</button></div><div class="card-body">
+        <div class="info-box"><strong>Como funciona:</strong> Cada fluxo é vinculado a um Agent Contact Reason. Quando o analista selecionar esse Agent CR, o passo a passo aparece automaticamente.</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;"><input type="text" id="flows-filter" placeholder="🔍  Filtrar por Agent CR L1 ou L2..." oninput="renderFlowsTable()" style="flex:1;padding:9px 14px;border:1.5px solid var(--gray-200);border-radius:9px;font-family:'Nunito Sans',sans-serif;font-size:13px;outline:none;transition:border-color var(--transition);" onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--gray-200)'"><button onclick="document.getElementById('flows-filter').value='';renderFlowsTable()" style="padding:9px 14px;background:var(--gray-100);color:var(--gray-600);border:1.5px solid var(--gray-200);border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Limpar</button></div>
+        <div class="scroll-table"><table class="admin-table"><thead><tr><th>Agent CR L1</th><th>Agent CR L2</th><th>Passos</th><th>Escalação</th><th>Ações</th></tr></thead><tbody id="flows-tbody"></tbody></table></div>
+      </div></div>
+    </div>
+    <!-- NEW/EDIT FLOW -->
+    <div id="tab-new-flow" class="admin-tab-content hidden">
+      <div class="card"><div class="card-header"><div><div class="card-title" id="flow-form-title">Novo Fluxo</div><div class="card-subtitle">Configure os campos e defina o passo a passo do N1</div></div></div><div class="card-body">
+        <div style="margin-bottom:20px">
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:14px;display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Vincular a combinação de campos</div>
+          <!-- CAMPO REMOVIDO: Categoria do Atendimento não interfere na determinação do fluxo
+          <div class="row-2" style="margin-bottom:12px"><div class="field-group" style="margin:0"><label class="field-label">Categoria do Atendimento</label><div class="custom-select-wrap" id="fcs-sc"><div class="custom-select-trigger placeholder" onclick="toggleCS('fcs-sc')">— Qualquer —</div><div class="custom-select-dropdown" id="fcs-sc-list"></div></div></div><div></div></div>
+          -->
+          <div class="row-2" style="margin-bottom:12px">
+            <div class="field-group" style="margin:0"><label class="field-label">Agent CR — L1</label><div class="custom-select-wrap" id="fcs-al1"><div class="custom-select-trigger placeholder" onclick="toggleCS('fcs-al1')">— Qualquer —</div><div class="custom-select-dropdown" id="fcs-al1-list"></div></div></div>
+            <div class="field-group" style="margin:0"><label class="field-label">Agent CR — L2</label><div class="custom-select-wrap" id="fcs-al2"><div class="custom-select-trigger placeholder" onclick="toggleCS('fcs-al2')">— Qualquer —</div><div class="custom-select-dropdown" id="fcs-al2-list"></div></div></div>
+          </div>
+
+          <div style="margin-top:12px;padding:10px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;font-size:12px;color:var(--gray-600)"><strong style="color:var(--gray-700)">Chave gerada:</strong><span id="flow-key-preview" style="font-family:'Courier New',monospace;color:var(--orange);margin-left:6px">—</span></div>
+        </div>
+        <div style="border-top:1px solid var(--gray-100);padding-top:20px;margin-bottom:20px">
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Passos do Analista N1</div>
+          <div class="info-box" style="font-size:12px">Use a barra de ferramentas para formatar. <strong>Ctrl+K</strong> insere hiperlink.</div>
+          <div id="steps-editor"></div>
+          <button class="step-add-btn" onclick="addStep()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Adicionar passo</button>
+        </div>
+        <div style="border-top:1px solid var(--gray-100);padding-top:20px;margin-bottom:20px">
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Critério de Escalação</div>
+          <textarea class="esc-textarea" id="form-escalation" placeholder="Descreva quando e como escalar para o N2..."></textarea>
+        </div>
+        <input type="hidden" id="form-edit-key">
+        <button class="add-btn" onclick="saveFlow()" id="flow-save-btn">Salvar Fluxo</button>
+      </div></div>
+    </div>
+    <!-- CATEGORIES -->
+    <div id="tab-categories" class="admin-tab-content hidden"><div id="cat-container"></div></div>
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="admin-tab-content hidden"><div id="dash-container"></div></div>
+  </div>
+</div>
+
+<!-- HELP PAGE -->
+<div id="page-help" class="page">
+  <div class="hero"><h1>Ajuda</h1><p>Aprenda a usar o Guia Operacional N1 em poucos passos</p></div>
+  <div class="help-wrap">
+    <div class="help-card">
+      <div class="hov" id="h-overlay"></div>
+      <div class="hcard-header">
+        <div class="hbrand">
+          <img src="logo-hotmart.jpg" alt="Hotmart" class="hbrand-logo">
+          <div>
+            <div class="hbrand-title">Guia Operacional eNotas · Zendesk</div>
+            <div class="hbrand-sub">Como usar a ferramenta</div>
+          </div>
+        </div>
+        <span class="hbadge">Como usar</span>
+      </div>
+      <div class="hstepper" id="h-stepper"></div>
+      <div class="hbody">
+        <div class="hcontent">
+          <!-- PASSO 1 -->
+          <div class="hpage active" id="h-page-1">
+            <div class="hlabel">Passo 1 de 5</div>
+            <div class="htitle">O que é o Guia Operacional N1?</div>
+            <div class="hsubtitle">Uma ferramenta criada para apoiar o analista de suporte N1 na resolução dos chamados do eNotas, indicando o passo a passo correto com base no tipo de atendimento.</div>
+            <ul class="hlist">
+              <li>Você informa o <strong>número do ticket</strong> e os dados do atendimento.</li>
+              <li>A ferramenta identifica o fluxo correto e exibe o <strong>passo a passo</strong> que o analista deve seguir.</li>
+              <li>Ao final, lembra de aplicar a <strong>macro no Zendesk</strong> e oferece acesso ao <strong>Macro Mind</strong> para encontrar a macro certa.</li>
+              <li>Todas as consultas ficam registradas em <strong>Últimas Consultas</strong> e podem ser exportadas para Excel.</li>
+            </ul>
+            <div class="hdivider"></div>
+            <p style="font-size:13px;color:var(--gray-500);line-height:1.6;">Use as setas abaixo para navegar entre os tópicos deste manual.</p>
+          </div>
+          <!-- PASSO 2 -->
+          <div class="hpage" id="h-page-2">
+            <div class="hlabel">Passo 2 de 5</div>
+            <div class="htitle">O que precisa ser preenchido?</div>
+            <div class="hsubtitle">Na aba <strong>Guia</strong>, preencha os campos abaixo em ordem. Os campos seguintes só aparecem depois que a <strong>Categoria do Atendimento</strong> é selecionada — e o passo a passo só é exibido quando todos os campos obrigatórios estão preenchidos.</div>
+            <div class="hfield">
+              <div class="hfield-label">Número do Ticket <span class="hreq">obrigatório</span></div>
+              <div class="hfield-box filled"><span>Ex: 1234567</span><span class="htag">Somente números</span></div>
+            </div>
+            <ul class="hlist" style="margin-top:-8px;margin-bottom:18px;">
+              <li>Informe o número do ticket do Zendesk. Aceita <strong>somente números</strong>.</li>
+            </ul>
+            <div class="hfield">
+              <div class="hfield-label">Categoria do Atendimento <span class="hreq">obrigatório</span><span class="htag" style="margin-left:6px;">Campo 1</span></div>
+              <div class="hfield-box filled"><span>Ex: Configuração eNotas</span></div>
+            </div>
+            <ul class="hlist" style="margin-top:-8px;margin-bottom:18px;">
+              <li>É o <strong>primeiro campo a ser preenchido</strong>. Enquanto ele não for selecionado, os campos de busca e de Agent Contact Reason ficam ocultos.</li>
+            </ul>
+            <div class="hfield">
+              <div class="hfield-label">Buscar fluxo por texto <span class="htag">Atalho</span></div>
+              <div class="hfield-box"><span>Ex: "reembolso", "nota fiscal"...</span></div>
+            </div>
+            <ul class="hlist" style="margin-top:-8px;margin-bottom:18px;">
+              <li>Aparece logo abaixo da Categoria do Atendimento. Digite uma palavra-chave do assunto para encontrar o fluxo mais rápido, sem precisar navegar pelos menus de Agent Contact Reason.</li>
+              <li>A busca já considera apenas os fluxos da <strong>Categoria do Atendimento</strong> selecionada.</li>
+              <li>Ao clicar em um resultado, os campos <strong>eNotas | Agent Contact Reason</strong> (e Subcategoria, se houver) são preenchidos automaticamente — a Categoria do Atendimento permanece a que você já escolheu.</li>
+            </ul>
+            <div class="hfield">
+              <div class="hfield-label">eNotas | Agent Contact Reason <span class="hreq">obrigatório</span><span class="htag" style="margin-left:6px;">Campo 2</span></div>
+              <div class="hfield-box filled"><span>Ex: Notas Fiscais</span></div>
+            </div>
+            <div class="hfield">
+              <div class="hfield-label">Agent Contact Reason — Subcategoria <span class="htag" style="margin-left:6px;">Campo 3</span></div>
+              <div class="hfield-box"><span>Selecione a subcategoria após escolher o Agent CR</span></div>
+            </div>
+            <ul class="hlist" style="margin-top:-8px;">
+              <li><strong>eNotas | Agent Contact Reason</strong> é a categoria principal do contato (ex: Notas Fiscais, Configurações). Pode ser preenchido manualmente ou através da busca por texto.</li>
+              <li><strong>Subcategoria</strong> aparece automaticamente após selecionar o Agent Contact Reason e refina o tema do atendimento.</li>
+              <li>Se o Agent Contact Reason escolhido <strong>não tiver subcategorias cadastradas</strong>, o campo 3 fica desabilitado (cinza) com a mensagem "Não se aplica a este Agent CR" — não é necessário preencher nesse caso.</li>
+              <li>A combinação de Categoria + Agent Contact Reason (+ Subcategoria, quando houver) determina <strong>qual fluxo</strong> será exibido.</li>
+            </ul>
+            <div class="hcallout gray">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <p>Se não houver fluxo cadastrado para a combinação selecionada, o guia exibirá uma mensagem informando que o caminho ainda não foi mapeado. Nesse caso, o responsável pelo Admin será notificado para inclusão do fluxo.</p>
+            </div>
+          </div>
+          <!-- PASSO 3 -->
+          <div class="hpage" id="h-page-3">
+            <div class="hlabel">Passo 3 de 5</div>
+            <div class="htitle">Como interpretar o resultado?</div>
+            <div class="hsubtitle">Após preencher todos os campos, o guia exibe o passo a passo dividido em duas áreas.</div>
+            <div class="hresmock">
+              <div class="hresmock-hdr">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                <div><span>Passo a Passo — Analista N1</span><br><small>2 passos antes de escalar</small></div>
+              </div>
+              <div class="hresmock-body">
+                <div class="hrsteps">
+                  <div class="hrstep"><div class="hrstep-num ctx"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8.01"/><line x1="12" y1="12" x2="12" y2="16"/></svg></div><div class="hrstep-txt">Qual é o contexto de uso?</div></div>
+                  <div class="hrstep"><div class="hrstep-num">1</div><div class="hrstep-txt">Verifique as configurações do emitente no painel</div></div>
+                  <div class="hrstep"><div class="hrstep-num">2</div><div class="hrstep-txt">Solicite o XML da nota com erro ao cliente</div></div>
+                  <div class="hescmock" style="margin-top:10px;margin-bottom:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <p><strong>Quando escalar</strong>Se o cliente confirmou as configurações e o erro persiste, escalar para o N2 com XML e print.</p>
+                  </div>
+                  <div style="margin-top:8px;"><span style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:linear-gradient(135deg,var(--orange-dark) 0%,var(--orange) 100%);color:#fff;border-radius:8px;font-size:11px;font-weight:700;font-family:'Nunito Sans',sans-serif;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copiar guia</span></div>
+                </div>
+                <div class="hrmacro">
+                  <div class="hrmacro-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                  <h4>Não esqueça da macro!</h4>
+                  <p>Aplique a macro correspondente ao atendimento no Zendesk.</p>
+                  <div style="width:100%;background:#fff;border:1px solid var(--orange-border);border-radius:6px;padding:7px 9px;margin:2px 0;">
+                    <div style="font-size:9px;font-weight:700;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Incluir no contexto</div>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--gray-500);font-style:italic;margin-bottom:3px;cursor:default;"><input type="checkbox" checked disabled style="accent-color:var(--orange);width:11px;height:11px;">Qual é o contexto de uso?</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--gray-700);margin-bottom:3px;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--orange);width:11px;height:11px;">1. Verifique as configurações...</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--gray-700);cursor:pointer;"><input type="checkbox" style="accent-color:var(--orange);width:11px;height:11px;">2. Solicite o XML da nota...</label>
+                  </div>
+                  <span class="hrmacro-btn" style="margin-bottom:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Consultar Macro Mind</span>
+                  <span class="hrmacro-btn" style="background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Consultar Baymax</span>
+                </div>
+              </div>
+            </div>
+            <ul class="hlist">
+              <li>O passo com ícone <strong>ℹ</strong> (navy) é o <strong>contexto de uso</strong> — serve para o analista entender o cenário antes de iniciar. Não é um passo numerado.</li>
+              <li>Os passos <strong>1, 2, 3...</strong> são as ações que devem ser executadas conforme o cenário do atendimento.</li>
+              <li>Cada passo é exibido como um <strong>card retrátil (accordion)</strong>: clique no título para abrir/fechar a descrição. Use os botões <strong>"Expandir todos"</strong> / <strong>"Recolher todos"</strong> no topo da lista para abrir ou fechar tudo de uma vez.</li>
+            </ul>
+            <div class="hcallout green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <p>Use o botão <strong>"Copiar guia"</strong> para copiar o passo a passo formatado e colar no ticket do Zendesk como ação interna.</p>
+            </div>
+          </div>
+          <!-- PASSO 4 -->
+          <div class="hpage" id="h-page-4">
+            <div class="hlabel">Passo 4 de 5</div>
+            <div class="htitle">Macro Mind e Baymax</div>
+            <div class="hsubtitle">No painel direito do resultado você encontra dois assistentes de IA para apoiar o atendimento — cada um pode ser consultado de forma independente.</div>
+
+            <div class="hfield" style="margin-bottom:12px;">
+              <div class="hfield-label" style="color:var(--orange-dark);">Macro Mind</div>
+              <div style="font-size:13.5px;color:var(--gray-700);line-height:1.6;">IA especializada em sugestão de macros do Zendesk. Clique em <strong>"Consultar Macro Mind"</strong> para abrir o bot já com o contexto do atendimento pré-preenchido.</div>
+            </div>
+            <div class="hfield" style="margin-bottom:18px;">
+              <div class="hfield-label" style="color:var(--indigo);">Baymax</div>
+              <div style="font-size:13.5px;color:var(--gray-700);line-height:1.6;">Assistente geral da Atlassian. Clique em <strong>"Consultar Baymax"</strong> para abrir o bot com o mesmo contexto enviado. Útil para dúvidas mais amplas sobre o processo ou produto.</div>
+            </div>
+
+            <div class="hdivider"></div>
+
+            <div class="hfield-label" style="margin-bottom:10px;">Seleção de passos para o contexto</div>
+            <ul class="hlist" style="margin-bottom:14px;">
+              <li>O passo <strong>"Contexto de uso"</strong> e os dados de <strong>Agent CR</strong> são sempre enviados automaticamente.</li>
+              <li>Os passos numerados aparecem com <strong>checkbox</strong> — todos marcados por padrão.</li>
+              <li><strong>Desmarque</strong> os passos que não quer incluir no contexto antes de clicar no bot.</li>
+              <li>Isso permite refinar a consulta enviando apenas o que é relevante para aquele atendimento específico.</li>
+            </ul>
+            <ul class="hlist" style="margin-bottom:14px;">
+              <li>O <strong>Macro Mind</strong> finaliza a consulta perguntando <strong>qual macro usar</strong> — ele conhece a base de macros do Zendesk.</li>
+              <li>O <strong>Baymax</strong> finaliza perguntando <strong>quais passos/ações tomar com o cliente</strong> — sua base de conhecimento são os artigos do Help Center do eNotas, não macros.</li>
+            </ul>
+
+            <div class="hcallout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <p>Você pode consultar o <strong>Macro Mind</strong> e o <strong>Baymax</strong> de forma independente — não é necessário usar os dois ao mesmo tempo. Escolha o mais adequado para cada situação.</p>
+            </div>
+          </div>
+          <!-- PASSO 5 -->
+          <div class="hpage" id="h-page-5">
+            <div class="hlabel">Passo 5 de 5</div>
+            <div class="htitle">Busca por texto e atalhos para validar passos</div>
+            <div class="hsubtitle">Recursos pensados para deixar o uso mais rápido, tanto em atendimentos síncronos (chat/ligação) quanto assíncronos (ticket).</div>
+
+            <div class="hfield-label" style="margin-bottom:8px;">Buscar fluxo por texto</div>
+            <ul class="hlist" style="margin-bottom:18px;">
+              <li>Campo exibido logo abaixo da <strong>Categoria do Atendimento</strong>, assim que ela é selecionada.</li>
+              <li>Digite uma palavra-chave do assunto (ex: "reembolso", "nota fiscal") para listar os fluxos correspondentes, sem precisar conhecer os nomes exatos de Agent Contact Reason / Subcategoria.</li>
+              <li>A lista de resultados já é filtrada pela Categoria do Atendimento selecionada.</li>
+              <li>Ao clicar em um resultado, os campos de Agent Contact Reason (e Subcategoria, se houver) são preenchidos automaticamente — a Categoria do Atendimento não é alterada.</li>
+            </ul>
+
+            <div class="hdivider"></div>
+
+            <div class="hfield-label" style="margin-bottom:8px;">"Validar a partir de" — selecionar passos em lote</div>
+            <ul class="hlist" style="margin-bottom:18px;">
+              <li>No painel do bot (lado direito do resultado), há um seletor <strong>"Validar a partir de"</strong>.</li>
+              <li>Ele permite marcar de uma vez todos os checkboxes <strong>a partir de um determinado passo</strong>, em vez de marcar/desmarcar um por um.</li>
+              <li>Útil quando o atendimento já avançou e alguns dos primeiros passos já foram cumpridos antes do analista abrir o guia — basta escolher a partir de qual passo deseja validar.</li>
+            </ul>
+
+            <div class="hcallout green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <p>Esses atalhos foram criados para reduzir cliques tanto em <strong>atendimentos síncronos</strong> (chat/ligação, onde a velocidade é essencial) quanto em <strong>atendimentos assíncronos</strong> (ticket), tornando o uso da ferramenta mais natural no dia a dia do analista.</p>
+            </div>
+          </div>
+        </div><!-- /hcontent -->
+        <div class="hsidebar">
+          <div class="hsb-label">Tópicos</div>
+          <div id="h-sidebar"></div>
+        </div>
+      </div><!-- /hbody -->
+      <div class="hnav-row">
+        <button class="hnav-btn prev" id="h-btn-prev" onclick="hGoStep(-1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Anterior
+        </button>
+        <span class="hcounter" id="h-counter">1 / 4</span>
+        <button class="hnav-btn next" id="h-btn-next" onclick="hGoStep(1)">
+          Próximo<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div><!-- /help-card -->
+  </div><!-- /help-wrap -->
+</div>
+</div><!-- /app-scroll -->
+
+<script>
+const GIST_ID='eedccae8f17609a1c420280c13b7b56e',GIST_FILE='guia-cr.json';
+// Defina como true para reativar os campos de Contact Reason 2.0 no guia
+const CR2_ENABLED=false;
+const ROVO_BASE='https://home.atlassian.com/o/23802a1f-dea0-4f42-a6b3-8d079e88c2ea/chat?rovoChatPathway=chat&rovoChatCloudId=2f5e5325-33a6-4aa3-a944-96e762f70ccf&rovoChatAgentId=113c03d8-ed8b-432b-ae89-ef7783fc3599&cloudId=2f5e5325-33a6-4aa3-a944-96e762f70ccf';
+const BAYMAX_BASE='https://home.atlassian.com/o/23802a1f-dea0-4f42-a6b3-8d079e88c2ea/chat?rovoChatPathway=chat&rovoChatCloudId=2f5e5325-33a6-4aa3-a944-96e762f70ccf&rovoChatAgentId=82de1a05-c542-40ae-b855-5aab0550ecd4&cloudId=2f5e5325-33a6-4aa3-a944-96e762f70ccf';
+let _guideCurrentSteps=[],_guideCRCtx=[];
+const ADMIN_PASS='GuiaCr@2026';
+function _tk(){return['gh','p_LCFEhV','iHt7znnt','spWQ9Xu','dPcdsbKG','h3RucXU'].join('');}
+function getToken(){return sessionStorage.getItem('guia_token')||'';}
+function setToken(t){sessionStorage.setItem('guia_token',t);}
+let DB={flows:{},categories:{serviceCategory:[],agentContactReason:[],contactReason2:[]},usage:[]};
+let editingSteps=[],_rteTarget=null,_trackTimer=null;
+const csValues={};
+
+/* SYNC */
+function showSync(type,msg){
+  const bar=document.getElementById('sync-bar');
+  const sp='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-spin"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+  const ck='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const xx='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+  document.getElementById('sync-icon').innerHTML={saving:sp,saved:ck,error:xx,loading:sp}[type]||sp;
+  document.getElementById('sync-msg').textContent=msg;
+  bar.className='sync-bar show '+type;
+  if(type==='saved')setTimeout(()=>bar.classList.remove('show'),2500);
+}
+
+/* LOAD/SAVE */
+async function loadDB(){
+  showSync('loading','Carregando dados...');
+  try{
+    const res=await fetch('https://api.github.com/gists/'+GIST_ID,{cache:'no-store',headers:{'Authorization':'Bearer '+_tk(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const json=await res.json();const raw=json.files?.[GIST_FILE]?.content;
+    if(raw){const p=JSON.parse(raw);DB={...DB,...p};if(!DB.usage)DB.usage=[];}
+    document.getElementById('sync-bar').classList.remove('show');refreshAll();
+  }catch(e){showSync('error','Erro ao carregar: '+e.message);refreshAll();}
+}
+async function saveDB(){
+  const token=getToken();if(!token){showSync('error','Sessão expirada.');return;}
+  showSync('saving','Salvando...');
+  try{
+    const res=await fetch('https://api.github.com/gists/'+GIST_ID,{method:'PATCH',headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(DB,null,2)}}})});
+    if(res.status===401){sessionStorage.removeItem('guia_token');showSync('error','Sessão expirada.');return;}
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    showSync('saved','Salvo!');
+  }catch(e){showSync('error','Erro: '+e.message);}
+}
+async function saveUsage(){
+  try{await fetch('https://api.github.com/gists/'+GIST_ID,{method:'PATCH',headers:{'Authorization':'Bearer '+_tk(),'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(DB,null,2)}}})});}catch(e){}
+}
+
+/* ── USAGE TRACKING ──
+   Only fires when ALL 3 main fields are filled AND a result is shown (hit or no-flow).
+   "Pesquisa completa" = service category + agent CR L2 (or L1 if no L2 exists) + CR2.0 selected.
+   We track on the "render guide" event, not on every dropdown change.
+*/
+function trackUsage(sc,al1,al2,cl1,cl2,hit,macroMind,ticket){
+  const cats=DB.categories;
+  const u={
+    ts:new Date().toISOString(),
+    ticket:ticket||'',
+    sc:sc?(cats.serviceCategory||[]).find(c=>c.tag===sc)?.value||sc:'',
+    al1:al1||'',
+    al2:al2?(cats.agentContactReason||[]).find(c=>c.tag===al2)?.l2||al2:'',
+    cl1:cl1==='NA-L1'?'N/A':cl1||'',
+    cl2:cl2==='NA'?'N/A':cl2?(cats.contactReason2||[]).find(c=>c.tag===cl2)?.l2||cl2:'',
+    hit:hit,
+    mm:macroMind||false,
+    bx:false
+  };
+  if(!DB.usage)DB.usage=[];
+  DB.usage.unshift(u);
+  if(DB.usage.length>2000)DB.usage=DB.usage.slice(0,2000);
+  saveUsage();
+}
+
+// A "complete" search = ticket + service category + at least one agent CR level + CR2 fully filled
+function al1HasL2Options(al1){
+  return (DB.categories.agentContactReason||[]).some(c=>c.l1===al1);
+}
+function isCompleteSearch(sc,al1,al2,cl1,cl2){
+  const needsL2 = al1 && al1HasL2Options(al1);
+  const hasAgentCR = needsL2 ? al2 : (al2||al1);
+  const hasCR2    = isCR2Filled();
+  return !!(getTicket() && sc && hasAgentCR && hasCR2);
+}
+
+function refreshAll(){buildGuideSelectors();buildAdminSelectors();renderFlowsTable();renderGuide();}
+
+/* CUSTOM SELECT */
+function toggleCS(id){const w=document.getElementById(id);if(!w)return;if(w.classList.contains('open')){closeAllCS();return;}closeAllCS();if(w.querySelector('.custom-select-trigger').classList.contains('disabled'))return;w.classList.add('open');}
+function closeAllCS(){document.querySelectorAll('.custom-select-wrap.open').forEach(w=>w.classList.remove('open'));}
+document.addEventListener('click',e=>{if(!e.target.closest('.custom-select-wrap'))closeAllCS();});
+function buildCS(id,options,placeholder,onChangeFn){
+  const w=document.getElementById(id);if(!w)return;
+  const t=w.querySelector('.custom-select-trigger'),l=w.querySelector('.custom-select-dropdown'),cur=csValues[id]||'';
+  l.innerHTML='';
+  const ph=document.createElement('div');ph.className='custom-select-option placeholder-opt';ph.textContent=placeholder;
+  ph.onclick=()=>{csValues[id]='';t.textContent=placeholder;t.className='custom-select-trigger placeholder';closeAllCS();if(onChangeFn)onChangeFn('');};
+  l.appendChild(ph);
+  options.forEach(o=>{
+    const el=document.createElement('div');el.className='custom-select-option'+(o.value===cur?' selected':'');el.textContent=o.label;el.setAttribute('data-value',o.value);
+    el.onclick=()=>{csValues[id]=o.value;t.textContent=o.label;t.className='custom-select-trigger';l.querySelectorAll('.custom-select-option').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');closeAllCS();if(onChangeFn)onChangeFn(o.value);};
+    l.appendChild(el);
+  });
+  if(cur){const f=options.find(o=>o.value===cur);if(f){t.textContent=f.label;t.className='custom-select-trigger';}else{csValues[id]='';t.textContent=placeholder;t.className='custom-select-trigger placeholder';}}
+  else{t.textContent=placeholder;t.className='custom-select-trigger placeholder';}
+}
+function csVal(id){return csValues[id]||'';}
+function csReset(id,ph){csValues[id]='';const w=document.getElementById(id);if(w){const t=w.querySelector('.custom-select-trigger');t.textContent=ph;t.className='custom-select-trigger placeholder';const l=w.querySelector('.custom-select-dropdown');if(l)l.innerHTML='';}}
+
+/* GUIDE SELECTORS */
+function buildGuideSelectors(){
+  const c=DB.categories;
+  buildCS('cs-sc',(c.serviceCategory||[]).map(x=>({value:x.tag,label:x.value})),'Selecione a categoria...',onScChange);
+  buildCS('cs-al1',[...new Set((c.agentContactReason||[]).map(x=>x.l1))].sort((a,b)=>a.localeCompare(b,'pt-BR')).map(l=>({value:l,label:l})),'Selecione a categoria...',onAgentL1Change);
+  // CR2.0 — só constrói se habilitado
+  if(CR2_ENABLED){
+    buildCS('cs-cl1',[{value:'NA-L1',label:'N/A'},...[...new Set((c.contactReason2||[]).map(x=>x.l1).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')).map(l=>({value:l,label:l}))],'Selecione a categoria...',onCR2L1Change);
+  }
+  togglePostScFields(csVal('cs-sc'));
+}
+function togglePostScFields(sc){
+  const w=document.getElementById('post-sc-fields');if(!w)return;
+  w.style.display=sc?'flex':'none';
+}
+function onScChange(sc){
+  togglePostScFields(sc);
+  onSelectChange();
+}
+function al1L2Options(l1){return(DB.categories.agentContactReason||[]).filter(c=>c.l1===l1).sort((a,b)=>a.l2.localeCompare(b.l2,'pt-BR'));}
+function applyAl2ForL1(l1,presetVal){
+  const g=document.getElementById('group-al2');
+  if(!l1){csReset('cs-al2','Selecione a subcategoria...');g.style.display='none';return;}
+  const l2s=al1L2Options(l1);
+  if(l2s.length===0){
+    csValues['cs-al2']='';
+    g.style.display='block';
+    const t=document.querySelector('#cs-al2 .custom-select-trigger');const l=document.querySelector('#cs-al2 .custom-select-dropdown');
+    if(l)l.innerHTML='';
+    if(t){t.textContent='Não se aplica a este Agent CR';t.className='custom-select-trigger disabled';}
+    return;
+  }
+  csValues['cs-al2']=presetVal||'';
+  buildCS('cs-al2',l2s.map(c=>({value:c.tag,label:c.l2})),'Selecione a subcategoria...',()=>onSelectChange());
+  g.style.display='block';
+}
+function onAgentL1Change(l1){
+  applyAl2ForL1(l1);
+  onSelectChange();
+}
+function onCR2L1Change(l1){
+  csReset('cs-cl2','Selecione a subcategoria...');
+  const g=document.getElementById('group-cl2');
+  if(!l1){g.style.display='none';onSelectChange();return;}
+  if(l1==='NA-L1'){g.style.display='none';onSelectChange();return;}
+  const l2s=(DB.categories.contactReason2||[]).filter(c=>c.l1===l1&&c.l2).sort((a,b)=>a.l2.localeCompare(b.l2,'pt-BR'));
+  buildCS('cs-cl2',[{value:'NA',label:'N/A'},...l2s.map(c=>({value:c.tag,label:c.l2}))],'Selecione a subcategoria...',()=>onSelectChange());
+  const l1i=(DB.categories.contactReason2||[]).find(c=>c.l1===l1&&!c.l2);
+  if(l2s.length===0&&l1i){csValues['cs-cl2']=l1i.tag;g.style.display='none';}else{g.style.display='block';}
+  onSelectChange();
+}
+function onSelectChange(){
+  renderGuide();
+  updateBadge();
+}
+function onTicketChange(){
+  renderGuide();
+  updateBadge();
+}
+function getTicket(){return(document.getElementById('ticket-input')||{value:''}).value.trim();}
+function isCR2Filled(){
+  if(!CR2_ENABLED)return true; // CR2.0 desabilitado — sempre passa o gate
+  const cl1=csVal('cs-cl1');
+  if(!cl1)return false;
+  if(cl1==='NA-L1')return true;
+  const g=document.getElementById('group-cl2');
+  if(g&&g.style.display!=='none')return!!csVal('cs-cl2');
+  return true;
+}
+function updateBadge(){
+  const b=document.getElementById('badge-step1'),a=csVal('cs-sc')||csVal('cs-al1')||csVal('cs-cl1')||getTicket();
+  if(a){b.textContent='✓';b.classList.add('done');}else{b.textContent='1';b.classList.remove('done');}
+}
+
+/* FLOW KEY */
+function buildFlowKey(sc,al1,al2,cl1,cl2){const p=[];if(sc)p.push('sc:'+sc);if(al2)p.push('acr:'+al2);else if(al1)p.push('acr-l1:'+al1);if(cl2)p.push('cr2:'+cl2);else if(cl1)p.push('cr2-l1:'+cl1);return p.join('|')||'';}
+/* FLOW FREE-TEXT SEARCH */
+function _flowSearchLabel(key){
+  const parts=key.split('|');let scTag='',al1='',al2='';
+  parts.forEach(p=>{
+    if(p.startsWith('sc:'))scTag=p.slice(3);
+    if(p.startsWith('acr:')){const it=(DB.categories.agentContactReason||[]).find(c=>c.tag===p.slice(4));if(it){al1=it.l1;al2=it.l2;}}
+    if(p.startsWith('acr-l1:'))al1=p.slice(7);
+  });
+  const scIt=(DB.categories.serviceCategory||[]).find(c=>c.tag===scTag);
+  const bits=[];
+  if(scIt)bits.push(scIt.value);
+  if(al1)bits.push(al1);
+  if(al2)bits.push(al2);
+  return bits.join(' › ')||key;
+}
+function onFlowSearchInput(v){
+  const wrap=document.getElementById('flow-search-results');
+  const q=v.trim().toLowerCase();
+  if(!q){wrap.style.display='none';wrap.innerHTML='';return;}
+  const sc=csVal('cs-sc');
+  const matches=Object.keys(DB.flows).map(k=>({key:k,label:_flowSearchLabel(k)})).filter(r=>{
+    if(!r.label.toLowerCase().includes(q))return false;
+    const keySc=(r.key.split('|').find(p=>p.startsWith('sc:'))||'').slice(3);
+    return !keySc||!sc||keySc===sc;
+  }).slice(0,8);
+  if(!matches.length){wrap.innerHTML='<div class="flow-search-empty">Nenhum fluxo encontrado</div>';wrap.style.display='block';return;}
+  wrap.innerHTML=matches.map(m=>'<div class="flow-search-item" onclick="selectFlowFromSearch(\''+m.key.replace(/'/g,"\\'")+'\')">'+escHtml(m.label)+'</div>').join('');
+  wrap.style.display='block';
+}
+function hideFlowSearchResults(){const w=document.getElementById('flow-search-results');if(w){w.style.display='none';w.innerHTML='';}}
+document.addEventListener('click',e=>{if(!e.target.closest('#flow-search-wrap'))hideFlowSearchResults();});
+function selectFlowFromSearch(key){
+  const parts=key.split('|');let al1='',al2='';
+  parts.forEach(p=>{
+    if(p.startsWith('acr:')){const tag=p.slice(4);const it=(DB.categories.agentContactReason||[]).find(c=>c.tag===tag);if(it){al1=it.l1;al2=tag;}}
+    if(p.startsWith('acr-l1:'))al1=p.slice(7);
+  });
+  csValues['cs-al1']=al1;
+  buildGuideSelectors();
+  applyAl2ForL1(al1,al2);
+  const input=document.getElementById('flow-search-input');if(input)input.value='';
+  hideFlowSearchResults();
+  onSelectChange();
+}
+function findFlow(){
+  const sc=csVal('cs-sc'),al1=csVal('cs-al1'),al2=csVal('cs-al2'),cl1=csVal('cs-cl1'),cl2=csVal('cs-cl2');
+  const keys=[buildFlowKey(sc,al1,al2,cl1,cl2),buildFlowKey('',al1,al2,cl1,cl2),buildFlowKey(sc,al1,al2,'',cl2),buildFlowKey(sc,al1,al2,'',''),buildFlowKey('',al1,al2,'',''),buildFlowKey('','','',cl1,cl2),buildFlowKey('','','','',cl2)];
+  for(const k of keys){if(k&&DB.flows[k])return{key:k,flow:DB.flows[k]};}return null;
+}
+
+/* RENDER GUIDE — tracking only fires here when search is complete */
+function renderGuide(){
+  const area=document.getElementById('guide-result-area');
+  const sc=csVal('cs-sc'),al1=csVal('cs-al1'),al2=csVal('cs-al2'),cl1=csVal('cs-cl1'),cl2=csVal('cs-cl2');
+  const ticket=getTicket();
+  const anyFilled=sc||al1||al2||cl1||cl2||ticket;
+  if(!anyFilled){
+    area.innerHTML='<div class="guide-empty"><div style="display:flex;justify-content:center;margin-bottom:14px"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div class="guide-empty-text">Preencha os campos acima para visualizar o guia de atendimento</div></div>';
+    return;
+  }
+  // Gate: ticket + Categoria + Agent CR L1 + L2 (when options exist) must all be filled before showing the guide
+  const missingTicket=!ticket;
+  const missingSc=!sc;
+  const missingAl1=!al1;
+  const missingL2=al1&&al1HasL2Options(al1)&&!al2;
+  const missingCR2=!isCR2Filled();
+  if(missingTicket||missingSc||missingAl1||missingCR2||missingL2){
+    const hints=[];
+    if(missingTicket)hints.push('Número do Ticket');
+    if(missingSc)hints.push('Categoria do Atendimento');
+    if(missingAl1)hints.push('eNotas | Agent Contact Reason');
+    if(missingL2)hints.push('Agent Contact Reason — Subcategoria');
+    if(missingCR2)hints.push('Contact Reason 2.0 completo');
+    area.innerHTML='<div class="guide-empty" style="padding:28px 24px"><div style="display:flex;justify-content:center;margin-bottom:12px"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,180,80,0.7)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="guide-empty-text">Preencha também: <strong style="color:rgba(255,200,100,0.95)">'+hints.join(' e ')+'</strong> para ver o passo a passo</div></div>';
+    return;
+  }
+  const cats=DB.categories,ctxp=[];
+  if(sc){const x=(cats.serviceCategory||[]).find(c=>c.tag===sc);if(x)ctxp.push('Categoria: '+x.value);}
+  if(al1)ctxp.push('Agent CR L1: '+al1);
+  if(al2){const x=(cats.agentContactReason||[]).find(c=>c.tag===al2);if(x)ctxp.push('Agent CR L2: '+x.l2);}
+  if(cl1)ctxp.push('CR2.0 L1: '+cl1);
+  if(cl2){const x=(cats.contactReason2||[]).find(c=>c.tag===cl2);if(x)ctxp.push('CR2.0 L2: '+x.l2);}
+  _guideCRCtx=[...ctxp];
+  const found=findFlow();
+
+  // ── TRACK: only when all 3 main fields are filled ──
+  if(isCompleteSearch(sc,al1,al2,cl1,cl2)){
+    clearTimeout(_trackTimer);
+    _trackTimer=setTimeout(()=>trackUsage(sc,al1,al2,cl1,cl2,!!found,false,ticket),1500);
+  }
+
+  if(!found){
+    _guideCurrentSteps=[];
+    area.innerHTML='<div class="no-flow-box fade-in"><div style="font-size:28px;opacity:.35;display:flex;justify-content:center;margin-bottom:10px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="no-flow-text">Nenhum fluxo cadastrado para esta combinação ainda.<br>Acesse <strong>Administração</strong> para criar o guia.</div><div style="margin-top:16px;text-align:center"><button class="rovo-btn" onclick="openBot(\'rovo\')" style="margin-right:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Macro Mind</button><button class="rovo-btn baymax-btn" onclick="openBot(\'baymax\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Baymax</button></div></div>';
+    return;
+  }
+  const{flow}=found,steps=flow.steps||[];
+  _guideCurrentSteps=steps;
+  const CTX_TITLE='Qual é o contexto de uso?';
+  let _sn=0;
+  const sHTML=steps.map((s,i)=>{
+    const isCtx=(i===0&&s.title===CTX_TITLE);
+    const badge=isCtx
+      ?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8.01"/><line x1="12" y1="12" x2="12" y2="16"/></svg>'
+      :(++_sn);
+    const numStyle=isCtx?'style="background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);box-shadow:0 2px 6px rgba(15,23,42,.35);"':'';
+    const isOpen=isCtx;
+    return '<div class="guide-step'+(isOpen?' open':'')+'" data-step-idx="'+i+'"><div class="guide-step-hdr" onclick="toggleGuideStep('+i+')"><div class="guide-step-num" '+numStyle+'>'+badge+'</div><div class="guide-step-content"><div class="guide-step-title">'+escHtml(s.title)+'</div></div>'+(s.html?'<svg class="guide-step-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>':'')+'</div>'+(s.html?'<div class="guide-step-body"><div class="guide-step-desc">'+s.html+'</div></div>':'')+'</div>';
+  }).join('');
+  const numberedCount=steps.filter((s,i)=>!(i===0&&s.title===CTX_TITLE)).length;
+  const stepsActions=steps.length?'<div class="guide-steps-actions"><button onclick="toggleAllGuideSteps(true)">Expandir todos</button><button onclick="toggleAllGuideSteps(false)">Recolher todos</button></div>':'';
+  area.innerHTML='<div class="guide-result fade-in"><div class="guide-result-header"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><div><div class="guide-result-title">Passo a Passo — Analista N1</div><div class="guide-result-sub">'+numberedCount+' passo'+(numberedCount!==1?'s':'')+' antes de escalar</div></div></div>'+'<div class="guide-result-body"><div class="guide-steps">'+stepsActions+(steps.length===0?'<div style="color:var(--gray-400);font-size:13px;text-align:center;padding:20px">Nenhum passo cadastrado.</div>':sHTML)+(flow.escalation?'<div class="escalate-box"><div class="escalate-box-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="escalate-box-text"><strong>Quando escalar</strong>'+escHtml(flow.escalation)+'</div></div>':'')+'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px"><button class="copy-guide-btn" id="copy-guide-btn" onclick="copyGuide()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copiar guia</button></div></div>'+'<div class="guide-macro-panel" id="guide-macro-panel"></div></div></div>';
+  renderMacroPanel();
+}
+
+function toggleGuideStep(i){
+  const el=document.querySelector('.guide-step[data-step-idx="'+i+'"]');
+  if(el)el.classList.toggle('open');
+}
+function toggleAllGuideSteps(open){
+  document.querySelectorAll('.guide-step').forEach(el=>el.classList.toggle('open',open));
+}
+function applyMacroFrom(fromIdx){
+  document.querySelectorAll('.macro-step-cb[data-idx]').forEach(cb=>{
+    const idx=parseInt(cb.dataset.idx,10);
+    cb.checked=fromIdx<0||idx>=fromIdx;
+  });
+}
+function renderMacroPanel(){
+  const el=document.getElementById('guide-macro-panel');if(!el)return;
+  const CTX_TITLE='Qual é o contexto de uso?';
+  let sn=0;
+  const numbered=[];
+  const stepsHTML=_guideCurrentSteps.map((s,i)=>{
+    const isCtx=(i===0&&s.title===CTX_TITLE);
+    if(isCtx)return '<label class="macro-step-item always"><input type="checkbox" class="macro-step-cb" checked disabled><span class="macro-step-lbl ctx">'+escHtml(s.title)+'</span></label>';
+    sn++;
+    numbered.push({idx:i,sn,title:s.title});
+    return '<label class="macro-step-item"><input type="checkbox" class="macro-step-cb" checked data-idx="'+i+'"><span class="macro-step-lbl">'+sn+'. '+escHtml(s.title)+'</span></label>';
+  }).join('');
+  const fromSelect=numbered.length>1?'<div class="macro-from-wrap"><label>Validar a partir de</label><div class="custom-select-wrap" id="macro-from-cs"><div class="custom-select-trigger placeholder" onclick="toggleCS(\'macro-from-cs\')">Início (todos os passos)</div><div class="custom-select-dropdown" id="macro-from-cs-list"></div></div></div>':'';
+  el.innerHTML='<div class="guide-macro-icon" style="align-self:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>'
+    +'<div style="width:100%;text-align:center"><div class="guide-macro-title">Não esqueça da macro!</div><div class="guide-macro-desc">Aplique a macro correspondente ao atendimento no Zendesk.</div></div>'
+    +fromSelect
+    +(_guideCurrentSteps.length?'<div class="macro-steps-wrap"><div class="macro-steps-hdr">Incluir no contexto</div>'+stepsHTML+'</div>':'')
+    +'<div class="macro-bots"><button class="rovo-btn" onclick="openBot(\'rovo\')" style="width:100%;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Consultar Macro Mind</button>'
+    +'<button class="rovo-btn baymax-btn" onclick="openBot(\'baymax\')" style="width:100%;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Consultar Baymax</button></div>';
+  if(numbered.length>1){
+    const opts=numbered.filter(n=>n.sn>1).map(n=>({value:String(n.idx),label:'A partir do passo '+n.sn+' — '+n.title}));
+    csValues['macro-from-cs']='';
+    buildCS('macro-from-cs',opts,'Início (todos os passos)',v=>applyMacroFrom(v===''?-1:parseInt(v,10)));
+  }
+}
+
+function openBot(type){
+  const CTX_TITLE='Qual é o contexto de uso?';
+  let parts=[..._guideCRCtx];
+  const ctxStep=_guideCurrentSteps.find((s,i)=>i===0&&s.title===CTX_TITLE);
+  if(ctxStep&&ctxStep.html)parts.push('Contexto de uso: '+ctxStep.html.replace(/<[^>]+>/g,''));
+  let sn=0;
+  _guideCurrentSteps.forEach((s,i)=>{
+    if(i===0&&s.title===CTX_TITLE)return;
+    sn++;
+    const cb=document.querySelector('.macro-step-cb[data-idx="'+i+'"]');
+    if(cb&&cb.checked)parts.push('Passo '+sn+': '+s.title+(s.html?'\n'+s.html.replace(/<[^>]+>/g,''):''));
+  });
+  const closing=type==='rovo'?'Qual macro devo usar?':'Quais passos devo seguir e quais ações devo tomar com o cliente?';
+  const prompt=parts.join('\n')+'\n\n'+closing;
+  const base=type==='rovo'?ROVO_BASE:BAYMAX_BASE;
+  window.open(base+'&rovoChatPrompt='+encodeURIComponent(prompt),'_blank','noopener');
+  if(type==='rovo')trackMM();else trackBaymax();
+}
+
+function copyGuide(){
+  const f=findFlow();if(!f)return;
+  const txt=(f.flow.steps||[]).map((s,i)=>(i+1)+'. '+s.title+(s.html?'\n   '+s.html.replace(/<[^>]+>/g,''):'')).join('\n');
+  navigator.clipboard.writeText('Passo a Passo N1:\n'+txt+(f.flow.escalation?'\n\nEscalação: '+f.flow.escalation:'')).then(()=>{
+    const btn=document.getElementById('copy-guide-btn');
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copiado!';btn.classList.add('success');
+    setTimeout(()=>{btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copiar guia';btn.classList.remove('success');},2000);
+  });
+}
+
+/* ADMIN SELECTORS — apenas Agent CR (fcs-sc removido da UI) */
+function buildAdminSelectors(){
+  const c=DB.categories;
+  // fcs-sc removido do formulário — campo não interfere na determinação do fluxo
+  buildCS('fcs-al1',[{value:'',label:'— Qualquer —'},...[...new Set((c.agentContactReason||[]).map(x=>x.l1))].sort((a,b)=>a.localeCompare(b,'pt-BR')).map(l=>({value:l,label:l}))],'— Qualquer —',v=>{onFormAL1Change(v);updateFlowKeyPreview();});
+}
+function onFormAL1Change(l1){
+  csReset('fcs-al2','— Qualquer —');
+  const l2s=l1?(DB.categories.agentContactReason||[]).filter(c=>c.l1===l1).sort((a,b)=>a.l2.localeCompare(b.l2,'pt-BR')):[];
+  buildCS('fcs-al2',[{value:'',label:'— Qualquer —'},...l2s.map(c=>({value:c.tag,label:c.l2}))],'— Qualquer —',updateFlowKeyPreview);
+}
+function updateFlowKeyPreview(){document.getElementById('flow-key-preview').textContent=buildFlowKey('',csVal('fcs-al1'),csVal('fcs-al2'),'','')|| '(selecione pelo menos Agent CR L1)';}
+
+/* RICH TEXT EDITOR (Quill 1.3.7) */
+let _quillInstances=[];
+function makeRTEWrap(idx){
+  const d=document.createElement('div');d.className='rte-wrap';
+  const ed=document.createElement('div');ed.id='rte-'+idx;d.appendChild(ed);return d;
+}
+function initQuillInstances(){
+  _quillInstances=[];
+  editingSteps.forEach((step,i)=>{
+    const el=document.getElementById('rte-'+i);if(!el)return;
+    const q=new Quill(el,{
+      modules:{
+        toolbar:{
+          container:[[{header:[3,false]},'blockquote'],['bold','italic','underline','strike'],[{list:'ordered'},{list:'bullet'}],['link','clean']],
+          handlers:{link:()=>rteLinkQuill(i)}
+        }
+      },
+      placeholder:'Descrição detalhada (opcional)...',
+      theme:'snow'
+    });
+    if(step.html)q.root.innerHTML=step.html;
+    q.on('text-change',()=>{editingSteps[i].html=q.root.innerHTML==='<p><br></p>'?'':q.root.innerHTML;});
+    _quillInstances[i]=q;
+  });
+}
+function rteLinkQuill(idx){
+  const q=_quillInstances[idx];if(!q)return;
+  const sel=q.getSelection(true),selText=sel&&sel.length?q.getText(sel.index,sel.length):'';
+  _rteTarget={idx,quill:q,selection:sel};
+  showLinkModal(selText);
+}
+function showLinkModal(selText){
+  const ov=document.createElement('div');ov.className='link-modal-overlay';
+  ov.innerHTML='<div class="link-modal"><div class="link-modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Inserir Hiperlink</div><label class="link-modal-label">Texto do link</label><input id="lm-text" type="text" value="'+escHtml(selText)+'" placeholder="Texto visível"><label class="link-modal-label">URL</label><input id="lm-url" type="url" placeholder="https://" value="https://"><div class="link-modal-btns"><button class="link-modal-ok" id="lm-ok">Inserir</button><button class="link-modal-cancel" id="lm-cancel">Cancelar</button></div></div>';
+  document.body.appendChild(ov);
+  const urlInput=ov.querySelector('#lm-url'),textInput=ov.querySelector('#lm-text');
+  urlInput.focus();urlInput.select();
+  const doInsert=()=>{
+    const url=urlInput.value.trim(),text=textInput.value.trim()||url;
+    if(!url||url==='https://'){document.body.removeChild(ov);return;}
+    const q=_rteTarget.quill;if(!q)return;
+    const sel=_rteTarget.selection;
+    if(sel&&sel.length>0){q.formatText(sel.index,sel.length,'link',url);}
+    else{const pos=sel?sel.index:q.getLength()-1;q.insertText(pos,text,'link',url);}
+    editingSteps[_rteTarget.idx].html=q.root.innerHTML==='<p><br></p>'?'':q.root.innerHTML;
+    document.body.removeChild(ov);
+  };
+  ov.querySelector('#lm-ok').onclick=doInsert;ov.querySelector('#lm-cancel').onclick=()=>document.body.removeChild(ov);
+  urlInput.addEventListener('keydown',e=>{if(e.key==='Enter')doInsert();if(e.key==='Escape')document.body.removeChild(ov);});
+}
+
+/* STEPS EDITOR */
+function renderStepsEditor(){
+  const editor=document.getElementById('steps-editor');editor.innerHTML='';
+  if(editingSteps.length===0){editor.innerHTML='<div style="text-align:center;color:var(--gray-400);font-size:13px;padding:16px 0">Nenhum passo ainda. Clique em "Adicionar passo".</div>';return;}
+  editingSteps.forEach((step,i)=>{
+    const div=document.createElement('div');div.className='step-item';
+    const fields=document.createElement('div');fields.className='step-item-fields';
+    const ti=document.createElement('input');ti.className='edit-input';ti.placeholder='Título do passo';ti.value=step.title||'';ti.oninput=()=>editingSteps[i].title=ti.value;
+    const num=document.createElement('div');num.className='step-item-num';
+    const isCtxStep=(i===0&&(step.title||'')==='Qual é o contexto de uso?');
+    if(isCtxStep){num.style.cssText='background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);box-shadow:0 2px 5px rgba(15,23,42,.35);';num.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8.01"/><line x1="12" y1="12" x2="12" y2="16"/></svg>';}else{let n=0;for(let j=0;j<=i;j++){if(!(j===0&&(editingSteps[j].title||'')==='Qual é o contexto de uso?'))n++;}num.textContent=n;}
+    const del=document.createElement('button');del.className='step-item-del';del.title='Remover';del.onclick=()=>removeStep(i);del.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    fields.appendChild(ti);fields.appendChild(makeRTEWrap(i));
+    div.appendChild(num);div.appendChild(fields);div.appendChild(del);editor.appendChild(div);
+  });
+  initQuillInstances();
+}
+function addStep(){editingSteps.push({title:'',html:''});renderStepsEditor();const ts=document.querySelectorAll('.step-item-fields input');if(ts.length)ts[ts.length-1].focus();}
+function removeStep(i){editingSteps.splice(i,1);renderStepsEditor();}
+
+/* FLOWS TABLE */
+function _resolveFlowRow(key){
+  const parts=key.split('|');let al1='',al2='',scTag='';
+  parts.forEach(p=>{
+    if(p.startsWith('sc:'))scTag=p.slice(3);
+    if(p.startsWith('acr:'))  {const it=(DB.categories.agentContactReason||[]).find(c=>c.tag===p.slice(4));if(it){al1=it.l1;al2=it.l2;}}
+    if(p.startsWith('acr-l1:')){al1=p.slice(7);}
+  });
+  return{al1,al2,scTag};
+}
+function renderFlowsTable(){
+  const tbody=document.getElementById('flows-tbody');if(!tbody)return;
+  const filterVal=(document.getElementById('flows-filter')?.value||'').toLowerCase().trim();
+  const keys=Object.keys(DB.flows);
+  tbody.innerHTML='';
+  if(!keys.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--gray-400);padding:28px;font-size:13px">Nenhum fluxo cadastrado ainda.</td></tr>';return;}
+
+  const rows=keys.map(key=>{const r=_resolveFlowRow(key);return{key,flow:DB.flows[key],...r};});
+  const filtered=filterVal?rows.filter(r=>r.al1.toLowerCase().includes(filterVal)||r.al2.toLowerCase().includes(filterVal)):rows;
+
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--gray-400);padding:28px;font-size:13px">Nenhum fluxo encontrado para o filtro aplicado.</td></tr>';return;}
+
+  filtered.forEach(({key,flow,al1,al2})=>{
+    const f=flow;const tr=document.createElement('tr');
+    const esc=f.escalation?escHtml(f.escalation.substring(0,60))+(f.escalation.length>60?'…':''):'—';
+    tr.innerHTML='<td style="font-weight:700;color:var(--gray-800)">'+escHtml(al1||'—')+'</td>'
+      +'<td style="color:var(--gray-600)">'+escHtml(al2||'—')+'</td>'
+      +'<td><span style="font-size:12px;color:var(--gray-500)">'+(f.steps||[]).length+' passo(s)</span></td>'
+      +'<td style="font-size:12px;color:var(--gray-500)">'+esc+'</td>'
+      +'<td><div class="action-btns">'+actBtn('edit','Editar',"editFlow('"+escAttr(key)+"')")+actBtn('del','Excluir',"deleteFlow('"+escAttr(key)+"')")+'</div></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+/* SAVE/EDIT/DELETE — flow key uses only agentCR (sc removido do formulário de admin) */
+function saveFlow(){
+  const key=buildFlowKey('',csVal('fcs-al1'),csVal('fcs-al2'),'','');
+  if(!key){alert('Selecione pelo menos um campo.');return;}
+  const steps=editingSteps.map(s=>({title:s.title.trim(),html:s.html||''})).filter(s=>s.title);
+  if(!steps.length){alert('Adicione pelo menos um passo com título.');return;}
+  const esc=document.getElementById('form-escalation').value.trim();
+  const old=document.getElementById('form-edit-key').value;
+  /* duplicate key check — only when not already editing that key */
+  if(!old&&DB.flows[key]){
+    showConfirm({title:'Fluxo já existe',message:'Já existe um fluxo cadastrado para essa combinação de Agent CR.<br><br>Deseja abrir o fluxo existente para edição?',confirmText:'Editar fluxo existente',cancelText:'Cancelar',onConfirm:()=>editFlow(key)});
+    return;
+  }
+  if(old&&old!==key&&DB.flows[key]){
+    showConfirm({title:'Conflito de chave',message:'Já existe outro fluxo cadastrado para essa combinação de Agent CR.<br><br>Deseja abrir o fluxo existente para edição?',confirmText:'Editar fluxo existente',cancelText:'Cancelar',onConfirm:()=>editFlow(key)});
+    return;
+  }
+  if(old&&old!==key)delete DB.flows[old];
+  DB.flows[key]={steps,escalation:esc};
+  saveDB();renderFlowsTable();resetFlowForm();showAdminTab('tab-flows');
+}
+function editFlow(key){
+  const flow=DB.flows[key];if(!flow)return;
+  const parts=key.split('|');let al1='',al2='';
+  parts.forEach(p=>{if(p.startsWith('acr:'))al2=p.slice(4);if(p.startsWith('acr-l1:'))al1=p.slice(7);});
+  if(al2&&!al1){const it=(DB.categories.agentContactReason||[]).find(c=>c.tag===al2);if(it)al1=it.l1;}
+  csValues['fcs-al1']=al1;
+  buildAdminSelectors();if(al1)onFormAL1Change(al1);
+  /* restore al2 after onFormAL1Change rebuilds the dropdown */
+  if(al2){csValues['fcs-al2']=al2;const t=document.querySelector('#fcs-al2 .custom-select-trigger');const opt=document.querySelector('#fcs-al2 .custom-select-option[data-value="'+al2+'"]');if(t&&opt){t.textContent=opt.textContent;t.classList.remove('placeholder');}}
+  updateFlowKeyPreview();
+  editingSteps=JSON.parse(JSON.stringify(flow.steps||[])).map(s=>({title:s.title||'',html:s.html||''}));
+  renderStepsEditor();
+  document.getElementById('form-escalation').value=flow.escalation||'';
+  document.getElementById('form-edit-key').value=key;
+  document.getElementById('flow-form-title').textContent='Editar Fluxo';
+  document.getElementById('flow-save-btn').textContent='Salvar Alterações';
+  showAdminTab('tab-new-flow');
+}
+function deleteFlow(key){showConfirm({title:'Excluir Fluxo',message:'Excluir o fluxo <strong>'+escHtml(key)+'</strong>?',confirmText:'Excluir',cancelText:'Cancelar',danger:true,onConfirm:()=>{delete DB.flows[key];saveDB();renderFlowsTable();}});}
+function resetFlowForm(){
+  ['fcs-al1','fcs-al2'].forEach(id=>csValues[id]='');
+  buildAdminSelectors();
+  editingSteps=[{title:'Qual é o contexto de uso?',html:''}];
+  renderStepsEditor();
+  document.getElementById('form-escalation').value='';document.getElementById('form-edit-key').value='';
+  document.getElementById('flow-form-title').textContent='Novo Fluxo';document.getElementById('flow-save-btn').textContent='Salvar Fluxo';
+  updateFlowKeyPreview();
+}
+
+/* ── DASHBOARD ──
+   FIX: Charts use maintainAspectRatio:true + explicit aspectRatio to prevent infinite resize loop.
+   Containers get a max-height with overflow hidden to prevent page from growing unboundedly.
+   CR2 removed from admin flow key but still shown in dashboard (it comes from usage data).
+*/
+
+
+
+
+
+
+/* NAVIGATION + HASH ROUTING */
+const PAGE_HASH={guide:'',help:'ajuda',admin:'admin'};
+const HASH_PAGE={'':'guide','ajuda':'help','admin':'admin'};
+function showPage(name,pushState=true){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',(name==='guide'&&i===0)||(name==='help'&&i===1)||(name==='admin'&&i===2)));
+  if(pushState){const h=PAGE_HASH[name]||'';history.pushState({page:name},'','#'+h);}
+}
+async function goToAdmin(){if(getToken()){showPage('admin');return;}const t=await promptPassword();if(!t)return;setToken(t);showPage('admin');}
+window.addEventListener('popstate',e=>{const h=(location.hash||'').replace('#','');const name=HASH_PAGE[h]||'guide';if(name==='admin'){goToAdmin();}else{showPage(name,false);}});
+(function initRoute(){const h=(location.hash||'').replace('#','');const name=HASH_PAGE[h]||'guide';if(name==='admin'){goToAdmin();}else if(name!=='guide'){showPage(name,false);}})();
+function showAdminTab(id){
+  document.querySelectorAll('.admin-tab-content').forEach(t=>t.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick').includes(id)));
+  // resetFlowForm() is invoked from the '+ Novo Fluxo' tab button directly
+}
+
+/* PASSWORD */
+function promptPassword(){
+  return new Promise(resolve=>{
+    const ov=document.createElement('div');
+    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center';
+    const box=document.createElement('div');
+    box.style.cssText='background:#fff;border-radius:16px;padding:32px 28px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25)';
+    const title=document.createElement('div');
+    title.style.cssText='font-size:18px;font-weight:800;color:#111827;margin-bottom:6px;display:flex;align-items:center;gap:8px';
+    title.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Área Restrita';
+    const desc=document.createElement('div');
+    desc.style.cssText='font-size:13px;color:#6B7280;margin-bottom:20px;line-height:1.6';
+    desc.textContent='Digite a senha de administrador.';
+    const input=document.createElement('input');
+    input.type='password';input.placeholder='Senha...';
+    input.style.cssText='width:100%;padding:10px 14px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;margin-bottom:8px;box-sizing:border-box;outline:none;display:block';
+    const error=document.createElement('div');
+    error.style.cssText='font-size:12px;color:#DC2626;margin-bottom:12px;min-height:16px;font-weight:600';
+    const btnRow=document.createElement('div');
+    btnRow.style.cssText='display:flex;gap:10px';
+    const btnOk=document.createElement('button');
+    btnOk.textContent='Entrar';
+    btnOk.style.cssText='flex:1;padding:11px;background:#F04C21;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer';
+    const btnCancel=document.createElement('button');
+    btnCancel.textContent='Cancelar';
+    btnCancel.style.cssText='padding:11px 18px;background:#F3F4F6;color:#374151;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer';
+    btnRow.appendChild(btnOk);btnRow.appendChild(btnCancel);
+    box.appendChild(title);box.appendChild(desc);box.appendChild(input);box.appendChild(error);box.appendChild(btnRow);
+    ov.appendChild(box);document.body.appendChild(ov);
+    input.focus();
+    const tryLogin=()=>{
+      if(input.value.trim()!==ADMIN_PASS){error.textContent='Senha incorreta.';input.value='';input.focus();return;}
+      document.body.removeChild(ov);resolve(_tk());
+    };
+    btnOk.onclick=tryLogin;
+    btnCancel.onclick=()=>{document.body.removeChild(ov);resolve(null);};
+    input.addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();if(e.key==='Escape')btnCancel.click();});
+  });
+}
+
+/* CONFIRM */
+function showConfirm({title,message,confirmText='Sim',cancelText='Não',danger=false,onConfirm,onCancel}){const ov=document.createElement('div');ov.className='confirm-overlay';ov.innerHTML='<div class="confirm-box"><div class="confirm-title">'+title+'</div><div class="confirm-msg">'+message+'</div><div class="confirm-btns"><button class="confirm-yes'+(danger?' danger':'')+'" id="conf-yes">'+confirmText+'</button><button class="confirm-no" id="conf-no">'+cancelText+'</button></div></div>';document.body.appendChild(ov);ov.querySelector('#conf-yes').onclick=()=>{document.body.removeChild(ov);if(onConfirm)onConfirm();};ov.querySelector('#conf-no').onclick=()=>{document.body.removeChild(ov);if(onCancel)onCancel();};}
+
+/* UTILS */
+function localDateStr(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day;}
+const ACT={edit:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',del:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'};
+function actBtn(cls,title,onclick){return '<button class="action-btn '+cls+'" title="'+title+'" aria-label="'+title+'" onclick="'+onclick+'">'+ACT[cls]+'</button>';}
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escAttr(s){return String(s||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+
+
+
+
+/* ── CATEGORIES ── */
+function renderCategoriesTab(){
+  document.getElementById('cat-container').innerHTML=
+    buildCatCard('serviceCategory','Categoria do Atendimento',['value'],['Nome / Display'],'cat-sc')
+    +buildCatCard('agentContactReason','Agent Contact Reason',['l1','l2'],['Nível 1 (L1)','Nível 2 (L2)'],'cat-acr')
+    +buildCatCard('contactReason2','Contact Reason 2.0',['l1','l2'],['Nível 1 (L1)','Nível 2 (L2 — opcional)'],'cat-cr2');
+}
+function buildCatCard(catKey,title,fields,labels,tId){
+  const items=DB.categories[catKey]||[];
+  const ths=fields.map((f,j)=>'<th>'+labels[j]+'</th>').join('')+'<th>Tag</th><th>Ações</th>';
+  const trs=items.length?items.map((item,i)=>{
+    const cells=fields.map(f=>'<td><span class="cat-cell-editable" title="Clique para editar" onclick="editCatInline(\''+tId+'\','+i+',\''+f+'\',\''+catKey+'\')">'+escHtml(item[f]||'—')+'</span></td>').join('');
+    return '<tr>'+cells+'<td><span class="cat-tag">'+escHtml(item.tag||'')+'</span></td><td><div class="action-btns">'+actBtn('del','Excluir',"deleteCat('"+catKey+"',"+i+")")+'</div></td></tr>';
+  }).join(''):'<tr><td colspan="'+(fields.length+2)+'" style="text-align:center;color:var(--gray-400);padding:20px;font-size:13px">Nenhum item. Use o formulário abaixo.</td></tr>';
+  const addInputs=fields.map((f,j)=>'<input class="cat-add-input" id="cat-in-'+tId+'-'+f+'" placeholder="'+labels[j]+'" onkeydown="if(event.key===\'Enter\')addCat(\''+catKey+'\',\''+tId+'\')">').join('');
+  return '<div class="card" style="margin-bottom:20px">'
+    +'<div class="card-header"><div class="card-title">'+title+'</div><div class="card-subtitle">'+items.length+' item(s)</div></div>'
+    +'<div class="card-body">'
+    +'<div class="scroll-table"><table class="admin-table"><thead><tr>'+ths+'</tr></thead><tbody id="tbody-'+tId+'">'+trs+'</tbody></table></div>'
+    +'<div class="cat-add-row">'+addInputs+'<button class="cat-add-btn" onclick="addCat(\''+catKey+'\',\''+tId+'\')">+ Adicionar</button></div>'
+    +'</div></div>';
+}
+function addCat(catKey,tId){
+  const fields=catKey==='serviceCategory'?['value']:['l1','l2'];
+  const vals=fields.map(f=>(document.getElementById('cat-in-'+tId+'-'+f)||{value:''}).value.trim());
+  if(!vals[0]){document.getElementById('cat-in-'+tId+'-'+fields[0])?.focus();return;}
+  const prefix=catKey==='serviceCategory'?'sc':catKey==='agentContactReason'?'acr':'cr2';
+  const tag=prefix+'_'+Date.now().toString(36);
+  const item={tag};fields.forEach((f,i)=>{if(vals[i])item[f]=vals[i];});
+  if(!DB.categories[catKey])DB.categories[catKey]=[];
+  DB.categories[catKey].push(item);
+  saveDB();renderCategoriesTab();refreshAll();
+}
+function deleteCat(catKey,idx){
+  const item=(DB.categories[catKey]||[])[idx];if(!item)return;
+  const label=item.value||item.l2||item.l1||'este item';
+  showConfirm({title:'Excluir categoria',message:'Excluir <strong>'+escHtml(label)+'</strong>?<br><small style="color:var(--gray-500)">Fluxos vinculados a esta tag não serão removidos automaticamente.</small>',confirmText:'Excluir',cancelText:'Cancelar',danger:true,onConfirm:()=>{DB.categories[catKey].splice(idx,1);saveDB();renderCategoriesTab();refreshAll();}});
+}
+function editCatInline(tId,idx,field,catKey){
+  const span=document.querySelector('#tbody-'+tId+' tr:nth-child('+(idx+1)+') .cat-cell-editable:nth-child('+((['value','l1','l2'].indexOf(field)+1))+')');
+  const allSpans=document.querySelectorAll('#tbody-'+tId+' tr:nth-child('+(idx+1)+') .cat-cell-editable');
+  let spanEl=null;
+  allSpans.forEach(s=>{if(s.getAttribute('onclick')&&s.getAttribute('onclick').includes("'"+field+"'"))spanEl=s;});
+  if(!spanEl)return;
+  const cur=(DB.categories[catKey]||[])[idx]?.[field]||'';
+  const input=document.createElement('input');input.className='cat-edit-input';input.value=cur;
+  spanEl.replaceWith(input);input.focus();input.select();
+  const commit=()=>{
+    const v=input.value.trim();
+    if(v&&(DB.categories[catKey]||[])[idx])DB.categories[catKey][idx][field]=v;
+    saveDB();renderCategoriesTab();refreshAll();
+  };
+  input.addEventListener('blur',commit);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commit();}if(e.key==='Escape')renderCategoriesTab();});
+}
+
+window.addEventListener('DOMContentLoaded',loadDB);/* DASHBOARD */
+let _dashCharts={};
+
+function buildDashboard(){
+  Object.values(_dashCharts).forEach(c=>{try{c.destroy();}catch(e){}});
+  _dashCharts={};
+  const usage=DB.usage||[];
+  const l1sA=[...new Set(usage.map(u=>u.al1).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const l1sC=[...new Set(usage.map(u=>u.cl1).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+
+  // Default filter = last 7 days
+  const today=new Date();
+  const d7=new Date();d7.setDate(d7.getDate()-6);
+  const todayStr=localDateStr(today);
+  const d7Str=localDateStr(d7);
+
+  document.getElementById('dash-container').innerHTML=
+    '<div class="filter-bar">'
+    +'<div class="filter-group"><div class="filter-label">Período</div>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
+    +'<button class="dash-period-btn active" data-period="7d" onclick="setDashPeriod(this)">Últimos 7 dias</button>'
+    +'<button class="dash-period-btn" data-period="today" onclick="setDashPeriod(this)">Hoje</button>'
+    +'<button class="dash-period-btn" data-period="30d" onclick="setDashPeriod(this)">Últimos 30 dias</button>'
+    +'<button class="dash-period-btn" data-period="custom" onclick="setDashPeriod(this)">Intervalo</button>'
+    +'</div></div>'
+    +'<div class="filter-group" id="custom-range-group" style="display:none">'
+    +'<div class="filter-label">De</div><input type="date" class="filter-select" id="df-from" value="'+d7Str+'" style="padding:7px 10px">'
+    +'</div>'
+    +'<div class="filter-group" id="custom-range-group2" style="display:none">'
+    +'<div class="filter-label">Até</div><input type="date" class="filter-select" id="df-to" value="'+todayStr+'" style="padding:7px 10px">'
+    +'</div>'
+    +'<div class="filter-group"><div class="filter-label">Agent CR L1</div>'
+    +'<select class="filter-select" id="df-al1"><option value="">Todos</option>'
+    +l1sA.map(l=>'<option value="'+escHtml(l)+'">'+escHtml(l)+'</option>').join('')
+    +'</select></div>'
+    +'<div class="filter-group"><div class="filter-label">Resultado</div>'
+    +'<select class="filter-select" id="df-hit"><option value="">Todos</option><option value="1">Encontrado</option><option value="0">Sem fluxo</option></select>'
+    +'</div>'
+    +'<button class="filter-btn" onclick="applyDashFilter()">Filtrar</button>'
+    +'<button class="filter-btn secondary" onclick="resetDashFilter()">Limpar</button>'
+    +'</div>'
+    +'<div id="dash-stats"></div>'
+    +'<div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">'
+    +'<div><div style="font-size:13px;font-weight:700;color:var(--gray-700)">Zerar histórico de consultas</div><div style="font-size:12px;color:var(--gray-500);margin-top:2px">Remove todos os registros do dashboard permanentemente.</div></div>'
+    +'<button id="btn-zerar" onclick="zerarDash()" style="padding:9px 20px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Zerar dados</button>'
+    +'</div>';
+
+  // Store default period
+  window._dashPeriod='7d';
+  window._dashFrom=d7Str;
+  window._dashTo=todayStr;
+  applyDashFilter();
+}
+
+function setDashPeriod(btn){
+  document.querySelectorAll('.dash-period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const period=btn.dataset.period;
+  window._dashPeriod=period;
+  const todayStr=localDateStr(new Date());
+  const cg=document.getElementById('custom-range-group');
+  const cg2=document.getElementById('custom-range-group2');
+  if(period==='custom'){
+    cg.style.display='flex';cg2.style.display='flex';
+  } else {
+    cg.style.display='none';cg2.style.display='none';
+    if(period==='today'){window._dashFrom=todayStr;window._dashTo=todayStr;}
+    else if(period==='7d'){const d=new Date();d.setDate(d.getDate()-6);window._dashFrom=localDateStr(d);window._dashTo=todayStr;}
+    else if(period==='30d'){const d=new Date();d.setDate(d.getDate()-29);window._dashFrom=localDateStr(d);window._dashTo=todayStr;}
+    applyDashFilter();
+  }
+}
+
+let _filteredData=[];
+function applyDashFilter(){
+  const usage=DB.usage||[];
+  const period=window._dashPeriod||'7d';
+  let fromStr=window._dashFrom,toStr=window._dashTo;
+  if(period==='custom'){
+    fromStr=document.getElementById('df-from')?.value||'';
+    toStr=document.getElementById('df-to')?.value||'';
+  }
+  const al1=document.getElementById('df-al1')?.value||'';
+  const hit=document.getElementById('df-hit')?.value||'';
+
+  _filteredData=usage.filter(u=>{
+    const d=localDateStr(new Date(u.ts));
+    if(fromStr&&d<fromStr)return false;
+    if(toStr&&d>toStr)return false;
+    if(al1&&u.al1!==al1)return false;
+    if(hit==='1'&&!u.hit)return false;
+    if(hit==='0'&&u.hit)return false;
+    return true;
+  });
+  renderDashStats(_filteredData,fromStr,toStr);
+}
+
+function resetDashFilter(){
+  ['df-al1','df-hit'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  // Reset to 7 days
+  document.querySelectorAll('.dash-period-btn').forEach(b=>b.classList.toggle('active',b.dataset.period==='7d'));
+  document.getElementById('custom-range-group').style.display='none';
+  document.getElementById('custom-range-group2').style.display='none';
+  const d7=new Date();d7.setDate(d7.getDate()-6);
+  window._dashPeriod='7d';
+  window._dashFrom=localDateStr(d7);
+  window._dashTo=localDateStr(new Date());
+  applyDashFilter();
+}
+
+function renderDashStats(data,fromStr,toStr){
+  const el=document.getElementById('dash-stats');if(!el)return;
+  Object.values(_dashCharts).forEach(c=>{try{c.destroy();}catch(e){}});_dashCharts={};
+
+  const total=data.length;
+  const hits=data.filter(u=>u.hit).length;
+  const mm=data.filter(u=>u.mm).length;
+  const bx=data.filter(u=>u.bx).length;
+  const last7=data.filter(u=>{const d=new Date(u.ts);return(Date.now()-d)<7*86400000;}).length;
+
+  const al1C={};data.forEach(u=>{if(u.al1)al1C[u.al1]=(al1C[u.al1]||0)+1;});
+  const topAl1=Object.entries(al1C).sort((a,b)=>b[1]-a[1]).slice(0,6);
+
+  // Build day range for chart
+  const days={};
+  if(fromStr&&toStr){
+    const start=new Date(fromStr+'T00:00:00');
+    const end=new Date(toStr+'T00:00:00');
+    for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+      days[localDateStr(d)]=0;
+    }
+  } else {
+    for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days[localDateStr(d)]=0;}
+  }
+  data.forEach(u=>{const d=localDateStr(new Date(u.ts));if(d in days)days[d]++;});
+
+  const scC={};data.forEach(u=>{if(u.sc)scC[u.sc]=(scC[u.sc]||0)+1;});
+  const topSc=Object.entries(scC).sort((a,b)=>b[1]-a[1]).slice(0,5);
+
+  el.innerHTML=
+    '<div class="dash-section-title">Visão Geral</div>'
+    +'<div class="stat-grid">'
+    +'<div class="stat-card accent"><div class="stat-card-label">Total de consultas</div><div class="stat-card-value">'+total+'</div><div class="stat-card-sub">no período filtrado</div></div>'
+    +'<div class="stat-card"><div class="stat-card-label">Com fluxo</div><div class="stat-card-value" style="color:var(--green)">'+hits+'</div><div class="stat-card-sub">'+(total?((hits/total*100).toFixed(0))+'% de cobertura':'—')+'</div></div>'
+    +'<div class="stat-card"><div class="stat-card-label">Sem fluxo</div><div class="stat-card-value" style="color:var(--red)">'+(total-hits)+'</div><div class="stat-card-sub">'+(total?(((total-hits)/total*100).toFixed(0))+'% sem guia':'—')+'</div></div>'
+    +'<div class="stat-card"><div class="stat-card-label">Macro Mind consultado</div><div class="stat-card-value" style="color:var(--purple)">'+mm+'</div><div class="stat-card-sub">'+(total?((mm/total*100).toFixed(0))+'% dos atendimentos':'—')+'</div></div>'
+    +'<div class="stat-card"><div class="stat-card-label">Baymax consultado</div><div class="stat-card-value" style="color:var(--indigo)">'+bx+'</div><div class="stat-card-sub">'+(total?((bx/total*100).toFixed(0))+'% dos atendimentos':'—')+'</div></div>'
+    +'</div>'
+    +'<div class="dash-section-title">Consultas por dia</div>'
+    +'<div class="chart-card"><div style="position:relative;height:160px"><canvas id="ch-daily"></canvas></div></div>'
+    +'<div class="dash-section-title">Por Contact Reason</div>'
+    +'<div class="chart-grid-2">'
+    +'<div class="chart-card"><div class="chart-card-title">Agent CR L1</div><div style="position:relative;height:180px"><canvas id="ch-al1"></canvas></div></div>'
+    +'<div class="chart-card"><div class="chart-card-title">Categoria do Atendimento</div><div style="position:relative;height:180px"><canvas id="ch-sc"></canvas></div></div>'
+    +'</div>'
+    +'<div class="dash-section-title" style="display:flex;align-items:center;justify-content:space-between">Últimas consultas <button onclick="exportUsage()" style="padding:6px 14px;background:var(--green-bg);color:var(--green);border:1.5px solid var(--green-border);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:\'Nunito Sans\',sans-serif"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar Excel</button></div>'
+    +'<div class="card" style="margin-bottom:20px"><div class="card-body" style="padding:0"><div class="scroll-table"><table class="admin-table">'
+    +'<thead><tr><th>Data/Hora</th><th>Ticket</th><th>Categoria</th><th>Agent CR</th><th>Resultado</th><th>Macro Mind</th><th>Baymax</th></tr></thead><tbody>'
+    +data.slice(0,50).map(u=>
+      '<tr>'
+      +'<td style="white-space:nowrap;font-size:12px">'+new Date(u.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})+'</td>'
+      +'<td style="font-size:12px;font-family:\'Courier New\',monospace">'+escHtml(u.ticket||'—')+'</td>'
+      +'<td style="font-size:12px">'+escHtml(u.sc||'—')+'</td>'
+      +'<td style="font-size:12px">'+escHtml([u.al1,u.al2].filter(Boolean).join(' › ')||'—')+'</td>'
+      +'<td>'+(u.hit?'<span style="color:var(--green);font-size:12px;font-weight:700">✓ Encontrado</span>':'<span style="color:var(--red);font-size:12px;font-weight:700">✗ Sem fluxo</span>')+'</td>'
+      +'<td>'+(u.mm?'<span style="color:var(--purple);font-size:12px;font-weight:700">✓ Sim</span>':'<span style="color:var(--gray-400);font-size:12px">—</span>')+'</td>'
+      +'<td>'+(u.bx?'<span style="color:var(--indigo);font-size:12px;font-weight:700">✓ Sim</span>':'<span style="color:var(--gray-400);font-size:12px">—</span>')+'</td>'
+      +'</tr>'
+    ).join('')
+    +(data.length===0?'<tr><td colspan="7" style="text-align:center;color:var(--gray-400);padding:24px;font-size:13px">Nenhuma consulta registrada ainda.</td></tr>':'')
+    +'</tbody></table></div></div></div>';
+
+  if(!total)return;
+
+  const gridColor='rgba(0,0,0,0.05)';
+  Chart.defaults.font={family:'Nunito Sans, sans-serif',size:11};
+  Chart.defaults.color='#6B7280';
+
+  const dayLabels=Object.keys(days).map(d=>{const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});});
+  _dashCharts.daily=new Chart(document.getElementById('ch-daily'),{
+    type:'line',
+    data:{labels:dayLabels,datasets:[{label:'Consultas',data:Object.values(days),borderColor:'#F04C21',backgroundColor:'rgba(240,76,33,0.08)',borderWidth:2.5,pointBackgroundColor:'#F04C21',pointRadius:3,tension:0.35,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:gridColor}},x:{grid:{display:false},ticks:{font:{size:10}}}}}
+  });
+  if(topAl1.length)_dashCharts.al1=new Chart(document.getElementById('ch-al1'),{
+    type:'bar',
+    data:{labels:topAl1.map(([k])=>k),datasets:[{label:'Consultas',data:topAl1.map(([,v])=>v),backgroundColor:'#F04C21',borderRadius:5,barThickness:18}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:gridColor}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+  });
+  if(topSc.length){
+    const pal=['#F04C21','#FF6B45','#FFa07a','#c93d18','#ff8c69'];
+    _dashCharts.sc=new Chart(document.getElementById('ch-sc'),{
+      type:'doughnut',
+      data:{labels:topSc.map(([k])=>k),datasets:[{data:topSc.map(([,v])=>v),backgroundColor:pal,borderWidth:2,borderColor:'#fff'}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10}}}},cutout:'58%'}
+    });
+  }
+}
+
+/* EXPORT XLSX */
+function exportFlows(){
+  const rows=[['Chave do Fluxo','Categoria (sc)','Agent CR L1','Agent CR L2','Passos','Texto dos Passos','Escalação']];
+  Object.entries(DB.flows).forEach(([key,flow])=>{
+    const parts=key.split('|');
+    let sc='',al1='',al2='';
+    parts.forEach(p=>{
+      if(p.startsWith('sc:'))sc=p.slice(3);
+      if(p.startsWith('acr:'))al2=p.slice(4);
+      if(p.startsWith('acr-l1:'))al1=p.slice(7);
+    });
+    // Resolve labels
+    const scLabel=(DB.categories.serviceCategory||[]).find(c=>c.tag===sc)?.value||sc;
+    const acrItem=(DB.categories.agentContactReason||[]).find(c=>c.tag===al2);
+    if(acrItem&&!al1)al1=acrItem.l1;
+    const al2Label=acrItem?.l2||al2;
+    const steps=flow.steps||[];
+    const stepsNum=steps.length;
+    const stepsText=steps.map((s,i)=>(i+1)+'. '+s.title+(s.html?' — '+s.html.replace(/<[^>]+>/g,''):'') ).join('\n');
+    rows.push([key,scLabel,al1,al2Label,stepsNum,stepsText,flow.escalation||'']);
+  });
+  // Build CSV with BOM for Excel UTF-8
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='guia-cr-fluxos.csv';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+/* EXPORT USAGE */
+function exportUsage(){
+  const usage=_filteredData.length?_filteredData:(DB.usage||[]);
+  if(!usage.length){alert('Nenhuma consulta para exportar.');return;}
+  const rows=[['Data/Hora','Ticket','Categoria','Agent CR L1','Agent CR L2','Resultado','Macro Mind','Baymax']];
+  usage.forEach(u=>{
+    rows.push([
+      new Date(u.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+      u.ticket||'',
+      u.sc||'',
+      u.al1||'',
+      u.al2||'',
+      u.hit?'Encontrado':'Sem fluxo',
+      u.mm?'Sim':'Não',
+      u.bx?'Sim':'Não'
+    ]);
+  });
+  const csv='﻿'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='guia-cr-consultas.csv';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+/* ZERAR DASH */
+function zerarDash(){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center';
+  const box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:16px;padding:32px 28px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25)';
+  const title=document.createElement('div');
+  title.style.cssText='font-size:18px;font-weight:800;color:#DC2626;margin-bottom:6px;display:flex;align-items:center;gap:8px';
+  title.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Confirmação de segurança';
+  const desc=document.createElement('div');
+  desc.style.cssText='font-size:13px;color:#6B7280;margin-bottom:20px;line-height:1.6';
+  desc.innerHTML='Esta ação é <strong>irreversível</strong>.<br>Digite a senha para confirmar o reset.';
+  const input=document.createElement('input');
+  input.type='password';input.placeholder='Senha de reset...';
+  input.style.cssText='width:100%;padding:10px 14px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;margin-bottom:8px;box-sizing:border-box;outline:none;display:block';
+  const errEl=document.createElement('div');
+  errEl.style.cssText='font-size:12px;color:#DC2626;margin-bottom:12px;min-height:16px;font-weight:600';
+  const btnRow=document.createElement('div');
+  btnRow.style.cssText='display:flex;gap:10px';
+  const btnOk=document.createElement('button');
+  btnOk.textContent='Zerar dados';
+  btnOk.style.cssText='flex:1;padding:11px;background:#DC2626;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer';
+  const btnCancel=document.createElement('button');
+  btnCancel.textContent='Cancelar';
+  btnCancel.style.cssText='padding:11px 18px;background:#F3F4F6;color:#374151;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer';
+  btnRow.appendChild(btnOk);btnRow.appendChild(btnCancel);
+  box.appendChild(title);box.appendChild(desc);box.appendChild(input);box.appendChild(errEl);box.appendChild(btnRow);
+  ov.appendChild(box);document.body.appendChild(ov);
+  input.focus();
+  const tryZerar=()=>{
+    if(input.value.trim()!=='Zerar'){errEl.textContent='Senha incorreta.';input.value='';input.focus();return;}
+    document.body.removeChild(ov);
+    showConfirm({
+      title:'Zerar dashboard',
+      message:'Tem certeza? Todos os <strong>'+(DB.usage?.length||0)+'</strong> registros serão apagados permanentemente.',
+      confirmText:'Sim, zerar tudo',cancelText:'Cancelar',danger:true,
+      onConfirm:async()=>{DB.usage=[];await saveDB();buildDashboard();}
+    });
+  };
+  btnOk.onclick=tryZerar;
+  btnCancel.onclick=()=>document.body.removeChild(ov);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')tryZerar();if(e.key==='Escape')btnCancel.click();});
+}
+
+function trackMM(){
+  if(!DB.usage||!DB.usage.length)return;
+  const last=DB.usage[0];
+  if(last&&!last.mm){last.mm=true;saveUsage();}
+}
+function trackBaymax(){
+  if(!DB.usage||!DB.usage.length)return;
+  const last=DB.usage[0];
+  if(last&&!last.bx){last.bx=true;saveUsage();}
+}
+/* SPLASH */
+(function(){
+  const sp=document.getElementById('splash-screen');
+  if(!sp)return;
+  const hide=()=>{sp.classList.add('hide');setTimeout(()=>{sp.style.display='none';},460);};
+  setTimeout(hide,5000);
+  // Hide early once DB is loaded (called from loadDB success path)
+  window._splashDone=hide;
+})();
+
+window.addEventListener('DOMContentLoaded',loadDB);
+
+/* ── HELP STEPPER ──────────────────────────────────────────── */
+const H_STEPS=[
+  {label:'Visão Geral',tip:'O que é e como funciona'},
+  {label:'Os Campos',tip:'O que preencher no guia'},
+  {label:'O Resultado',tip:'Como ler o passo a passo'},
+  {label:'Macro Mind e Baymax',tip:'Consultar os assistentes de IA'},
+  {label:'Busca e Atalhos',tip:'Buscar fluxo por texto e validar passos'},
+];
+let hCur=1;const hTotal=H_STEPS.length;
+function hBuildStepper(){
+  const el=document.getElementById('h-stepper');let h='';
+  H_STEPS.forEach((s,i)=>{
+    const n=i+1,cls=n<hCur?'done':n===hCur?'active':'inactive';
+    h+=`<div class="hstep-item"><div class="hstep-cwrap"><div class="hstep-tip">${s.label}</div><div class="hstep-circle ${cls}" onclick="hJump(${n})">${n<hCur?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':n}</div></div></div>`;
+    if(i<H_STEPS.length-1)h+=`<div class="hstep-line${n<hCur?' done':''}"></div>`;
+  });
+  el.innerHTML=h;
+}
+function hBuildSidebar(){
+  const el=document.getElementById('h-sidebar');let h='';
+  H_STEPS.forEach((s,i)=>{
+    const n=i+1,st=n<hCur?'done':n===hCur?'active':'';
+    h+=`<div class="hsb-step"><div class="hsb-row"><div class="hsb-icon ${st}">${st==='done'?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':st==='active'?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>':'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>'}</div><div class="hsb-text ${st}">${s.label}</div></div>${st==='active'?`<div class="hsb-tip">${s.tip}</div>`:''}</div>`;
+  });
+  el.innerHTML=h;
+}
+function hRender(){
+  hBuildStepper();hBuildSidebar();
+  document.getElementById('h-counter').textContent=hCur+' / '+hTotal;
+  document.getElementById('h-btn-prev').disabled=hCur===1;
+  const nb=document.getElementById('h-btn-next');
+  if(hCur===hTotal){nb.innerHTML='Concluído <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';nb.disabled=true;}
+  else{nb.innerHTML='Próximo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';nb.disabled=false;}
+}
+function hJump(n){if(n===hCur)return;hTransition(()=>{document.getElementById('h-page-'+hCur).classList.remove('active');hCur=n;document.getElementById('h-page-'+hCur).classList.add('active');hRender();});}
+function hGoStep(d){const n=hCur+d;if(n<1||n>hTotal)return;hJump(n);}
+function hTransition(cb){const ov=document.getElementById('h-overlay');ov.classList.add('fading');setTimeout(()=>{cb();ov.classList.remove('fading');},220);}
+window.addEventListener('DOMContentLoaded',()=>hRender());
+</script>
+</body>
+</html>

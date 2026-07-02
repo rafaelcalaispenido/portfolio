@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eNotas - Painel de Operações Postman</title>
+<link rel="icon" type="image/jpeg" href="Logo eNotas.jpg">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f4f6fb;color:#1e2130;display:flex;flex-direction:column;height:100vh}
+
+/* HEADER */
+header{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;display:flex;align-items:center;gap:16px;height:56px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+header img{height:32px;object-fit:contain}
+header .divider{width:1px;height:24px;background:#e2e8f0}
+header h1{font-size:.95rem;font-weight:600;color:#1e2130;letter-spacing:-.01em}
+header .spacer{flex:1}
+.apibar{display:flex;align-items:center;gap:8px}
+.apibar label{font-size:.78rem;font-weight:600;color:#64748b;white-space:nowrap;line-height:1}
+.apibar input{width:260px;padding:6px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:.82rem;background:#f8fafc;transition:all .2s;line-height:1.4;margin:0}
+.apibar input:focus{outline:none;border-color:#6366f1;background:#fff;box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+.apibar .btn-eye{padding:6px 10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:.78rem;color:#64748b;transition:all .2s}
+.apibar .btn-eye:hover{background:#e2e8f0}
+
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:#1e2130;color:#94a3b8;overflow-y:auto;flex-shrink:0;padding:8px 0 24px}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}
+.sidebar-section{padding:16px 16px 6px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#475569}
+.sidebar-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;font-size:.8rem;color:#94a3b8;border-left:3px solid transparent;transition:all .15s;border-radius:0 6px 6px 0;margin:1px 8px 1px 0}
+.sidebar-item:hover{background:#2d3748;color:#e2e8f0}
+.sidebar-item.active{background:#2d3748;border-left-color:#6366f1;color:#e2e8f0}
+.badge{display:inline-block;padding:2px 5px;border-radius:4px;font-size:.6rem;font-weight:700;min-width:34px;text-align:center;flex-shrink:0;letter-spacing:.02em}
+.badge-get{background:#1e3a5f;color:#60a5fa}
+.badge-post{background:#14532d;color:#4ade80}
+.badge-del{background:#4c0519;color:#fb7185}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:24px;background:#f4f6fb}
+.main::-webkit-scrollbar{width:6px}
+.main::-webkit-scrollbar-track{background:transparent}
+.main::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+.panel{display:none}.panel.active{display:block}
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);padding:24px;max-width:820px;border:1px solid #f1f5f9}
+.card h2{font-size:.95rem;font-weight:600;margin-bottom:18px;color:#1e2130;border-bottom:1px solid #f1f5f9;padding-bottom:12px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:.78rem;font-weight:600;margin-bottom:5px;color:#475569;letter-spacing:.01em}
+input,select,textarea{width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:.85rem;margin-bottom:14px;transition:all .2s;background:#fafafa;color:#1e2130}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#6366f1;background:#fff;box-shadow:0 0 0 3px rgba(99,102,241,.08)}
+textarea{resize:vertical;min-height:80px;font-family:monospace;font-size:.8rem}
+.btn{padding:9px 20px;border:none;border-radius:8px;cursor:pointer;font-size:.83rem;font-weight:600;transition:all .2s;letter-spacing:.01em}
+.btn-primary{background:#6366f1;color:#fff}.btn-primary:hover{background:#4f46e5;box-shadow:0 4px 12px rgba(99,102,241,.3)}
+.btn-danger{background:#ef4444;color:#fff}.btn-danger:hover{background:#dc2626;box-shadow:0 4px 12px rgba(239,68,68,.3)}
+.btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.btn-secondary:hover{background:#e2e8f0}
+.btn-success{background:#10b981;color:#fff}.btn-success:hover{background:#059669;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.alert{padding:10px 14px;border-radius:8px;font-size:.82rem;margin-bottom:14px}
+.alert-info{background:#eff6ff;color:#1d4ed8;border-left:3px solid #3b82f6}
+.alert-warn{background:#fffbeb;color:#92400e;border-left:3px solid #f59e0b}
+.alert-validate{background:#f0fdf4;color:#166534;border-left:3px solid #22c55e;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.alert-validate a{color:#15803d;font-weight:700;text-decoration:none;white-space:nowrap;font-size:.82rem;cursor:pointer}
+.alert-validate a:hover{text-decoration:underline}
+.section-title{font-size:.7rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin:16px 0 10px;letter-spacing:.08em}
+.loading{display:none;color:#6366f1;font-size:.82rem;margin-top:8px}
+.loading.show{display:block}
+@media(max-width:640px){.sidebar{width:200px}.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* RESPONSE CARDS */
+.resp-wrap{display:none;margin-top:14px}
+.resp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.resp-status{font-size:.84rem;font-weight:700}
+.resp-status.ok{color:#059669}
+.resp-status.err{color:#dc2626}
+.resp-actions{display:flex;gap:6px}
+.btn-sm{padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600;border:1px solid #e2e8f0;background:#f8fafc;transition:all .15s}
+.btn-sm:hover{background:#e2e8f0}
+.btn-sm-json{color:#6366f1}
+.btn-sm-json:hover{background:#eff0fe;border-color:#c7d2fe}
+
+.resp-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px}
+.resp-field{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid #f8fafc;align-items:flex-start}
+.resp-field:last-child{border-bottom:none}
+.resp-key{font-size:.72rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;min-width:160px;padding-top:2px;flex-shrink:0}
+.resp-val{font-size:.84rem;color:#1e2130;word-break:break-word}
+.resp-val code{font-family:monospace;font-size:.78rem;background:#f1f5f9;padding:1px 5px;border-radius:4px;word-break:break-all}
+.resp-section-sep{font-size:.67rem;font-weight:700;text-transform:uppercase;color:#94a3b8;letter-spacing:.08em;padding:10px 0 4px;margin-top:4px;border-top:1px solid #f1f5f9;display:block}
+
+.status-pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72rem;font-weight:700}
+.pill-ok{background:#d1fae5;color:#065f46}
+.pill-warn{background:#fef3c7;color:#92400e}
+.pill-err{background:#fee2e2;color:#991b1b}
+.pill-neutral{background:#f1f5f9;color:#475569}
+
+.resp-list-summary{font-size:.82rem;color:#475569;margin-bottom:10px;padding:8px 12px;background:#f8fafc;border-radius:8px}
+.resp-list-item-card{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:8px;overflow:hidden}
+.resp-list-item-summary{list-style:none;padding:10px 14px;cursor:pointer;background:#fff;display:flex;align-items:center;gap:8px;user-select:none}
+.resp-list-item-summary::-webkit-details-marker{display:none}
+.resp-list-item-summary::before{content:'▶';font-size:.6rem;color:#94a3b8;transition:transform .2s;flex-shrink:0}
+details[open] .resp-list-item-summary::before{transform:rotate(90deg)}
+.resp-list-item-summary:hover{background:#f8fafc}
+.resp-list-item-header{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap}
+.resp-list-item-title{font-size:.84rem;font-weight:600;color:#1e2130}
+.resp-list-item-body{border-top:1px solid #f1f5f9;border-radius:0!important;border:none!important;border-top:1px solid #f1f5f9!important}
+
+.resp-success-simple{text-align:center;padding:24px}
+.resp-success-simple .icon{font-size:2.2rem;margin-bottom:8px}
+.resp-success-simple .msg{font-size:.9rem;font-weight:600;color:#059669}
+.resp-success-simple .sub{font-size:.78rem;color:#64748b;margin-top:4px}
+
+.resp-error-msg{font-size:.88rem;font-weight:600;color:#dc2626;margin-bottom:8px}
+.resp-error-detail{font-size:.82rem;color:#475569;margin-top:4px;padding:6px 10px;background:#fff5f5;border-radius:6px}
+
+.resp-json{display:none;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:14px;font-family:'Fira Code',monospace;font-size:.74rem;white-space:pre-wrap;word-break:break-all;max-height:340px;overflow-y:auto;margin-top:10px;border:1px solid #1e293b}
+.resp-json::-webkit-scrollbar{width:4px}
+.resp-json::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}
+.resp-json.show{display:block}
+
+.resp-file{text-align:center;padding:24px}
+
+/* LOADING SCREEN */
+#loadingScreen{position:fixed;inset:0;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .6s ease}
+#loadingScreen.hide{opacity:0;pointer-events:none}
+#loadingScreen img{height:84px;object-fit:contain;animation:loadingReveal 5s ease forwards}
+#loadingScreen .loading-bar{width:220px;height:4px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+#loadingScreen .loading-bar i{display:block;height:100%;width:0;background:#6366f1;animation:loadingProgress 5s linear forwards}
+@keyframes loadingReveal{0%{opacity:.12;filter:blur(10px) brightness(1.5)}100%{opacity:1;filter:blur(0) brightness(1)}}
+@keyframes loadingProgress{0%{width:0}100%{width:100%}}
+
+/* AJUDA */
+.help-step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9}
+.help-step:last-child{border-bottom:none}
+.help-step .num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#eef2ff;color:#6366f1;font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.help-step .txt{font-size:.84rem;color:#1e2130;line-height:1.5}
+.help-link{color:#6366f1;font-weight:600;text-decoration:none;word-break:break-all}
+.help-link:hover{text-decoration:underline}
+.resp-file .icon{font-size:2rem;margin-bottom:8px}
+.resp-file a{color:#6366f1;font-weight:700;font-size:.9rem;text-decoration:none}
+.resp-file a:hover{text-decoration:underline}
+
+.emp-editor-tabs{display:flex;gap:4px;margin-bottom:0}
+.emp-tab-btn{padding:8px 16px;border:1px solid #e2e8f0;border-bottom:none;border-radius:8px 8px 0 0;background:#f1f5f9;color:#64748b;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .15s}
+.emp-tab-btn.active{background:#fff;color:#1e2130}
+.emp-tab-btn:hover{background:#e2e8f0}
+.emp-tab-btn.active:hover{background:#fff}
+.emp-tab-panel{display:none;border:1px solid #e2e8f0;border-radius:0 8px 8px 8px;padding:16px;margin-bottom:14px}
+.emp-tab-panel.active{display:block}
+#emp_inc_json_tab{padding:0;border:none}
+#emp_inc_json_tab .json-editor-wrap{margin:0}
+#emp_inc_form .form-field{margin-bottom:14px}
+#emp_inc_form .form-field label{margin-bottom:5px}
+#emp_inc_form .form-check{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+#emp_inc_form .form-check input{width:auto;margin:0}
+#emp_inc_form .form-check label{margin:0}
+#emp_inc_form textarea{font-family:'Fira Code',monospace;font-size:.76rem}
+.btn-sm-edit{color:#059669}
+.btn-sm-edit:hover{background:#ecfdf5;border-color:#a7f3d0}
+
+.json-editor-wrap{position:relative}
+.json-editor-wrap textarea{font-family:'Fira Code',monospace;font-size:.77rem;min-height:220px;background:#0f172a;color:#e2e8f0;border-color:#334155}
+.json-editor-wrap textarea:focus{background:#0f172a;border-color:#6366f1}
+.json-editor-wrap textarea.json-invalid{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.12)}
+.json-validation{display:flex;align-items:center;gap:6px;font-size:.78rem;margin:-8px 0 14px;padding:6px 10px;border-radius:6px}
+.json-validation.ok{color:#059669;background:#ecfdf5}
+.json-validation.err{color:#dc2626;background:#fef2f2}
+.json-err-jump{color:#b91c1c;font-weight:700;text-decoration:underline;white-space:nowrap;margin-left:4px}
+</style>
+</head>
+<body>
+
+<div id="loadingScreen">
+  <img src="Logo eNotas.jpg" alt="eNotas">
+  <div class="loading-bar"><i></i></div>
+</div>
+
+<header>
+  <img src="Logo eNotas.jpg" alt="eNotas">
+  <div class="divider"></div>
+  <h1>Painel Postman</h1>
+  <div class="spacer"></div>
+  <div class="apibar">
+    <label>API Key:</label>
+    <input type="password" id="apiKey" placeholder="API Key GW (Embutido)">
+    <button class="btn-eye" onclick="toggleKey()">Ver</button>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section">Ajuda</div>
+  <div class="sidebar-item active" onclick="show('ajuda',this)">Ajuda</div>
+
+  <div class="sidebar-section">Empresas</div>
+  <div class="sidebar-item" onclick="show('emp_consultar',this)"><span class="badge badge-get">GET</span> Consultar empresa</div>
+  <div class="sidebar-item" onclick="show('emp_listar',this)"><span class="badge badge-get">GET</span> Listar empresas</div>
+  <div class="sidebar-item" onclick="show('emp_incluir',this)"><span class="badge badge-post">POST</span> Incluir / Alterar empresa</div>
+  <div class="sidebar-item" onclick="show('emp_habilitar',this)"><span class="badge badge-post">POST</span> Habilitar empresa</div>
+  <div class="sidebar-item" onclick="show('emp_desabilitar',this)"><span class="badge badge-post">POST</span> Desabilitar empresa</div>
+  <div class="sidebar-item" onclick="show('emp_criticar',this)"><span class="badge badge-get">GET</span> Criticar dados obrigatórios</div>
+  <div class="sidebar-item" onclick="show('emp_certificado',this)"><span class="badge badge-post">POST</span> Vincular certificado digital</div>
+  <div class="sidebar-item" onclick="show('emp_logo',this)"><span class="badge badge-post">POST</span> Vincular logotipo</div>
+  <div class="sidebar-item" onclick="show('emp_servicos',this)"><span class="badge badge-get">GET</span> Serviços da prefeitura</div>
+  <div class="sidebar-item" onclick="show('emp_servicos_unif',this)"><span class="badge badge-get">GET</span> Serviços unificados</div>
+  <div class="sidebar-item" onclick="show('emp_prefeitura',this)"><span class="badge badge-get">GET</span> Características da prefeitura</div>
+
+  <div class="sidebar-section">NFS-e</div>
+  <div class="sidebar-item" onclick="show('nfse_emitir',this)"><span class="badge badge-post">POST</span> Emitir NFS-e</div>
+  <div class="sidebar-item" onclick="show('nfse_consultar',this)"><span class="badge badge-get">GET</span> Consultar NFS-e</div>
+  <div class="sidebar-item" onclick="show('nfse_listar',this)"><span class="badge badge-get">GET</span> Listar notas da empresa</div>
+  <div class="sidebar-item" onclick="show('nfse_pdf',this)"><span class="badge badge-get">GET</span> Baixar PDF</div>
+  <div class="sidebar-item" onclick="show('nfse_xml',this)"><span class="badge badge-get">GET</span> Baixar XML</div>
+  <div class="sidebar-item" onclick="show('nfse_cancelar',this)"><span class="badge badge-del">DEL</span> Cancelar NFS-e</div>
+
+  <div class="sidebar-section">NF-e</div>
+  <div class="sidebar-item" onclick="show('nfe_emitir',this)"><span class="badge badge-post">POST</span> Emitir NF-e</div>
+  <div class="sidebar-item" onclick="show('nfe_consultar',this)"><span class="badge badge-get">GET</span> Consultar NF-e</div>
+  <div class="sidebar-item" onclick="show('nfe_listar',this)"><span class="badge badge-get">GET</span> Listar NF-e</div>
+  <div class="sidebar-item" onclick="show('nfe_pdf',this)"><span class="badge badge-get">GET</span> Baixar PDF</div>
+  <div class="sidebar-item" onclick="show('nfe_xml',this)"><span class="badge badge-get">GET</span> Baixar XML</div>
+  <div class="sidebar-item" onclick="show('nfe_cancelar',this)"><span class="badge badge-del">DEL</span> Cancelar NF-e</div>
+  <div class="sidebar-item" onclick="show('nfe_xml_cancelamento',this)"><span class="badge badge-get">GET</span> XML de Cancelamento</div>
+  <div class="sidebar-item" onclick="show('nfe_carta_correcao',this)"><span class="badge badge-post">POST</span> Emitir Carta de Correção</div>
+  <div class="sidebar-item" onclick="show('nfe_cons_carta',this)"><span class="badge badge-get">GET</span> Consultar Carta de Correção</div>
+  <div class="sidebar-item" onclick="show('nfe_xml_carta',this)"><span class="badge badge-get">GET</span> XML Carta de Correção</div>
+  <div class="sidebar-item" onclick="show('nfe_inutilizar',this)"><span class="badge badge-post">POST</span> Inutilizar NF-e</div>
+  <div class="sidebar-item" onclick="show('nfe_cons_inut',this)"><span class="badge badge-get">GET</span> Consultar inutilização</div>
+  <div class="sidebar-item" onclick="show('nfe_xml_inut',this)"><span class="badge badge-get">GET</span> Baixar XML inutilização</div>
+
+  <div class="sidebar-section">MEI</div>
+  <div class="sidebar-item" onclick="show('mei_consultar',this)"><span class="badge badge-get">GET</span> Consultar empresa MEI</div>
+  <div class="sidebar-item" onclick="show('mei_alterar',this)"><span class="badge badge-post">POST</span> Alterar campo MEI</div>
+  <div class="sidebar-item" onclick="show('mei_portal',this)"><span class="badge badge-post">POST</span> Atualizar empresa MEI</div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+<!-- EMPRESAS -->
+<div id="panel_emp_consultar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Consultar Empresa pelo ID</h2>
+    <div><label>ID da Empresa</label><input type="text" id="emp_consultar_id" placeholder="GW Empresa ID (Embed)"></div>
+    <button class="btn btn-primary" onclick="consultarEmpresa()">Consultar</button>
+    <div class="loading" id="load_emp_consultar">Aguardando...</div>
+    <div class="resp-wrap" id="resp_emp_consultar"></div>
+  </div>
+</div>
+
+<div id="panel_emp_listar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Listar Empresas</h2>
+    <div class="grid-3">
+      <div><label>Página</label><input type="number" id="emp_list_page" value="0"></div>
+      <div><label>Itens por página</label><input type="number" id="emp_list_size" value="10"></div>
+      <div><label>Buscar por</label><select id="emp_list_searchby"><option value="nome_fantasia">Nome Fantasia</option><option value="razao_social">Razão Social</option></select></div>
+    </div>
+    <label>Termo de busca</label><input type="text" id="emp_list_term" placeholder="Filtrar...">
+    <button class="btn btn-primary" onclick="listarEmpresas()">Listar</button>
+    <div class="loading" id="load_emp_list">Aguardando...</div>
+    <div class="resp-wrap" id="resp_emp_list"></div>
+  </div>
+</div>
+
+<div id="panel_emp_incluir" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Incluir / Alterar Empresa</h2>
+    <div class="alert alert-warn">Para incluir uma nova empresa, deixe o campo "ID da Empresa" vazio. Para alterar uma empresa existente, informe o ID dela no campo abaixo.</div>
+    <div class="alert alert-validate"><span>Pode ser que não reflita no emissor/embed a alteração realizada.</span><a onclick="show('emp_consultar')">Consulte aqui para validar</a></div>
+    <label>ID da Empresa</label>
+    <input type="text" id="emp_inc_empresaid" placeholder="GW Empresa ID (Embed)">
+
+    <label>Corpo da requisição</label>
+    <div class="emp-editor-tabs">
+      <button type="button" class="emp-tab-btn active" data-tab="visual" onclick="switchEmpTab('visual')">Editor Amigável</button>
+      <button type="button" class="emp-tab-btn" data-tab="json" onclick="switchEmpTab('json')">JSON Técnico</button>
+    </div>
+
+    <div id="emp_inc_form_tab" class="emp-tab-panel active">
+      <div id="emp_inc_form"></div>
+    </div>
+
+    <div id="emp_inc_json_tab" class="emp-tab-panel">
+    <div class="json-editor-wrap">
+      <textarea id="emp_inc_body" rows="30">{
+  "status": "Habilitada",
+  "prazo": 0,
+  "dadosObrigatoriosPreenchidos": true,
+  "cnpj": "14422279000106",
+  "inscricaoMunicipal": "1420",
+  "inscricaoEstadual": "31959260081",
+  "razaoSocial": "ENOTAS DESENVOLVIMENTO DE SOFTWARES LTDA",
+  "nomeFantasia": "VIRTUAL GROUP -eNotas",
+  "optanteSimplesNacional": false,
+  "mei": false,
+  "emiteNFSeNacional": true,
+  "optanteSimplesNacionalSubLimiteReceitaBruta": false,
+  "dataCriacao": "2018-06-11T04:38:33Z",
+  "dataUltimaAlteracao": "2026-06-24T18:58:14Z",
+  "email": "JURIDICO@AGECONSULTORIA.COM.BR",
+  "telefoneComercial": "3125511089",
+  "endereco": {
+    "pais": "Brasil",
+    "uf": "MG",
+    "codigoIbgeUf": 31,
+    "cidade": "Belo Horizonte",
+    "codigoIbgeCidade": 3106200,
+    "logradouro": "Assis chatebraunt",
+    "numero": "500",
+    "complemento": null,
+    "bairro": "Savassi",
+    "cep": "30150101"
+  },
+  "incentivadorCultural": false,
+  "regimeEspecialTributacao": "9",
+  "emissaoNFeConsumidor": {
+    "ambienteProducao": null,
+    "ambienteHomologacao": null
+  },
+  "emissaoNFeProduto": {
+    "ambienteProducao": {
+      "sequencialNFe": 1,
+      "serieNFe": "8",
+      "sequencialLoteNFe": 1
+    },
+    "ambienteHomologacao": {
+      "sequencialNFe": 3,
+      "serieNFe": "8",
+      "sequencialLoteNFe": 1
+    }
+  },
+  "emissaoNFeServico": {
+    "ambienteProducao": {
+      "sequencialNFe": 100000,
+      "serieNFe": "1",
+      "sequencialLoteNFe": 1000005390
+    },
+    "ambienteHomologacao": {
+      "sequencialNFe": 100008,
+      "serieNFe": "1",
+      "sequencialLoteNFe": 1000007014
+    }
+  },
+  "emissaoDCe": {
+    "ambienteProducao": null,
+    "ambienteHomologacao": null
+  },
+  "emissaoCTe": {
+    "ambienteProducao": null,
+    "ambienteHomologacao": null
+  },
+  "certificadoDigital": {
+    "nome": "ENOTAS DESENVOLVIMENTO DE SOFTWARES LTDA:14422279000106",
+    "dataVencimento": "29/07/2026"
+  },
+  "modulos": {
+    "emissao": true,
+    "consulta": false
+  },
+  "metadados": {
+    "imCNCv2": "1420",
+    "usaCertificado": true,
+    "regimeApuracaoTributosSN": null,
+    "porcentagemTributoMunicipal": "1.00",
+    "porcentagemTributoEstadual": "1.00",
+    "porcentagemTributoFederal": "1.00",
+    "valorPercentualTributosFederal": {
+      "PercentualTotalFederal": "1",
+      "PercentualTotalEstadual": "1",
+      "PercentualTotalMunicipal": "1"
+    }
+  }
+}</textarea>
+    </div>
+    </div>
+
+    <div class="json-validation" id="emp_inc_body_status"></div>
+    <button class="btn btn-success" onclick="incluirEmpresa()">Salvar</button>
+    <div class="loading" id="load_emp_inc">Aguardando...</div>
+    <div class="resp-wrap" id="resp_emp_inc"></div>
+  </div>
+</div>
+
+<div id="panel_emp_habilitar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Habilitar Empresa</h2>
+    <div class="alert alert-validate"><span>Valide o novo status consultando a empresa após salvar.</span><a onclick="show('emp_consultar')">Consulte aqui para validar</a></div>
+    <label>ID da Empresa</label><input type="text" id="emp_hab_id" placeholder="GW Empresa ID (Embed)">
+    <button class="btn btn-success" onclick="habDesEmpresa('habilitar','emp_hab_id','load_emp_hab','resp_emp_hab')">Habilitar</button>
+    <div class="loading" id="load_emp_hab">Aguardando...</div>
+    <div class="resp-wrap" id="resp_emp_hab"></div>
+  </div>
+</div>
+
+<div id="panel_emp_desabilitar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Desabilitar Empresa</h2>
+    <div class="alert alert-validate"><span>Valide o novo status consultando a empresa após salvar.</span><a onclick="show('emp_consultar')">Consulte aqui para validar</a></div>
+    <label>ID da Empresa</label><input type="text" id="emp_des_id" placeholder="GW Empresa ID (Embed)">
+    <button class="btn btn-danger" onclick="habDesEmpresa('desabilitar','emp_des_id','load_emp_des','resp_emp_des')">Desabilitar</button>
+    <div class="loading" id="load_emp_des">Aguardando...</div>
+    <div class="resp-wrap" id="resp_emp_des"></div>
+  </div>
+</div>
+
+<div id="panel_emp_criticar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Criticar Dados Obrigatórios</h2>
+    <div class="alert alert-info">Verifica o que está faltando na configuração da empresa antes de emitir notas.</div>
+    <label>ID da Empresa</label><input type="text" id="criticar_id" placeholder="GW Empresa ID (Embed)">
+    <button class="btn btn-primary" onclick="criticarDados()">Verificar</button>
+    <div class="loading" id="load_criticar">Aguardando...</div>
+    <div class="resp-wrap" id="resp_criticar"></div>
+  </div>
+</div>
+
+<div id="panel_emp_certificado" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Vincular Certificado Digital</h2>
+    <div class="alert alert-validate"><span>Valide o vínculo consultando a empresa após o upload.</span><a onclick="show('emp_consultar')">Consulte aqui para validar</a></div>
+    <label>ID da Empresa</label><input type="text" id="cert_emp_id" placeholder="GW Empresa ID (Embed)">
+    <label>Senha do Certificado</label><input type="password" id="cert_senha">
+    <label>Arquivo (.pfx / .p12)</label><input type="file" id="cert_arquivo" accept=".pfx,.p12">
+    <button class="btn btn-primary" onclick="vincularCertificado()">Vincular</button>
+    <div class="loading" id="load_cert">Aguardando...</div>
+    <div class="resp-wrap" id="resp_cert"></div>
+  </div>
+</div>
+
+<div id="panel_emp_logo" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Vincular Logotipo</h2>
+    <div class="alert alert-validate"><span>Valide o vínculo consultando a empresa após o upload.</span><a onclick="show('emp_consultar')">Consulte aqui para validar</a></div>
+    <label>ID da Empresa</label><input type="text" id="logo_emp_id" placeholder="GW Empresa ID (Embed)">
+    <label>Arquivo de imagem (JPG, PNG, GIF)</label><input type="file" id="logo_arquivo" accept=".jpg,.jpeg,.png,.gif">
+    <button class="btn btn-primary" onclick="vincularLogo()">Vincular</button>
+    <div class="loading" id="load_logo">Aguardando...</div>
+    <div class="resp-wrap" id="resp_logo"></div>
+  </div>
+</div>
+
+<div id="panel_emp_servicos" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Serviços Municipais da Prefeitura</h2>
+    <div class="grid-2">
+      <div><label>UF</label><input type="text" id="serv_uf" placeholder="SP" maxlength="2"></div>
+      <div><label>Cidade</label><input type="text" id="serv_cidade" placeholder="São Paulo"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Filtro (descrição)</label><input type="text" id="serv_filtro" placeholder="consultoria"></div>
+      <div><label>Itens por página</label><input type="number" id="serv_size" value="10"></div>
+    </div>
+    <button class="btn btn-primary" onclick="consultarServicos()">Consultar</button>
+    <div class="loading" id="load_serv">Aguardando...</div>
+    <div class="resp-wrap" id="resp_serv"></div>
+  </div>
+</div>
+
+<div id="panel_emp_servicos_unif" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Serviços Municipais Unificados</h2>
+    <div class="grid-2">
+      <div><label>Página</label><input type="number" id="serv_unif_page" value="0"></div>
+      <div><label>Itens por página</label><input type="number" id="serv_unif_size" value="10"></div>
+    </div>
+    <button class="btn btn-primary" onclick="consultarServicosUnif()">Consultar</button>
+    <div class="loading" id="load_serv_unif">Aguardando...</div>
+    <div class="resp-wrap" id="resp_serv_unif"></div>
+  </div>
+</div>
+
+<div id="panel_emp_prefeitura" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Características da Prefeitura</h2>
+    <label>Código IBGE da Cidade</label><input type="text" id="pref_ibge" placeholder="Ex: 3106200">
+    <button class="btn btn-primary" onclick="consultarPrefeitura()">Consultar</button>
+    <div class="loading" id="load_pref">Aguardando...</div>
+    <div class="resp-wrap" id="resp_pref"></div>
+  </div>
+</div>
+
+<!-- NFS-e -->
+<div id="panel_nfse_emitir" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Emitir NFS-e</h2>
+    <div class="alert alert-warn">Preencha o ID da empresa e ajuste o corpo JSON conforme necessário. Campos como serviço municipal e RPS variam por prefeitura.</div>
+    <label>ID da Empresa *</label><input type="text" id="nfse_emitir_emp" placeholder="GW Empresa ID (Embed)">
+    <label>Corpo da requisição (JSON)</label>
+    <div class="json-editor-wrap">
+      <textarea id="nfse_emitir_body" rows="14">{
+  "ambienteEmissao": "Homologacao",
+  "tipo": "NFS-e",
+  "enviarPorEmail": false,
+  "valorTotal": 10,
+  "cliente": {
+    "nome": "Cliente Teste",
+    "email": "email@email.com.br",
+    "cpfCnpj": "99999999999",
+    "tipoPessoa": "F",
+    "endereco": {
+      "uf": "MG",
+      "cidade": "Belo Horizonte",
+      "logradouro": "Rua Teste",
+      "numero": "112",
+      "bairro": "Bairro Teste",
+      "cep": "32323111"
+    }
+  },
+  "servico": {
+    "descricao": "Discriminação do Serviço prestado",
+    "aliquotaIss": 0,
+    "issRetidoFonte": false
+  }
+}</textarea>
+    </div>
+    <div class="json-validation" id="nfse_emitir_body_status"></div>
+    <button class="btn btn-success" onclick="emitirNFSe()">Emitir NFS-e</button>
+    <div class="loading" id="load_nfse_emit">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfse_emit"></div>
+  </div>
+</div>
+
+<div id="panel_nfse_consultar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Consultar NFS-e</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfse_cons_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Buscar por</label><select id="nfse_cons_tipo"><option value="gw">ID do GW</option><option value="externo">ID Externo</option></select></div>
+    </div>
+    <label>ID da Nota</label><input type="text" id="nfse_cons_id">
+    <button class="btn btn-primary" onclick="consultarNFSe()">Consultar</button>
+    <div class="loading" id="load_nfse_cons">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfse_cons"></div>
+  </div>
+</div>
+
+<div id="panel_nfse_listar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Listar Notas da Empresa (NFS-e)</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfse_list_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Status</label><select id="nfse_list_status"><option value="autorizada">Autorizada</option><option value="cancelada">Cancelada</option><option value="">Todos</option></select></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Data Criação — Início *</label><input type="date" id="nfse_list_dt_ini"></div>
+      <div><label>Data Criação — Fim</label><input type="date" id="nfse_list_dt_fim"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Página</label><input type="number" id="nfse_list_page" value="0"></div>
+      <div><label>Itens por página</label><input type="number" id="nfse_list_size" value="10"></div>
+    </div>
+    <button class="btn btn-primary" onclick="listarNFSe()">Listar</button>
+    <div class="loading" id="load_nfse_list">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfse_list"></div>
+  </div>
+</div>
+
+<div id="panel_nfse_pdf" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Baixar PDF (NFS-e)</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfse_pdf_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Tipo de ID</label><select id="nfse_pdf_tipo"><option value="gw">ID do GW</option><option value="externo">ID Externo</option></select></div>
+    </div>
+    <label>ID da Nota</label><input type="text" id="nfse_pdf_id">
+    <button class="btn btn-primary" onclick="downloadNota('nfse','pdf')">Baixar PDF</button>
+    <div class="loading" id="load_nfse_pdf">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfse_pdf"></div>
+  </div>
+</div>
+
+<div id="panel_nfse_xml" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Baixar XML (NFS-e)</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfse_xml_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Tipo de ID</label><select id="nfse_xml_tipo"><option value="gw">ID do GW</option><option value="externo">ID Externo</option></select></div>
+    </div>
+    <label>ID da Nota</label><input type="text" id="nfse_xml_id">
+    <button class="btn btn-secondary" onclick="downloadNota('nfse','xml')">Baixar XML</button>
+    <div class="loading" id="load_nfse_xml">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfse_xml"></div>
+  </div>
+</div>
+
+<div id="panel_nfse_cancelar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-del">DEL</span> Cancelar NFS-e</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfse_cancel_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Tipo de ID</label><select id="nfse_cancel_tipo"><option value="gw">ID do GW</option><option value="externo">ID Externo</option></select></div>
+    </div>
+    <label>ID da Nota</label><input type="text" id="nfse_cancel_id">
+    <button class="btn btn-danger" onclick="cancelarNFSe()">Cancelar</button>
+    <div class="loading" id="load_nfse_cancel">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfse_cancel"></div>
+  </div>
+</div>
+
+<!-- NF-e -->
+<div id="panel_nfe_emitir" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Emitir NF-e</h2>
+    <div class="alert alert-warn">Emissão de NF-e via SEFAZ. Preencha o ID da empresa e ajuste o JSON conforme necessário. Ambiente padrão: Homologação.</div>
+    <label>ID da Empresa *</label><input type="text" id="nfe_emitir_emp" placeholder="GW Empresa ID (Embed)">
+    <label>Corpo da requisição (JSON)</label>
+    <div class="json-editor-wrap">
+      <textarea id="nfe_emitir_body" rows="14">{
+  "id": "teste001",
+  "ambienteEmissao": "Homologacao",
+  "tipoOperacao": "Saida",
+  "naturezaOperacao": "Venda de mercadoria",
+  "consumidorFinal": true,
+  "indicadorPresencaConsumidor": "NaoSeAplica",
+  "enviarPorEmail": false,
+  "cliente": {
+    "tipoPessoa": "F",
+    "indicadorContribuinteICMS": "NaoContribuinte",
+    "nome": "Cliente Teste",
+    "email": "cliente@exemplo.com.br",
+    "cpfCnpj": "38618699772",
+    "endereco": {
+      "uf": "MG",
+      "cidade": "Belo Horizonte",
+      "logradouro": "Rua Sergipe",
+      "numero": "1014",
+      "bairro": "Savassi",
+      "cep": "32323111"
+    }
+  },
+  "itens": [
+    {
+      "cfop": "6102",
+      "codigo": "200502",
+      "descricao": "Produto Teste",
+      "ncm": "25309090",
+      "quantidade": 1,
+      "unidadeMedida": "UN",
+      "valorUnitario": 1,
+      "impostos": {
+        "icms": { "situacaoTributaria": "00", "origem": "1", "baseCalculo": 1, "aliquota": 12 },
+        "pis": { "situacaoTributaria": "01", "porAliquota": { "aliquota": 1.65 } },
+        "cofins": { "situacaoTributaria": "01", "porAliquota": { "aliquota": 7.6 } }
+      }
+    }
+  ]
+}</textarea>
+    </div>
+    <div class="json-validation" id="nfe_emitir_body_status"></div>
+    <button class="btn btn-success" onclick="emitirNFe()">Emitir NF-e</button>
+    <div class="loading" id="load_nfe_emit">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfe_emit"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_consultar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Consultar NF-e</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfe_cons_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID Externo da Nota</label><input type="text" id="nfe_cons_id" placeholder="Ex: teste001"></div>
+    </div>
+    <button class="btn btn-primary" onclick="consultarNFe()">Consultar</button>
+    <div class="loading" id="load_nfe_cons">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfe_cons"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_listar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Listar NF-e por Empresa</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfe_list_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Status</label><select id="nfe_list_status"><option value="autorizada">Autorizada</option><option value="cancelada">Cancelada</option><option value="">Todos</option></select></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Data Criação — Início *</label><input type="date" id="nfe_list_dt_ini"></div>
+      <div><label>Data Criação — Fim</label><input type="date" id="nfe_list_dt_fim"></div>
+    </div>
+    <div class="grid-3">
+      <div><label>Página</label><input type="number" id="nfe_list_page" value="0"></div>
+      <div><label>Itens por página</label><input type="number" id="nfe_list_size" value="10"></div>
+      <div><label>Ordenar por</label><select id="nfe_list_sort"><option value="datacriacao">Data de criação</option><option value="numero">Número</option></select></div>
+    </div>
+    <button class="btn btn-primary" onclick="listarNFe()">Listar</button>
+    <div class="loading" id="load_nfe_list">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfe_list"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_pdf" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Baixar PDF (NF-e)</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfe_pdf_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Tipo de ID</label><select id="nfe_pdf_tipo"><option value="gw">ID do GW</option><option value="externo">ID Externo</option></select></div>
+    </div>
+    <label>ID da Nota</label><input type="text" id="nfe_pdf_id">
+    <button class="btn btn-primary" onclick="downloadNota('nfe','pdf')">Baixar PDF</button>
+    <div class="loading" id="load_nfe_pdf">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfe_pdf"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_xml" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Baixar XML (NF-e)</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfe_xml_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Tipo de ID</label><select id="nfe_xml_tipo"><option value="gw">ID do GW</option><option value="externo">ID Externo</option></select></div>
+    </div>
+    <label>ID da Nota</label><input type="text" id="nfe_xml_id">
+    <button class="btn btn-secondary" onclick="downloadNota('nfe','xml')">Baixar XML</button>
+    <div class="loading" id="load_nfe_xml">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfe_xml"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_cancelar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-del">DEL</span> Cancelar NF-e</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="nfe_cancel_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID Externo da Nota</label><input type="text" id="nfe_cancel_id"></div>
+    </div>
+    <button class="btn btn-danger" onclick="cancelarNFe()">Cancelar</button>
+    <div class="loading" id="load_nfe_cancel">Aguardando...</div>
+    <div class="resp-wrap" id="resp_nfe_cancel"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_xml_cancelamento" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> XML de Cancelamento</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="xml_cancel_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID da Nota</label><input type="text" id="xml_cancel_id"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="downloadXmlCancelamento()">Baixar XML</button>
+    <div class="loading" id="load_xml_cancel">Aguardando...</div>
+    <div class="resp-wrap" id="resp_xml_cancel"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_carta_correcao" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Emitir Carta de Correção</h2>
+    <div class="alert alert-validate"><span>Consulte a carta após emitir para confirmar o status.</span><a onclick="show('nfe_cons_carta')">Consultar aqui</a></div>
+    <div class="grid-2">
+      <div><label>ID da Empresa *</label><input type="text" id="carta_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID da Carta</label><input type="text" id="carta_id" placeholder="Ex: correc-01"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Ambiente</label><select id="carta_ambiente"><option value="Homologacao">Homologação (Teste)</option><option value="Producao">Produção</option></select></div>
+      <div><label>Número da Correção</label><input type="number" id="carta_numero" value="1"></div>
+    </div>
+    <label>Chave de Acesso da NF-e (44 dígitos)</label>
+    <input type="text" id="carta_chave" placeholder="44 dígitos da chave de acesso">
+    <label>Descrição da Correção *</label>
+    <textarea id="carta_correcao" placeholder="Descreva a correção a ser realizada..."></textarea>
+    <button class="btn btn-success" onclick="emitirCartaCorrecao()">Emitir Carta de Correção</button>
+    <div class="loading" id="load_carta">Aguardando...</div>
+    <div class="resp-wrap" id="resp_carta"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_cons_carta" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Consultar Carta de Correção</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="cons_carta_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID da Carta</label><input type="text" id="cons_carta_id"></div>
+    </div>
+    <button class="btn btn-primary" onclick="consultarCartaCorrecao()">Consultar</button>
+    <div class="loading" id="load_cons_carta">Aguardando...</div>
+    <div class="resp-wrap" id="resp_cons_carta"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_xml_carta" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> XML da Carta de Correção</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="xml_carta_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID da Carta</label><input type="text" id="xml_carta_id"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="downloadXmlCarta()">Baixar XML</button>
+    <div class="loading" id="load_xml_carta">Aguardando...</div>
+    <div class="resp-wrap" id="resp_xml_carta"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_inutilizar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Inutilizar NF-e</h2>
+    <div class="alert alert-warn">Atenção: Esta ação não pode ser desfeita.</div>
+    <div class="alert alert-validate"><span>Consulte a inutilização após confirmar.</span><a onclick="show('nfe_cons_inut')">Consultar aqui</a></div>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="inut_emp_id" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Ambiente</label><select id="inut_ambiente"><option value="Producao">Produção</option><option value="Homologacao">Homologação</option></select></div>
+    </div>
+    <div class="grid-2">
+      <div><label>ID da Inutilização</label><input type="text" id="inut_id" placeholder="Ex: inut-377-_nfe"></div>
+      <div><label>Série</label><input type="text" id="inut_serie" placeholder="1"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Número Inicial</label><input type="number" id="inut_num_ini"></div>
+      <div><label>Número Final</label><input type="number" id="inut_num_fim"></div>
+    </div>
+    <label>Justificativa</label><input type="text" id="inut_just" value="Quebra na sequência da numeração">
+    <button class="btn btn-danger" onclick="inutilizarNFe()">Inutilizar</button>
+    <div class="loading" id="load_inut">Aguardando...</div>
+    <div class="resp-wrap" id="resp_inut"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_cons_inut" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Consultar Inutilização NF-e</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="inut_cons_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID da Inutilização</label><input type="text" id="inut_cons_id" placeholder="Ex: inut-377-_nfe"></div>
+    </div>
+    <button class="btn btn-primary" onclick="consultarInutilizacao()">Consultar</button>
+    <div class="loading" id="load_inut_cons">Aguardando...</div>
+    <div class="resp-wrap" id="resp_inut_cons"></div>
+  </div>
+</div>
+
+<div id="panel_nfe_xml_inut" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Baixar XML de Inutilização</h2>
+    <div class="grid-2">
+      <div><label>ID da Empresa</label><input type="text" id="xml_inut_emp" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>ID da Inutilização</label><input type="text" id="xml_inut_id"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="downloadXmlInut()">Baixar XML</button>
+    <div class="loading" id="load_xml_inut">Aguardando...</div>
+    <div class="resp-wrap" id="resp_xml_inut"></div>
+  </div>
+</div>
+
+<!-- MEI -->
+<div id="panel_mei_consultar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-get">GET</span> Consultar Empresa MEI</h2>
+    <label>ID da Empresa</label><input type="text" id="mei_cons_id" placeholder="GW Empresa ID (Embed)">
+    <button class="btn btn-primary" onclick="consultarEmpresaMEI()">Consultar</button>
+    <div class="loading" id="load_mei_cons">Aguardando...</div>
+    <div class="resp-wrap" id="resp_mei_cons"></div>
+  </div>
+</div>
+
+<div id="panel_mei_alterar" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Alterar Campo MEI</h2>
+    <div class="alert alert-validate"><span>Consulte a empresa após salvar para confirmar.</span><a onclick="show('mei_consultar')">Consultar aqui</a></div>
+    <div class="grid-2">
+      <div><label>ID da Empresa *</label><input type="text" id="mei_alt_id" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Regime Especial Tributação</label><input type="text" id="mei_alt_ret"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>MEI</label><select id="mei_alt_mei"><option value="true">Sim</option><option value="false">Não</option></select></div>
+      <div><label>Regime Apuração SN</label><input type="text" id="mei_alt_sn"></div>
+    </div>
+    <div class="grid-3">
+      <div><label>% Federal</label><input type="number" id="mei_pct_fed" value="0" step="0.01"></div>
+      <div><label>% Estadual</label><input type="number" id="mei_pct_est" value="0" step="0.01"></div>
+      <div><label>% Municipal</label><input type="number" id="mei_pct_mun" value="0" step="0.01"></div>
+    </div>
+    <button class="btn btn-success" onclick="alterarMEI()">Salvar</button>
+    <div class="loading" id="load_mei_alt">Aguardando...</div>
+    <div class="resp-wrap" id="resp_mei_alt"></div>
+  </div>
+</div>
+
+<div id="panel_mei_portal" class="panel">
+  <div class="card">
+    <h2><span class="badge badge-post">POST</span> Atualizar Empresa MEI (Portal)</h2>
+    <div class="alert alert-validate"><span>Consulte a empresa após salvar para confirmar.</span><a onclick="show('mei_consultar')">Consultar aqui</a></div>
+    <div class="grid-2">
+      <div><label>ID da Empresa *</label><input type="text" id="mei_portal_id" placeholder="GW Empresa ID (Embed)"></div>
+      <div><label>Série NF</label><input type="text" id="mei_portal_serie" placeholder="80000"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Sequencial NF</label><input type="number" id="mei_portal_seq" value="1"></div>
+      <div><label>Usuário Provedor</label><input type="text" id="mei_portal_user"></div>
+    </div>
+    <label>Senha Provedor</label><input type="password" id="mei_portal_senha">
+    <button class="btn btn-success" onclick="salvarEmpresaMEI()">Salvar</button>
+    <div class="loading" id="load_mei_portal">Aguardando...</div>
+    <div class="resp-wrap" id="resp_mei_portal"></div>
+  </div>
+</div>
+
+<!-- AJUDA -->
+<div id="panel_ajuda" class="panel active">
+  <div class="card">
+    <h2>Ajuda</h2>
+    <div class="alert alert-info">Este painel funciona como um "Postman" simplificado: cada botão monta uma requisição e a envia <strong>diretamente do seu navegador para a API do eNotas</strong>, sem passar por nenhum backend próprio ou banco de dados intermediário. Nada do que você digita aqui fica salvo — se atualizar a página, os campos são limpos.</div>
+
+    <div class="section-title">Passo a passo</div>
+    <div class="help-step"><div class="num">1</div><div class="txt">Cole a <strong>API Key</strong> no campo no topo da tela (canto superior direito). Ela é obrigatória para qualquer chamada.</div></div>
+    <div class="help-step"><div class="num">2</div><div class="txt">Escolha, no menu à esquerda, a operação que deseja executar (ex.: Consultar empresa, Emitir NFS-e, Baixar XML, etc).</div></div>
+    <div class="help-step"><div class="num">3</div><div class="txt">Preencha os campos solicitados. Campos marcados com <strong>*</strong> são obrigatórios. Sempre que pedir "ID da Empresa", use o <strong>GW Empresa ID</strong> (veja abaixo onde encontrar).</div></div>
+    <div class="help-step"><div class="num">4</div><div class="txt">Clique no botão de ação (Consultar, Listar, Emitir, Salvar, etc). A resposta da API aparece logo abaixo, em uma versão "amigável" traduzida para português e também no formato JSON técnico (clique em "Ver JSON" para alternar).</div></div>
+    <div class="help-step"><div class="num">5</div><div class="txt">Em operações de inclusão/alteração (como "Incluir / Alterar Empresa", "Emitir NFS-e" e "Emitir NF-e"), o corpo da requisição é um <strong>JSON aberto</strong>. Você pode editar os valores dentro das chaves <code>{ }</code>, mas não altere os nomes dos campos (as chaves, à esquerda dos dois-pontos) — eles precisam ser exatamente como a API do eNotas espera.</div></div>
+
+    <div class="section-title">O que pode e o que não pode ser alterado</div>
+    <div class="help-step"><div class="num" style="color:#059669">OK</div><div class="txt"><strong>Pode alterar:</strong> os valores dentro do JSON (CNPJ, razão social, valores, datas, descrições, etc) e os campos de formulário (IDs, datas de filtro, páginas).</div></div>
+    <div class="help-step"><div class="num" style="color:#92400e">!</div><div class="txt"><strong>Ponto de atenção:</strong> em geral, evite mudar os nomes das chaves do JSON (ex.: <code>razaoSocial</code>, <code>cpfCnpj</code>) e a estrutura/aninhamento dos objetos — isso costuma fazer a API rejeitar a requisição. A exceção são alguns campos que variam conforme a prefeitura (cada município pode nomear certos campos de forma diferente); nesses casos, siga o nome indicado na documentação/retorno daquela prefeitura específica.</div></div>
+    <div class="help-step"><div class="num">!</div><div class="txt">Algumas alterações (ex.: dados de empresa) podem levar um tempo para refletir no Embed/Backoffice. Sempre consulte novamente após salvar para confirmar.</div></div>
+
+    <div class="section-title">Onde encontrar as credenciais</div>
+    <div class="help-step"><div class="num" style="font-size:.62rem">KEY</div><div class="txt"><strong>API Key (Embutido):</strong> disponível em <a class="help-link" href="https://app-emissor.enotasgw.com.br/apikey" target="_blank" rel="noopener">app-emissor.enotasgw.com.br/apikey</a></div></div>
+    <div class="help-step"><div class="num" style="font-size:.62rem">ID</div><div class="txt"><strong>GW Empresa ID (Embed):</strong> disponível em <a class="help-link" href="https://embed.enotas.com.br/backoffice" target="_blank" rel="noopener">embed.enotas.com.br/backoffice</a></div></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+const PROXY = 'https://postman-front.calais-rafael.workers.dev/?url=';
+
+// ─── Utilitários básicos ───────────────────────────────────────────────────
+function toggleKey() {
+  const el = document.getElementById('apiKey');
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+function getKey() {
+  const k = document.getElementById('apiKey').value.trim();
+  if (!k) { alert('Informe a API Key.'); return null; }
+  return k;
+}
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function show(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  const panel = document.getElementById('panel_' + name);
+  if (panel) panel.classList.add('active');
+  const sidebarBtn = btn || document.querySelector(`.sidebar-item[onclick*="'${name}'"]`);
+  if (sidebarBtn) sidebarBtn.classList.add('active');
+}
+function showLoad(id, on) {
+  const el = document.getElementById(id);
+  if (el) el.className = 'loading' + (on ? ' show' : '');
+}
+
+// ─── Validação de JSON em tempo real ───────────────────────────────────────
+function jsonErrorPt(err, text) {
+  const msg = err.message;
+  let position = null;
+  const posMatch = msg.match(/position (\d+)/);
+  if (posMatch) position = parseInt(posMatch[1], 10);
+  let line = null, col = null;
+  if (position != null) {
+    const upto = text.slice(0, position);
+    const lines = upto.split('\n');
+    line = lines.length;
+    col = lines[lines.length - 1].length + 1;
+  }
+  let friendly = 'O texto não está em um formato JSON válido.';
+  const tokenMatch = msg.match(/Unexpected token (.+?) in JSON/i);
+  if (/Unexpected end of JSON input/i.test(msg)) {
+    friendly = 'O JSON terminou antes do esperado — provavelmente falta fechar uma chave "}" ou um colchete "]".';
+  } else if (tokenMatch) {
+    friendly = `Caractere inesperado "${tokenMatch[1]}" — verifique se não falta ou sobra uma vírgula ",", aspas """ ou chave "{ }" antes desse ponto.`;
+  } else if (/Expected ',' or '}' after property value/i.test(msg)) {
+    friendly = 'Falta uma vírgula "," entre os campos, ou falta fechar a chave "}" depois de um valor.';
+  } else if (/Expected ',' or '\]' after array element/i.test(msg)) {
+    friendly = 'Falta uma vírgula "," entre os itens da lista, ou falta fechar o colchete "]".';
+  } else if (/Expected property name or '}'/i.test(msg)) {
+    friendly = 'Esperava-se o nome de um campo (entre aspas) ou o fechamento da chave "}" nesse ponto.';
+  } else if (/Expected double-quoted property name/i.test(msg)) {
+    friendly = 'O nome do campo precisa estar entre aspas duplas, assim: "nomeDoCampo".';
+  } else if (/Unterminated string/i.test(msg)) {
+    friendly = 'Há um texto entre aspas que não foi fechado corretamente.';
+  } else if (/Bad control character/i.test(msg)) {
+    friendly = 'Há um caractere inválido dentro de um texto entre aspas.';
+  } else if (/Unexpected number/i.test(msg) || /No number after minus sign/i.test(msg)) {
+    friendly = 'Número escrito de forma inválida nesse ponto.';
+  }
+  return { line, col, position, friendly };
+}
+function jumpToJsonError(textarea, position) {
+  textarea.focus();
+  if (position == null || isNaN(position)) return;
+  const start = Math.max(0, position - 1);
+  const end = Math.min(textarea.value.length, position + 1);
+  textarea.setSelectionRange(start, end);
+  const upto = textarea.value.slice(0, position);
+  const lineNum = upto.split('\n').length;
+  const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight) || 16;
+  textarea.scrollTop = Math.max(0, (lineNum - 3) * lineHeight);
+}
+function validateJsonField(textareaId, statusId) {
+  const textarea = document.getElementById(textareaId);
+  const status = document.getElementById(statusId);
+  if (!textarea || !status) return;
+  const check = () => {
+    const text = textarea.value.trim();
+    if (!text) { status.className = 'json-validation'; status.innerHTML = ''; textarea.classList.remove('json-invalid'); return; }
+    try {
+      JSON.parse(text);
+      status.className = 'json-validation ok';
+      status.textContent = 'JSON válido.';
+      textarea.classList.remove('json-invalid');
+    } catch (e) {
+      const info = jsonErrorPt(e, text);
+      const loc = info.line ? ` (linha ${info.line}, coluna ${info.col})` : '';
+      status.className = 'json-validation err';
+      status.innerHTML = `JSON inválido${loc}: ${info.friendly} <a href="#" class="json-err-jump">Mostrar no editor</a>`;
+      textarea.classList.add('json-invalid');
+      const link = status.querySelector('.json-err-jump');
+      if (link) link.addEventListener('click', ev => { ev.preventDefault(); jumpToJsonError(textarea, info.position); });
+    }
+  };
+  textarea.addEventListener('input', check);
+  check();
+}
+['emp_inc_body', 'nfse_emitir_body', 'nfe_emitir_body'].forEach(id => validateJsonField(id, id + '_status'));
+
+// ─── Editor amigável "Incluir / Alterar Empresa" (sincronizado com o JSON) ─
+function switchEmpTab(tab) {
+  document.querySelectorAll('.emp-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('emp_inc_form_tab').classList.toggle('active', tab === 'visual');
+  document.getElementById('emp_inc_json_tab').classList.toggle('active', tab === 'json');
+}
+function escapeAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+}
+function buildEditableForm(obj, prefix) {
+  if (obj === null || typeof obj !== 'object') return '';
+  return Object.entries(obj).map(([k, val]) => {
+    if (!prefix && k === 'id') return '';
+    const path = prefix ? `${prefix}.${k}` : k;
+    const label = LABELS[k] || camelToLabel(k);
+    if (val === null) {
+      return `<div class="form-field"><label>${label}</label><input type="text" data-path="${path}" data-origtype="null" value=""></div>`;
+    }
+    if (typeof val === 'boolean') {
+      return `<div class="form-check"><input type="checkbox" data-path="${path}" data-origtype="boolean" ${val ? 'checked' : ''}><label>${label}</label></div>`;
+    }
+    if (typeof val === 'number') {
+      return `<div class="form-field"><label>${label}</label><input type="number" data-path="${path}" data-origtype="number" value="${val}"></div>`;
+    }
+    if (Array.isArray(val)) {
+      const isPrimitive = val.every(it => typeof it !== 'object' || it === null);
+      if (isPrimitive) {
+        return `<div class="form-field"><label>${label}</label><input type="text" data-path="${path}" data-origtype="array" value="${escapeAttr(val.join(', '))}"></div>`;
+      }
+      return `<div class="form-field"><label>${label} (lista — use o JSON Técnico para editar itens complexos)</label><textarea data-path="${path}" data-origtype="arrayjson" rows="4">${escapeHtml(JSON.stringify(val, null, 2))}</textarea></div>`;
+    }
+    if (typeof val === 'object') {
+      const inner = buildEditableForm(val, path);
+      return `${sec(label)}<div class="grid-2">${inner}</div>`;
+    }
+    return `<div class="form-field"><label>${label}</label><input type="text" data-path="${path}" data-origtype="string" value="${escapeAttr(val)}"></div>`;
+  }).join('');
+}
+function formToObject(container) {
+  const result = {};
+  container.querySelectorAll('[data-path]').forEach(el => {
+    const keys = el.dataset.path.split('.');
+    const type = el.dataset.origtype;
+    let value;
+    if (type === 'boolean') value = el.checked;
+    else if (type === 'number') value = el.value === '' ? null : Number(el.value);
+    else if (type === 'null') value = el.value === '' ? null : el.value;
+    else if (type === 'array') value = el.value === '' ? [] : el.value.split(',').map(s => s.trim());
+    else if (type === 'arrayjson') { try { value = JSON.parse(el.value); } catch(e) { value = []; } }
+    else value = el.value;
+    let node = result;
+    for (let i = 0; i < keys.length - 1; i++) {
+      node[keys[i]] = node[keys[i]] || {};
+      node = node[keys[i]];
+    }
+    node[keys[keys.length - 1]] = value;
+  });
+  return result;
+}
+let empFormSyncing = false;
+function empRenderForm(jsonText) {
+  let obj;
+  try { obj = JSON.parse(jsonText); } catch(e) { return; }
+  const container = document.getElementById('emp_inc_form');
+  if (!container) return;
+  container.innerHTML = buildEditableForm(obj) || '<div style="color:#94a3b8;font-size:.84rem;text-align:center;padding:12px">Nenhum campo para exibir.</div>';
+  container.querySelectorAll('[data-path]').forEach(el => el.addEventListener('input', empFormChanged));
+}
+function empFormChanged() {
+  if (empFormSyncing) return;
+  const container = document.getElementById('emp_inc_form');
+  const textarea = document.getElementById('emp_inc_body');
+  if (!container || !textarea) return;
+  const obj = formToObject(container);
+  empFormSyncing = true;
+  textarea.value = JSON.stringify(obj, null, 2);
+  textarea.dispatchEvent(new Event('input'));
+  empFormSyncing = false;
+}
+(function initEmpInclude() {
+  const textarea = document.getElementById('emp_inc_body');
+  if (!textarea) return;
+  textarea.addEventListener('input', () => {
+    if (empFormSyncing) return;
+    empRenderForm(textarea.value);
+  });
+})();
+function editarEmpresaFromConsulta(data) {
+  show('emp_incluir');
+  const empresaIdField = document.getElementById('emp_inc_empresaid');
+  const textarea = document.getElementById('emp_inc_body');
+  if (empresaIdField) empresaIdField.value = data.id || '';
+  if (textarea) {
+    const { id, ...bodyWithoutId } = data;
+    textarea.value = JSON.stringify(bodyWithoutId, null, 2);
+    textarea.dispatchEvent(new Event('input'));
+  }
+  switchEmpTab('visual');
+}
+
+// ─── Tela de carregamento inicial ──────────────────────────────────────────
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const ls = document.getElementById('loadingScreen');
+    if (!ls) return;
+    ls.classList.add('hide');
+    setTimeout(() => ls.remove(), 700);
+  }, 5000);
+});
+
+// ─── Formatadores ─────────────────────────────────────────────────────────
+function fmtCPFCNPJ(val) {
+  if (!val) return '—';
+  const s = String(val).replace(/\D/g, '');
+  if (s.length === 11) return s.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  if (s.length === 14) return s.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+  return val;
+}
+function fmtMoney(val) {
+  if (val == null || val === '') return '—';
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+}
+function fmtDate(val) {
+  if (!val) return '—';
+  try { return new Date(val).toLocaleString('pt-BR'); } catch(e) { return val; }
+}
+function fmtBool(val) {
+  if (val === true || val === 'true') return '<span style="color:#059669;font-weight:600">Sim</span>';
+  if (val === false || val === 'false') return '<span style="color:#dc2626;font-weight:600">Não</span>';
+  return '—';
+}
+
+// ─── Constantes de tradução ───────────────────────────────────────────────
+const STATUS_NOTA = {
+  autorizada:    { label: 'Autorizada',            cls: 'pill-ok' },
+  ativa:         { label: 'Ativa',                 cls: 'pill-ok' },
+  cancelada:     { label: 'Cancelada',             cls: 'pill-err' },
+  erro:          { label: 'Erro',                  cls: 'pill-err' },
+  negada:        { label: 'Negada',                cls: 'pill-err' },
+  inativa:       { label: 'Inativa',               cls: 'pill-err' },
+  processando:   { label: 'Processando',           cls: 'pill-warn' },
+  contingencia:  { label: 'Contingência',          cls: 'pill-warn' },
+  aguardando_autorizacao: { label: 'Aguardando Autorização', cls: 'pill-warn' },
+};
+
+const LABELS = {
+  id: 'ID', cnpj: 'CNPJ', cpfCnpj: 'CPF / CNPJ', razaoSocial: 'Razão Social',
+  nomeFantasia: 'Nome Fantasia', email: 'E-mail', status: 'Status', numero: 'Número',
+  valorTotal: 'Valor Total', dataEmissao: 'Data de Emissão', dataAutorizacao: 'Data de Autorização',
+  dataCriacao: 'Data de Criação', ambienteEmissao: 'Ambiente', tipo: 'Tipo',
+  chaveAcesso: 'Chave de Acesso', mensagemSefaz: 'Mensagem SEFAZ', serie: 'Série',
+  numeroRps: 'Número RPS', serieRps: 'Série RPS', idExterno: 'ID Externo',
+  inscricaoMunicipal: 'Inscrição Municipal', inscricaoEstadual: 'Inscrição Estadual',
+  optanteSimplesNacional: 'Simples Nacional', mei: 'MEI', incentivadorCultural: 'Incentivador Cultural',
+  enviarEmailCliente: 'Enviar E-mail ao Cliente', aliquotaIss: 'Alíquota ISS',
+  codigoServicoMunicipal: 'Código Serviço Municipal', descricaoServico: 'Descrição do Serviço',
+  itemListaServicoLC116: 'Item LC116', cnae: 'CNAE', telefoneComercial: 'Telefone Comercial',
+  regimeEspecialTributacao: 'Regime Especial Tributação',
+  message: 'Mensagem', descricao: 'Descrição', correcao: 'Correção', justificativa: 'Justificativa',
+  numeroInicial: 'Número Inicial', numeroFinal: 'Número Final',
+  nome: 'Nome', telefone: 'Telefone',
+  tipoPessoa: 'Tipo de Pessoa', logradouro: 'Logradouro', bairro: 'Bairro',
+  cep: 'CEP', uf: 'UF', cidade: 'Cidade', pais: 'País', complemento: 'Complemento',
+  numero: 'Número', endereco: 'Endereço', cliente: 'Cliente', servico: 'Serviço',
+  issRetidoFonte: 'ISS Retido na Fonte', enviarPorEmail: 'Enviar por E-mail',
+  tipo: 'Tipo', totalItems: 'Total de Registros', totalRecords: 'Total de Registros',
+  pageNumber: 'Página', data: 'Dados', prazo: 'Prazo',
+  chaveAcesso: 'Chave de Acesso', numeroRps: 'Número RPS', serieRps: 'Série RPS',
+  codigoVerificacao: 'Código de Verificação', linkVisualizacaoNfse: 'Link de Visualização',
+  mensagemSefaz: 'Mensagem SEFAZ', codigoSefaz: 'Código SEFAZ',
+  idExterno: 'ID Externo', nomeFantasia: 'Nome Fantasia',
+  configuracoesNFSeHomologacao: 'Config. NFS-e Homologação',
+  configuracoesNFSeProducao: 'Config. NFS-e Produção',
+  ConfiguracoesNFSeHomologacao: 'Config. NFS-e Homologação',
+  ConfiguracoesNFSeProducao: 'Config. NFS-e Produção',
+  sequencialNFe: 'Sequencial NF', serieNFe: 'Série NF',
+  sequencialLoteNFe: 'Sequencial Lote', usuarioAcessoProvedor: 'Usuário Provedor',
+  senhaAcessoProvedor: 'Senha Provedor', tokenAcessoProvedor: 'Token Provedor',
+  itens: 'Itens', impostos: 'Impostos', icms: 'ICMS', pis: 'PIS', cofins: 'COFINS',
+  cfop: 'CFOP', ncm: 'NCM', quantidade: 'Quantidade', unidadeMedida: 'Unidade',
+  valorUnitario: 'Valor Unitário', valorDesconto: 'Desconto', baseCalculo: 'Base de Cálculo',
+  situacaoTributaria: 'Situação Tributária', origem: 'Origem',
+  porcentagemTributoFederal: '% Federal', porcentagemTributoEstadual: '% Estadual',
+  porcentagemTributoMunicipal: '% Municipal', mei: 'MEI',
+  optanteSimplesNacional: 'Simples Nacional', regimeEspecialTributacao: 'Regime Especial Tributação',
+  dadosObrigatoriosPreenchidos: 'Dados Obrigatórios Preenchidos',
+  emiteNfseNacional: 'Emite NFS-e Nacional',
+  optanteSimplesNacionalSublimiteReceitaBruta: 'Optante SN - Sub-limite Receita Bruta',
+  dataUltimaAlteracao: 'Data da Última Alteração',
+  habilitada: 'Habilitada', ativo: 'Ativo', ativa: 'Ativa',
+  porAliquota: 'Por Alíquota', aliquotaIss: 'Alíquota ISS',
+  codigoMunicipio: 'Código do Município', codigoTributacaoMunicipio: 'Código de Tributação Municipal',
+  discriminacao: 'Discriminação do Serviço', municipioPrestacaoServico: 'Município de Prestação',
+  issRetido: 'ISS Retido', valorIss: 'Valor do ISS', valorLiquidoNfse: 'Valor Líquido NFS-e',
+  valorPis: 'Valor PIS', valorCofins: 'Valor COFINS', valorInss: 'Valor INSS', valorIr: 'Valor IR',
+  valorCsll: 'Valor CSLL', outrasRetencoes: 'Outras Retenções',
+  competencia: 'Competência', numeroLote: 'Número do Lote',
+};
+
+const AMBIENTE_LABELS = { Homologacao: 'Homologação (Teste)', Producao: 'Produção' };
+
+function camelToLabel(key) {
+  return key
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+    .replace(/^./, s => s.toUpperCase());
+}
+
+function statusPill(val) {
+  if (!val) return '<span class="status-pill pill-neutral">—</span>';
+  const s = STATUS_NOTA[String(val).toLowerCase()] || { label: val, cls: 'pill-neutral' };
+  return `<span class="status-pill ${s.cls}">${s.label}</span>`;
+}
+
+// ─── Construtores de HTML de resposta ────────────────────────────────────
+function fld(label, val) {
+  return `<div class="resp-field"><span class="resp-key">${label}</span><span class="resp-val">${val ?? '—'}</span></div>`;
+}
+function sec(title) {
+  return `<span class="resp-section-sep">${title}</span>`;
+}
+
+function renderEmpresa(d) {
+  const end = d.endereco || {};
+  const logr = [end.logradouro, end.numero, end.complemento].filter(Boolean).join(', ');
+  const hom  = d.configuracoesNFSeHomologacao || d.ConfiguracoesNFSeHomologacao || {};
+  const prod = d.configuracoesNFSeProducao    || d.ConfiguracoesNFSeProducao    || {};
+  return `<div class="resp-card">
+    ${fld('ID da Empresa', `<code>${d.id || '—'}</code>`)}
+    ${fld('CNPJ', fmtCPFCNPJ(d.cnpj))}
+    ${fld('Razão Social', d.razaoSocial || '—')}
+    ${fld('Nome Fantasia', d.nomeFantasia || '—')}
+    ${fld('Status', statusPill(d.status))}
+    ${fld('E-mail', d.email || '—')}
+    ${fld('Telefone', d.telefoneComercial || '—')}
+    ${fld('Inscrição Municipal', d.inscricaoMunicipal || '—')}
+    ${fld('Inscrição Estadual', d.inscricaoEstadual || '—')}
+    ${fld('Simples Nacional', fmtBool(d.optanteSimplesNacional))}
+    ${fld('MEI', fmtBool(d.mei))}
+    ${d.aliquotaIss != null ? fld('Alíquota ISS', `${(d.aliquotaIss * 100).toFixed(2)}%`) : ''}
+    ${d.codigoServicoMunicipal ? fld('Serviço Municipal', d.codigoServicoMunicipal) : ''}
+    ${sec('Endereço')}
+    ${fld('Cidade / UF', end.cidade ? `${end.cidade} / ${end.uf}` : '—')}
+    ${fld('CEP', end.cep || '—')}
+    ${logr ? fld('Logradouro', logr) : ''}
+    ${fld('Bairro', end.bairro || '—')}
+    ${(hom.sequencialNFe || prod.sequencialNFe) ? sec('Configurações NFS-e') : ''}
+    ${hom.sequencialNFe ? fld('Sequencial Homologação', hom.sequencialNFe) : ''}
+    ${prod.sequencialNFe ? fld('Sequencial Produção', prod.sequencialNFe) : ''}
+  </div>`;
+}
+
+function renderNota(d) {
+  const cli  = d.cliente  || {};
+  const serv = d.servico  || {};
+  const end  = cli.endereco || {};
+  const amb  = AMBIENTE_LABELS[d.ambienteEmissao] || d.ambienteEmissao || '—';
+  return `<div class="resp-card">
+    ${fld('ID (GW)', `<code>${d.id || '—'}</code>`)}
+    ${d.idExterno ? fld('ID Externo', d.idExterno) : ''}
+    ${fld('Status', statusPill(d.status))}
+    ${fld('Número', d.numero || '—')}
+    ${fld('Série', d.serie || d.serieRps || '—')}
+    ${fld('Ambiente', amb)}
+    ${fld('Valor Total', fmtMoney(d.valorTotal))}
+    ${fld('Data de Emissão', fmtDate(d.dataEmissao || d.dataAutorizacao || d.dataCriacao))}
+    ${d.mensagemSefaz ? fld('Mensagem SEFAZ', d.mensagemSefaz) : ''}
+    ${d.chaveAcesso ? fld('Chave de Acesso', `<code>${d.chaveAcesso}</code>`) : ''}
+    ${sec('Cliente')}
+    ${fld('Nome', cli.nome || '—')}
+    ${fld('CPF / CNPJ', fmtCPFCNPJ(cli.cpfCnpj))}
+    ${fld('E-mail', cli.email || '—')}
+    ${end.cidade ? fld('Cidade / UF', `${end.cidade} / ${end.uf}`) : ''}
+    ${serv.descricao ? sec('Serviço') + fld('Descrição', serv.descricao) + fld('Alíquota ISS', serv.aliquotaIss != null ? `${serv.aliquotaIss}%` : '—') : ''}
+  </div>`;
+}
+
+// ─── Renderizador de valor individual ────────────────────────────────────
+function fmtVal(k, val) {
+  if (val === null || val === undefined) return '—';
+  if (k === 'status') return statusPill(val);
+  if (k === 'cnpj' || k === 'cpfCnpj' || k === 'cpf') return fmtCPFCNPJ(String(val));
+  if (k === 'valorTotal' || k === 'valor' || k === 'valorUnitario' || k === 'valorDesconto' || k === 'valorDeducoes' || k === 'baseCalculo') return fmtMoney(val);
+  if (k.toLowerCase().startsWith('data') || k.endsWith('At') || k.endsWith('Date') || k.endsWith('Em')) return fmtDate(val);
+  if (typeof val === 'boolean') return fmtBool(val);
+  if (k === 'ambienteEmissao') return AMBIENTE_LABELS[val] || val;
+  if (k === 'aliquotaIss' || k === 'aliquota') return val != null ? `${val}%` : '—';
+  return String(val);
+}
+
+// ─── Renderizador genérico recursivo (expande objetos aninhados) ──────────
+function renderObjeto(data, depth) {
+  depth = depth || 0;
+  if (!data || typeof data !== 'object') return '';
+  if (Array.isArray(data)) {
+    if (!data.length) return fld('Lista', '<em style="color:#94a3b8">vazia</em>');
+    return data.map((item, i) => {
+      if (typeof item !== 'object' || item === null) {
+        return fld(`Item ${i + 1}`, fmtVal('', item));
+      }
+      return `<div style="margin:6px 0 2px;padding:8px 10px;background:#f8fafc;border-radius:8px;border-left:3px solid #e2e8f0">
+        <div style="font-size:.67rem;font-weight:700;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;letter-spacing:.06em">Item ${i + 1}</div>
+        ${renderObjeto(item, depth + 1)}
+      </div>`;
+    }).join('');
+  }
+  return Object.entries(data).map(([k, val]) => {
+    if (val === null || val === undefined) return fld(LABELS[k] || camelToLabel(k), '—');
+    if (typeof val === 'object' && !Array.isArray(val)) {
+      const inner = renderObjeto(val, depth + 1);
+      if (!inner) return '';
+      return `${sec(LABELS[k] || camelToLabel(k))}${inner}`;
+    }
+    if (Array.isArray(val)) {
+      if (!val.length) return '';
+      const inner = renderObjeto(val, depth + 1);
+      return `${sec(LABELS[k] || camelToLabel(k))}${inner}`;
+    }
+    return fld(LABELS[k] || camelToLabel(k), fmtVal(k, val));
+  }).join('');
+}
+
+function renderLista(d) {
+  const items = d.items || (Array.isArray(d) ? d : []);
+  const total = d.totalItems ?? d.total ?? items.length;
+  if (!items.length) {
+    return `<div class="resp-card"><div style="text-align:center;padding:20px;color:#94a3b8;font-size:.85rem">Nenhum registro encontrado.</div></div>`;
+  }
+  const rows = items.map((item, idx) => {
+    const isEmpresa = item.cnpj != null || item.razaoSocial != null;
+    const isNota = item.status != null && (item.numero != null || item.valorTotal != null || item.cliente != null);
+
+    let header = '';
+    if (isEmpresa) {
+      header = `<div class="resp-list-item-header">
+        <span class="resp-list-item-title">${item.nomeFantasia || item.razaoSocial || '—'}</span>
+        ${statusPill(item.status)}
+      </div>`;
+    } else if (isNota) {
+      header = `<div class="resp-list-item-header">
+        <span class="resp-list-item-title">Nota ${item.numero || item.idExterno || `#${idx + 1}`}</span>
+        ${statusPill(item.status)}
+      </div>`;
+    } else {
+      const firstKey = Object.keys(item)[0];
+      header = `<div class="resp-list-item-header">
+        <span class="resp-list-item-title">${firstKey ? fmtVal(firstKey, item[firstKey]) : `Item ${idx + 1}`}</span>
+      </div>`;
+    }
+
+    const body = renderObjeto(item);
+    return `<details class="resp-list-item-card" ${items.length === 1 ? 'open' : ''}>
+      <summary class="resp-list-item-summary">${header}</summary>
+      <div class="resp-list-item-body resp-card">${body}</div>
+    </details>`;
+  }).join('');
+
+  return `<div>
+    <div class="resp-list-summary">Exibindo <strong>${items.length}</strong> de <strong>${total}</strong> registro(s) — clique em cada item para expandir</div>
+    ${rows}
+  </div>`;
+}
+
+function renderErro(data) {
+  let msg = 'Erro desconhecido.';
+  let details = '';
+  if (typeof data === 'string') { msg = data; }
+  else if (data) {
+    msg = data.message || data.mensagem || data.erro || data.error || data.descricao || 'Verifique o JSON técnico para mais detalhes.';
+    if (data.errors && Array.isArray(data.errors)) {
+      details = data.errors.map(e => {
+        const txt = typeof e === 'string' ? e : (e.message || e.descricao || JSON.stringify(e));
+        return `<div class="resp-error-detail">• ${txt}</div>`;
+      }).join('');
+    }
+  }
+  return `<div class="resp-card"><div class="resp-error-msg">${msg}</div>${details}</div>`;
+}
+
+function renderGenerico(data) {
+  if (!data || typeof data !== 'object') {
+    return `<div class="resp-card"><div class="resp-success-simple"><div class="msg">Operação realizada com sucesso</div></div></div>`;
+  }
+  const body = renderObjeto(data);
+  return `<div class="resp-card">${body || '<div style="text-align:center;padding:12px;color:#94a3b8">Operação concluída com sucesso.</div>'}</div>`;
+}
+
+// ─── Renderizador principal ───────────────────────────────────────────────
+function renderApiResponse(wrapperId, data, status, elapsed) {
+  const wrap = document.getElementById(wrapperId);
+  if (!wrap) return;
+
+  const ok  = status >= 200 && status < 300;
+  const statusTxt = ok ? 'Sucesso' : 'Erro';
+  const statusCls = ok ? 'ok' : 'err';
+  const jsonStr = (typeof data === 'string') ? data : JSON.stringify(data, null, 2);
+
+  let humanHtml;
+  if (!ok) {
+    humanHtml = renderErro(data);
+  } else if (!data || (typeof data === 'string' && !data.trim())) {
+    humanHtml = `<div class="resp-card"><div class="resp-success-simple"><div class="msg">Operação realizada com sucesso</div><div class="sub">Servidor confirmou sem retornar dados adicionais.</div></div></div>`;
+  } else if (typeof data === 'object') {
+    if (data.items !== undefined || Array.isArray(data)) {
+      humanHtml = renderLista(data);
+    } else {
+      humanHtml = renderGenerico(data);
+    }
+  } else {
+    humanHtml = `<div class="resp-card">${fld('Resposta', data)}</div>`;
+  }
+
+  let editBtn = '';
+  if (ok && wrapperId === 'resp_emp_consultar' && data && typeof data === 'object') {
+    window.__empresaConsultada = data;
+    editBtn = `<button class="btn-sm btn-sm-edit" onclick="editarEmpresaFromConsulta(window.__empresaConsultada)">Editar esta empresa</button>`;
+  }
+
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="resp-header">
+      <span class="resp-status ${statusCls}">${statusTxt} · HTTP ${status} · ${elapsed}ms</span>
+      <div class="resp-actions">
+        ${editBtn}
+        <button class="btn-sm btn-sm-copy" onclick="copyResp(this)">Copiar</button>
+        <button class="btn-sm btn-sm-json" onclick="toggleJson(this)">{ } JSON técnico</button>
+      </div>
+    </div>
+    ${humanHtml}
+    <pre class="resp-json">${jsonStr.replace(/</g,'&lt;')}</pre>`;
+}
+
+function copyResp(btn) {
+  const wrap = btn.closest('.resp-wrap');
+  const el = wrap && wrap.querySelector('.resp-json');
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copiado!';
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  });
+}
+function toggleJson(btn) {
+  const wrap = btn.closest('.resp-wrap');
+  const el = wrap && wrap.querySelector('.resp-json');
+  if (el) el.classList.toggle('show');
+}
+
+// ─── Chamada de API (JSON) ────────────────────────────────────────────────
+async function callApi(loadId, respId, url, method, body, forceDownload) {
+  const key = getKey(); if (!key) return;
+  showLoad(loadId, true);
+  const wrap = document.getElementById(respId);
+  if (wrap) wrap.style.display = 'none';
+
+  const opts = {
+    method,
+    headers: { Authorization: 'Basic ' + key, Accept: 'application/json', 'Content-Type': 'application/json' }
+  };
+  if (body) opts.body = JSON.stringify(body);
+
+  const t0 = Date.now();
+  try {
+    const res     = await fetch(PROXY + encodeURIComponent(url), opts);
+    const elapsed = Date.now() - t0;
+    const ct      = res.headers.get('content-type') || '';
+    showLoad(loadId, false);
+
+    // PDF — sempre binário, nunca lê como texto
+    if (ct.includes('pdf') || forceDownload === 'pdf') {
+      const blob = await res.blob();
+      const href = URL.createObjectURL(blob);
+      const w2   = document.getElementById(respId);
+      w2.style.display = 'block';
+      w2.innerHTML = `<div class="resp-header"><span class="resp-status ok">Arquivo pronto · HTTP ${res.status} · ${elapsed}ms</span></div>
+        <div class="resp-card"><div class="resp-file">
+        <a href="${href}" download="nota.pdf">Clique aqui para baixar o PDF</a>
+        </div></div>`;
+      return;
+    }
+
+    // XML — lê como texto, detecta base64 e decodifica se necessário
+    if (ct.includes('xml') || ct.includes('octet') || forceDownload === 'xml') {
+      const text = await res.text();
+      const trimmed = text.trim();
+
+      // Se a resposta for erro HTTP, mostra mensagem de erro normal
+      if (!res.ok) {
+        let data; try { data = JSON.parse(text); } catch(e) { data = text || null; }
+        renderApiResponse(respId, data, res.status, elapsed);
+        return;
+      }
+
+      // Tenta encontrar o XML em 3 estratégias
+      let xmlContent = null;
+
+      // 1. Conteúdo já é XML
+      if (trimmed.startsWith('<')) {
+        xmlContent = trimmed;
+      }
+
+      // 2. Base64 direto
+      if (!xmlContent) {
+        try {
+          const decoded = atob(trimmed.replace(/\s+/g, ''));
+          if (decoded.trimStart().startsWith('<')) xmlContent = decoded;
+        } catch(e) { /* não era base64 */ }
+      }
+
+      // 3. JSON com campo contendo XML ou base64
+      if (!xmlContent) {
+        try {
+          const json = JSON.parse(trimmed);
+          const findXml = (obj) => {
+            if (typeof obj === 'string') {
+              if (obj.trimStart().startsWith('<')) return obj;
+              try { const d = atob(obj.replace(/\s+/g, '')); if (d.trimStart().startsWith('<')) return d; } catch(e) {}
+            }
+            if (obj && typeof obj === 'object') {
+              for (const v of Object.values(obj)) { const r = findXml(v); if (r) return r; }
+            }
+            return null;
+          };
+          xmlContent = findXml(json);
+        } catch(e) { /* não era JSON */ }
+      }
+
+      // 4. Fallback — oferece o conteúdo bruto como download de qualquer forma
+      if (!xmlContent) xmlContent = text;
+
+      const blob = new Blob([xmlContent], { type: 'application/xml' });
+      const href = URL.createObjectURL(blob);
+      const preview = xmlContent.trimStart().startsWith('<')
+        ? xmlContent.slice(0, 600).replace(/</g, '&lt;')
+        : '(conteúdo não é XML legível — verifique o arquivo baixado)';
+      const w2 = document.getElementById(respId);
+      w2.style.display = 'block';
+      w2.innerHTML = `<div class="resp-header"><span class="resp-status ok">Arquivo pronto · HTTP ${res.status} · ${elapsed}ms</span></div>
+        <div class="resp-card"><div class="resp-file">
+        <a href="${href}" download="nota.xml">Clique aqui para baixar o XML</a>
+        <div style="margin-top:12px;font-size:.75rem;color:#64748b">Pré-visualização:</div>
+        <pre style="margin-top:6px;font-size:.7rem;background:#f1f5f9;padding:10px;border-radius:6px;overflow:auto;max-height:180px;white-space:pre-wrap">${preview}${xmlContent.length>600?'…':''}</pre>
+        </div></div>`;
+      return;
+    }
+
+    const text = await res.text();
+    let data; try { data = JSON.parse(text); } catch(e) { data = text || null; }
+    renderApiResponse(respId, data, res.status, elapsed);
+  } catch(e) {
+    showLoad(loadId, false);
+    renderApiResponse(respId, { erro: e.message }, 0, Date.now() - t0);
+  }
+}
+
+// ─── Chamada de API (FormData — uploads) ─────────────────────────────────
+async function callApiFile(loadId, respId, url, formData) {
+  const key = getKey(); if (!key) return;
+  showLoad(loadId, true);
+  const wrap = document.getElementById(respId);
+  if (wrap) wrap.style.display = 'none';
+  const t0 = Date.now();
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(url), {
+      method: 'POST',
+      headers: { Authorization: 'Basic ' + key },
+      body: formData
+    });
+    const elapsed = Date.now() - t0;
+    const text = await res.text();
+    let data; try { data = JSON.parse(text); } catch(e) { data = text || null; }
+    renderApiResponse(respId, data, res.status, elapsed);
+  } catch(e) {
+    renderApiResponse(respId, { erro: e.message }, 0, Date.now() - t0);
+  } finally {
+    showLoad(loadId, false);
+  }
+}
+
+// ─── EMPRESAS ─────────────────────────────────────────────────────────────
+function consultarEmpresa() {
+  const id = v('emp_consultar_id'); if (!id) { alert('Informe o ID.'); return; }
+  callApi('load_emp_consultar', 'resp_emp_consultar', `https://api-emissor.enotasgw.com.br/v2/empresas/${id}`, 'GET');
+}
+function listarEmpresas() {
+  const page = v('emp_list_page') || '0', size = v('emp_list_size') || '10';
+  const by = v('emp_list_searchby'), term = v('emp_list_term');
+  callApi('load_emp_list', 'resp_emp_list',
+    `https://api-emissor.enotasgw.com.br/v2/empresas?pageNumber=${page}&pageSize=${size}&searchBy=${by}&searchTerm=${encodeURIComponent(term)}&sortBy=nome_fantasia&sortDirection=asc`,
+    'GET');
+}
+function incluirEmpresa() {
+  let body;
+  try { body = JSON.parse(v('emp_inc_body')); }
+  catch(e) { alert('JSON inválido. Verifique o corpo da requisição.\n\n' + e.message); return; }
+  const empresaId = v('emp_inc_empresaid');
+  body.id = empresaId || null;
+  const url = 'https://api-emissor.enotasgw.com.br/v1/empresas' + (empresaId ? `?empresaId=${encodeURIComponent(empresaId)}` : '');
+  callApi('load_emp_inc', 'resp_emp_inc', url, 'POST', body);
+}
+function habDesEmpresa(acao, idField, loadId, respId) {
+  const id = v(idField); if (!id) { alert('Informe o ID.'); return; }
+  callApi(loadId, respId, `https://api-emissor.enotasgw.com.br/v1/empresas/${id}/${acao}`, 'POST');
+}
+function criticarDados() {
+  const id = v('criticar_id'); if (!id) { alert('Informe o ID.'); return; }
+  callApi('load_criticar', 'resp_criticar', `https://api-emissor.enotasgw.com.br/v1/empresas/${id}/criticardadosobrigatorios`, 'GET');
+}
+function vincularCertificado() {
+  const id = v('cert_emp_id'), senha = v('cert_senha');
+  const file = document.getElementById('cert_arquivo').files[0];
+  if (!id || !senha) { alert('Preencha ID e senha.'); return; }
+  if (!file) { alert('Selecione o arquivo .pfx ou .p12.'); return; }
+  const fd = new FormData();
+  fd.append('senha', senha);
+  fd.append('arquivo', file);
+  callApiFile('load_cert', 'resp_cert', `https://api-emissor.enotasgw.com.br/v2/empresas/${id}/certificadoDigital`, fd);
+}
+function vincularLogo() {
+  const id = v('logo_emp_id');
+  const file = document.getElementById('logo_arquivo').files[0];
+  if (!id) { alert('Informe o ID da empresa.'); return; }
+  if (!file) { alert('Selecione a imagem.'); return; }
+  const fd = new FormData();
+  fd.append('logotipo', file);
+  callApiFile('load_logo', 'resp_logo', `https://api-emissor.enotasgw.com.br/v2/empresas/${id}/logo`, fd);
+}
+function consultarServicos() {
+  const uf = v('serv_uf'), cidade = v('serv_cidade'), filtro = v('serv_filtro'), size = v('serv_size') || '10';
+  if (!uf || !cidade) { alert('Informe UF e Cidade.'); return; }
+  let url = `https://api-emissor.enotasgw.com.br/v1/estados/${encodeURIComponent(uf)}/cidades/${encodeURIComponent(cidade)}/servicos?pageNumber=0&pageSize=${size}`;
+  if (filtro) url += `&filter=contains(descricao,'${encodeURIComponent(filtro)}')`;
+  callApi('load_serv', 'resp_serv', url, 'GET');
+}
+function consultarServicosUnif() {
+  const page = v('serv_unif_page') || '0', size = v('serv_unif_size') || '10';
+  callApi('load_serv_unif', 'resp_serv_unif', `https://api-emissor.enotasgw.com.br/v1/servicos/cidades?pageNumber=${page}&pageSize=${size}`, 'GET');
+}
+function consultarPrefeitura() {
+  const ibge = v('pref_ibge'); if (!ibge) { alert('Informe o código IBGE.'); return; }
+  callApi('load_pref', 'resp_pref', `https://api-emissor.enotasgw.com.br/v1/estados/cidades/${ibge}/provedor`, 'GET');
+}
+
+// ─── NFS-e ────────────────────────────────────────────────────────────────
+function emitirNFSe() {
+  const emp = v('nfse_emitir_emp'); if (!emp) { alert('Informe o ID da empresa.'); return; }
+  let body;
+  try { body = JSON.parse(v('nfse_emitir_body')); }
+  catch(e) { alert('JSON inválido. Verifique o corpo da requisição.\n\n' + e.message); return; }
+  callApi('load_nfse_emit', 'resp_nfse_emit', `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes`, 'POST', body);
+}
+function consultarNFSe() {
+  const emp = v('nfse_cons_emp'), id = v('nfse_cons_id'), tipo = v('nfse_cons_tipo');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  const url = tipo === 'externo'
+    ? `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes/porIdExterno/${id}`
+    : `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes/${id}`;
+  callApi('load_nfse_cons', 'resp_nfse_cons', url, 'GET');
+}
+function listarNFSe() {
+  const emp = v('nfse_list_emp'), status = v('nfse_list_status');
+  const page = v('nfse_list_page') || '0', size = v('nfse_list_size') || '10';
+  const dtIni = v('nfse_list_dt_ini'), dtFim = v('nfse_list_dt_fim');
+  if (!emp) { alert('Informe o ID da empresa.'); return; }
+  if (!dtIni) { alert('Informe a Data de Criação — Início (obrigatório pela API).'); return; }
+  const ini = dtIni + 'T00:00:00', fim = (dtFim || dtIni) + 'T23:59:59';
+  let url = `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes?pageNumber=${page}&pageSize=${size}&sortBy=datacriacao&sortDirection=asc&dataCriacaoInicio=${encodeURIComponent(ini)}&dataCriacaoFim=${encodeURIComponent(fim)}`;
+  if (status) url += `&filter=status eq '${status}'`;
+  callApi('load_nfse_list', 'resp_nfse_list', url, 'GET');
+}
+function downloadNota(tipo, formato) {
+  const emp   = v(`${tipo}_${formato}_emp`);
+  const id    = v(`${tipo}_${formato}_id`);
+  const idTipo = v(`${tipo}_${formato}_tipo`);
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  const base = idTipo === 'externo'
+    ? `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes/porIdExterno/${id}`
+    : `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes/${id}`;
+  callApi(`load_${tipo}_${formato}`, `resp_${tipo}_${formato}`, `${base}/${formato}`, 'GET', null, formato);
+}
+function cancelarNFSe() {
+  const emp = v('nfse_cancel_emp'), id = v('nfse_cancel_id'), tipo = v('nfse_cancel_tipo');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  if (!confirm('Confirma o cancelamento da nota?')) return;
+  const url = tipo === 'externo'
+    ? `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes/porIdExterno/${id}`
+    : `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes/${id}`;
+  callApi('load_nfse_cancel', 'resp_nfse_cancel', url, 'DELETE');
+}
+
+// ─── NF-e ─────────────────────────────────────────────────────────────────
+function emitirNFe() {
+  const emp = v('nfe_emitir_emp'); if (!emp) { alert('Informe o ID da empresa.'); return; }
+  let body;
+  try { body = JSON.parse(v('nfe_emitir_body')); }
+  catch(e) { alert('JSON inválido. Verifique o corpo da requisição.\n\n' + e.message); return; }
+  callApi('load_nfe_emit', 'resp_nfe_emit', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e`, 'POST', body);
+}
+function consultarNFe() {
+  const emp = v('nfe_cons_emp'), id = v('nfe_cons_id');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  callApi('load_nfe_cons', 'resp_nfe_cons', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/${id}`, 'GET');
+}
+function listarNFe() {
+  const emp = v('nfe_list_emp'), status = v('nfe_list_status');
+  const page = v('nfe_list_page') || '0', size = v('nfe_list_size') || '10';
+  const sort = v('nfe_list_sort') || 'datacriacao';
+  const dtIni = v('nfe_list_dt_ini'), dtFim = v('nfe_list_dt_fim');
+  if (!emp) { alert('Informe o ID da empresa.'); return; }
+  if (!dtIni) { alert('Informe a Data de Criação — Início (obrigatório pela API).'); return; }
+  const ini = dtIni + 'T00:00:00', fim = (dtFim || dtIni) + 'T23:59:59';
+  let url = `https://api-emissor.enotasgw.com.br/v1/empresas/${emp}/nfes?pageNumber=${page}&pageSize=${size}&sortBy=${sort}&sortDirection=asc&dataCriacaoInicio=${encodeURIComponent(ini)}&dataCriacaoFim=${encodeURIComponent(fim)}`;
+  if (status) url += `&filter=status eq '${status}'`;
+  callApi('load_nfe_list', 'resp_nfe_list', url, 'GET');
+}
+function cancelarNFe() {
+  const emp = v('nfe_cancel_emp'), id = v('nfe_cancel_id');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  if (!confirm('Confirma o cancelamento da NF-e?')) return;
+  callApi('load_nfe_cancel', 'resp_nfe_cancel', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/${id}`, 'DELETE');
+}
+function downloadXmlCancelamento() {
+  const emp = v('xml_cancel_emp'), id = v('xml_cancel_id');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  callApi('load_xml_cancel', 'resp_xml_cancel', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/${id}/xmlCancelamento`, 'GET', null, 'xml');
+}
+function emitirCartaCorrecao() {
+  const emp = v('carta_emp'), correcao = v('carta_correcao');
+  if (!emp || !correcao) { alert('Informe o ID da empresa e a descrição da correção.'); return; }
+  const body = {
+    id:               v('carta_id')     || null,
+    ambienteEmissao:  v('carta_ambiente'),
+    numero:           parseInt(v('carta_numero')) || 1,
+    correcao,
+    nfe: { chaveAcesso: v('carta_chave') || null }
+  };
+  callApi('load_carta', 'resp_carta', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/cartaCorrecao`, 'POST', body);
+}
+function consultarCartaCorrecao() {
+  const emp = v('cons_carta_emp'), id = v('cons_carta_id');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  callApi('load_cons_carta', 'resp_cons_carta', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/cartaCorrecao/${id}`, 'GET');
+}
+function downloadXmlCarta() {
+  const emp = v('xml_carta_emp'), id = v('xml_carta_id');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  callApi('load_xml_carta', 'resp_xml_carta', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/cartaCorrecao/${id}/xml`, 'GET', null, 'xml');
+}
+function inutilizarNFe() {
+  const emp = v('inut_emp_id'); if (!emp) { alert('Informe o ID da empresa.'); return; }
+  if (!confirm('Confirma a inutilização? Esta ação não pode ser desfeita.')) return;
+  const body = {
+    id:              v('inut_id')      || null,
+    ambienteEmissao: v('inut_ambiente'),
+    serie:           v('inut_serie')   || '1',
+    numeroInicial:   parseInt(v('inut_num_ini')) || 0,
+    numeroFinal:     parseInt(v('inut_num_fim')) || 0,
+    justificativa:   v('inut_just')    || null,
+  };
+  callApi('load_inut', 'resp_inut', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/inutilizacao`, 'POST', body);
+}
+function consultarInutilizacao() {
+  const emp = v('inut_cons_emp'), id = v('inut_cons_id');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  callApi('load_inut_cons', 'resp_inut_cons', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/inutilizacao/${id}`, 'GET');
+}
+function downloadXmlInut() {
+  const emp = v('xml_inut_emp'), id = v('xml_inut_id');
+  if (!emp || !id) { alert('Preencha os campos.'); return; }
+  callApi('load_xml_inut', 'resp_xml_inut', `https://api-emissor.enotasgw.com.br/v2/empresas/${emp}/nf-e/inutilizacao/${id}/xml`, 'GET', null, 'xml');
+}
+
+// ─── MEI ──────────────────────────────────────────────────────────────────
+function consultarEmpresaMEI() {
+  const id = v('mei_cons_id'); if (!id) { alert('Informe o ID.'); return; }
+  callApi('load_mei_cons', 'resp_mei_cons', `https://api-emissor.enotasgw.com.br/v1/empresas/${id}`, 'GET');
+}
+function alterarMEI() {
+  const id = v('mei_alt_id'); if (!id) { alert('Informe o ID.'); return; }
+  const body = {
+    id,
+    regimeEspecialTributacao: v('mei_alt_ret') || null,
+    mei: v('mei_alt_mei') === 'true',
+    porcentagemTributoFederal:   parseFloat(v('mei_pct_fed')) || 0,
+    porcentagemTributoEstadual:  parseFloat(v('mei_pct_est')) || 0,
+    porcentagemTributoMunicipal: parseFloat(v('mei_pct_mun')) || 0,
+    metadados: {
+      regimeApuracaoTributosSN: v('mei_alt_sn') || null,
+      valorPercentualTributosFederal: {
+        PercentualTotalFederal:   parseFloat(v('mei_pct_fed')) || 0,
+        PercentualTotalEstadual:  parseFloat(v('mei_pct_est')) || 0,
+        PercentualTotalMunicipal: parseFloat(v('mei_pct_mun')) || 0,
+      }
+    }
+  };
+  callApi('load_mei_alt', 'resp_mei_alt', 'https://api-emissor.enotasgw.com.br/v1/empresas', 'POST', body);
+}
+function salvarEmpresaMEI() {
+  const id = v('mei_portal_id'); if (!id) { alert('Informe o ID.'); return; }
+  const body = {
+    id, mei: true,
+    configuracoesNFSeProducao: {
+      sequencialNFe:         parseInt(v('mei_portal_seq'))  || 1,
+      serieNFe:              v('mei_portal_serie')          || '80000',
+      usuarioAcessoProvedor: v('mei_portal_user')           || null,
+      senhaAcessoProvedor:   v('mei_portal_senha')          || null,
+    }
+  };
+  callApi('load_mei_portal', 'resp_mei_portal', 'https://api-emissor.enotasgw.com.br/v1/empresas', 'POST', body);
+}
+
+empRenderForm(document.getElementById('emp_inc_body').value);
+</script>
+</body>
+</html>
