@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preparação — Case ao vivo (Payments)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C1B1A;
+    --paper:#FDFBF9;
+    --paper-2:#F7F3EF;
+    --line:#E7E1D9;
+    --muted:#6E6862;
+    --orange:#EE4E34;
+    --orange-soft:#FDECE7;
+    --orange-line:#F6C9BC;
+    --teal:#0B8A80;
+    --teal-soft:#E6F5F3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    font-size:15.5px;
+  }
+  a{color:var(--orange);}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+  /* ── TOP BAR ── */
+  .topbar{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(253,251,249,.92);backdrop-filter:blur(6px);z-index:10;}
+  .topbar-inner{max-width:760px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .topbar-name{font-weight:700;font-size:13.5px;letter-spacing:.01em;}
+  .topbar-nav{display:flex;gap:18px;flex-wrap:wrap;}
+  .topbar-nav a{color:var(--muted);text-decoration:none;font-size:12.5px;font-weight:500;}
+  .topbar-nav a:hover{color:var(--orange);}
+
+  /* ── HEADER ── */
+  header.intro{padding:52px 0 36px;}
+  h1{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;}
+  .role{font-size:14.5px;color:var(--muted);font-weight:500;margin-bottom:20px;}
+  .intro p{font-size:14.5px;color:#3A3733;max-width:640px;margin-bottom:10px;}
+
+  /* ── INDEX ── */
+  section.index{padding:8px 0 36px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .index h2.label{font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;}
+  .index-list{list-style:none;}
+  .index-item{border-bottom:1px solid var(--line);}
+  .index-item:last-child{border-bottom:none;}
+  .index-item a{display:flex;align-items:baseline;gap:14px;padding:12px 4px;text-decoration:none;color:var(--ink);}
+  .index-item a:hover{background:var(--paper-2);}
+  .index-num{font-size:12px;color:var(--muted);font-weight:600;width:20px;flex-shrink:0;}
+  .index-title{font-size:14px;font-weight:600;flex:1;}
+
+  /* ── SECTIONS ── */
+  section.block{padding:40px 0;border-bottom:1px solid var(--line);scroll-margin-top:70px;}
+  section.block:last-of-type{border-bottom:none;padding-bottom:60px;}
+  .block-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .block-num{font-size:12px;font-weight:700;color:var(--orange);}
+  .tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--teal-soft);color:var(--teal);}
+  .tag.orange{background:var(--orange-soft);color:var(--orange);}
+  h2.block-title{font-size:19px;font-weight:700;letter-spacing:-.01em;margin-bottom:14px;}
+  .block p{font-size:14.5px;color:#3A3733;margin-bottom:12px;max-width:660px;}
+
+  /* framework steps */
+  .steps{margin-top:18px;}
+  .step{display:flex;gap:16px;padding:16px 0;border-top:1px solid var(--line);}
+  .step:first-child{border-top:none;padding-top:4px;}
+  .step-num{width:26px;height:26px;border-radius:50%;background:var(--orange-soft);color:var(--orange);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step-body h3{font-size:14.5px;font-weight:700;margin-bottom:4px;}
+  .step-body p{font-size:13.5px;color:var(--muted);margin-bottom:0;}
+
+  /* question list */
+  .qlist{list-style:none;margin-top:14px;}
+  .qlist li{font-size:14px;color:#3A3733;padding:10px 0 10px 26px;position:relative;border-top:1px solid var(--line);}
+  .qlist li:first-child{border-top:none;padding-top:0;}
+  .qlist li::before{content:'?';position:absolute;left:0;top:10px;color:var(--orange);font-weight:700;font-size:13px;}
+  .qlist li:first-child::before{top:0;}
+
+  /* glossary */
+  .glossary{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:14px;border-top:1px solid var(--line);}
+  .gterm{padding:12px 14px 12px 0;border-bottom:1px solid var(--line);}
+  .gterm:nth-child(odd){padding-right:20px;}
+  .gterm b{display:block;font-size:13.5px;font-weight:700;margin-bottom:2px;}
+  .gterm span{font-size:12.5px;color:var(--muted);}
+  @media(max-width:600px){.glossary{grid-template-columns:1fr;}}
+
+  /* trade-off compare */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
+  .compare-box{border:1px solid var(--line);border-radius:10px;padding:16px;}
+  .compare-box.a{background:var(--orange-soft);border-color:var(--orange-line);}
+  .compare-box.b{background:var(--teal-soft);border-color:#BFE4E0;}
+  .compare-box h4{font-size:13px;font-weight:700;margin-bottom:6px;}
+  .compare-box.a h4{color:var(--orange);}
+  .compare-box.b h4{color:var(--teal);}
+  .compare-box p{font-size:13px;color:#3A3733;margin:0;}
+  @media(max-width:600px){.compare{grid-template-columns:1fr;}}
+
+  /* practice cards */
+  .practice-card{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-top:14px;}
+  .practice-card .ptag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--orange);margin-bottom:8px;display:block;}
+  .practice-card p{font-size:14px;margin-bottom:0;}
+  .practice-hint{font-size:12.5px;color:var(--muted);margin-top:10px;}
+
+  /* checklist */
+  .checklist{list-style:none;margin-top:14px;}
+  .checklist li{font-size:14px;color:#3A3733;padding:9px 0 9px 28px;position:relative;border-top:1px solid var(--line);}
+  .checklist li:first-child{border-top:none;padding-top:0;}
+  .checklist li::before{content:'';position:absolute;left:0;top:11px;width:14px;height:14px;border:1.5px solid var(--orange-line);border-radius:4px;}
+  .checklist li:first-child::before{top:2px;}
+
+  @media(max-width:600px){
+    .wrap{padding:0 18px;}
+    .topbar-inner{padding:12px 18px;}
+    h1{font-size:22px;}
+    header.intro{padding:36px 0 26px;}
+    section.block{padding:30px 0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-name">Rafael Calais Penido</div>
+    <nav class="topbar-nav">
+      <a href="#contexto">Contexto</a>
+      <a href="#framework">Framework</a>
+      <a href="#perguntas">Perguntas</a>
+      <a href="#vocabulario">Vocabulário</a>
+      <a href="#tradeoff">Trade-off</a>
+      <a href="#treino">Treino</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="intro">
+    <h1>Preparação — Case ao vivo</h1>
+    <div class="role">Time de Payments — validações e fraude no momento da compra</div>
+    <div class="intro">
+      <p>Guia de estudo pessoal para praticar antes da call. Não é sobre decorar resposta certa — é sobre ter uma estrutura pronta na cabeça pra não travar e mostrar raciocínio, mesmo sem saber os números reais do time.</p>
+    </div>
+  </header>
+
+  <section class="index">
+    <h2 class="label">Índice</h2>
+    <ul class="index-list">
+      <li class="index-item"><a href="#contexto"><span class="index-num">01</span><span class="index-title">O que esperar do case</span></a></li>
+      <li class="index-item"><a href="#framework"><span class="index-num">02</span><span class="index-title">Framework de resposta (5 passos)</span></a></li>
+      <li class="index-item"><a href="#perguntas"><span class="index-num">03</span><span class="index-title">Perguntas de abertura</span></a></li>
+      <li class="index-item"><a href="#vocabulario"><span class="index-num">04</span><span class="index-title">Vocabulário essencial</span></a></li>
+      <li class="index-item"><a href="#tradeoff"><span class="index-num">05</span><span class="index-title">O trade-off que não pode esquecer</span></a></li>
+      <li class="index-item"><a href="#treino"><span class="index-num">06</span><span class="index-title">Cenários para treinar</span></a></li>
+    </ul>
+  </section>
+
+  <!-- 01 -->
+  <section class="block" id="contexto">
+    <div class="block-eyebrow"><span class="block-num">01</span><span class="tag orange">Contexto</span></div>
+    <h2 class="block-title">O que esperar do case</h2>
+    <p>Pelo que foi descrito, o time cuida das validações que acontecem entre o cliente clicar em "comprar" e a Hotmart autorizar ou negar a transação — mecanismos de prevenção a fraude, principalmente. O case provavelmente vai girar em torno de um dilema central desse tipo de time:</p>
+    <p><strong>como reduzir fraude sem derrubar a taxa de aprovação de clientes legítimos.</strong></p>
+    <p>Pode vir como um número caindo/subindo ("a aprovação caiu X%", "a fraude aumentou em Y"), como um fluxo pra redesenhar, ou como uma decisão pra tomar sob pressão (ex: "esse tipo de fraude aumentou, o que você faz esta semana?"). A armadilha mais comum é responder só com "bloqueia mais" ou só "libera mais" — sem mostrar que entende que as duas coisas têm custo.</p>
+  </section>
+
+  <!-- 02 -->
+  <section class="block" id="framework">
+    <div class="block-eyebrow"><span class="block-num">02</span><span class="tag">Framework</span></div>
+    <h2 class="block-title">Framework de resposta — 5 passos</h2>
+    <p>Estrutura pra seguir em voz alta durante o case. Não precisa decorar os nomes, só a ordem da lógica.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Clarificar antes de responder</h3>
+          <p>Pergunte qual métrica piorou, em qual segmento, desde quando, o que já foi tentado. Fazer a pergunta certa já conta como parte da resposta.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Segmentar a causa</h3>
+          <p>Fraude não é uma coisa só. Separe por tipo (cartão roubado, card testing, conta comprometida, chargeback fraud) e por segmento (ticket, país, meio de pagamento, novo x recorrente).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Propor em camadas, não bloqueio geral</h3>
+          <p>Regras rápidas (velocity check, blacklist, CVV/AVS) → score de risco → fricção extra só pra risco médio (3D Secure, OTP) → revisão manual só pro que sobrar. Fricção proporcional ao risco, não igual pra todo mundo.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Nomear o trade-off</h3>
+          <p>Diga explicitamente: essa solução reduz fraude mas pode aumentar falso positivo (nega venda boa), ou o contrário. Mostrar que você sabe que não existe solução de graça é o que diferencia.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Fechar com teste e métrica</h3>
+          <p>O que dá pra testar rápido (A/B de uma regra nova) vs o que precisa mais investimento (modelo). E como você saberia se funcionou — nunca uma métrica isolada, sempre aprovação + fraude + chargeback juntos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="block" id="perguntas">
+    <div class="block-eyebrow"><span class="block-num">03</span><span class="tag orange">Abertura</span></div>
+    <h2 class="block-title">Perguntas de abertura</h2>
+    <p>Prontas pra usar assim que ela apresentar o case — não precisa inventar na hora.</p>
+    <ul class="qlist">
+      <li>Qual métrica está no centro do problema: aprovação, fraude, chargeback ou reclamação de cliente?</li>
+      <li>Isso é generalizado ou concentrado em algum segmento (produto, ticket, país, meio de pagamento)?</li>
+      <li>Desde quando isso está acontecendo — é uma mudança recente ou algo estrutural?</li>
+      <li>O que já foi tentado ou descartado até agora?</li>
+      <li>Existe alguma restrição que eu deveria considerar (custo, prazo, dependência de terceiros como adquirente/bandeira)?</li>
+    </ul>
+  </section>
+
+  <!-- 04 -->
+  <section class="block" id="vocabulario">
+    <div class="block-eyebrow"><span class="block-num">04</span><span class="tag">Vocabulário</span></div>
+    <h2 class="block-title">Vocabulário essencial</h2>
+    <p>Só pra não travar na hora de usar o termo certo — não precisa se aprofundar além disso.</p>
+    <div class="glossary">
+      <div class="gterm"><b>Taxa de aprovação</b><span>% de transações autorizadas do total tentado.</span></div>
+      <div class="gterm"><b>Falso positivo</b><span>Compra legítima negada por engano.</span></div>
+      <div class="gterm"><b>Falso negativo</b><span>Fraude que passou como se fosse legítima.</span></div>
+      <div class="gterm"><b>Chargeback</b><span>Cliente contesta a compra com o banco e o valor é estornado.</span></div>
+      <div class="gterm"><b>3D Secure (3DS)</b><span>Autenticação extra feita pelo banco emissor (senha, OTP) na hora da compra.</span></div>
+      <div class="gterm"><b>Score de risco</b><span>Nota calculada pra cada transação indicando probabilidade de fraude.</span></div>
+      <div class="gterm"><b>Velocity check</b><span>Regra que limita tentativas repetidas em curto espaço de tempo.</span></div>
+      <div class="gterm"><b>Card testing</b><span>Fraudador testa vários cartões roubados com compras de valor baixo.</span></div>
+      <div class="gterm"><b>Revisão manual</b><span>Fila onde um analista decide caso a caso os limítrofes.</span></div>
+      <div class="gterm"><b>BIN</b><span>Primeiros dígitos do cartão — indicam banco emissor e país.</span></div>
+      <div class="gterm"><b>Adquirente x emissor</b><span>Adquirente processa pro lojista (Hotmart); emissor é o banco do cliente.</span></div>
+      <div class="gterm"><b>Liability shift</b><span>Define quem paga o prejuízo de um chargeback — loja ou emissor.</span></div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="block" id="tradeoff">
+    <div class="block-eyebrow"><span class="block-num">05</span><span class="tag orange">O essencial</span></div>
+    <h2 class="block-title">O trade-off que não pode esquecer</h2>
+    <p>Se a resposta não mencionar os dois lados abaixo, provavelmente está incompleta.</p>
+    <div class="compare">
+      <div class="compare-box a">
+        <h4>Apertar demais</h4>
+        <p>Menos fraude, mas nega cliente bom (falso positivo). Derruba conversão e receita — e o cliente negado sem motivo raramente volta.</p>
+      </div>
+      <div class="compare-box b">
+        <h4>Liberar demais</h4>
+        <p>Mais conversão, mas deixa passar fraude (falso negativo). Gera chargeback, custo e risco de bloqueio pela bandeira/adquirente.</p>
+      </div>
+    </div>
+    <p style="margin-top:14px;">A resposta boa quase sempre está em <strong>tratar o risco de forma proporcional</strong> — não em escolher um lado.</p>
+  </section>
+
+  <!-- 06 -->
+  <section class="block" id="treino">
+    <div class="block-eyebrow"><span class="block-num">06</span><span class="tag">Treino</span></div>
+    <h2 class="block-title">Cenários para treinar em voz alta</h2>
+    <p>Cronometre ~3-4 min por resposta, seguindo os 5 passos do framework. O objetivo não é acertar a "solução certa", é não travar e mostrar estrutura.</p>
+
+    <div class="practice-card">
+      <span class="ptag">Cenário 1</span>
+      <p>"A taxa de aprovação caiu 8 pontos percentuais em um país específico nos últimos 2 meses, mas o volume de chargeback não mudou. Como você investigaria e o que proporia?"</p>
+      <div class="practice-hint">Pista: chargeback estável + aprovação caindo sugere que o problema pode estar na regra/score ficando conservador demais, não em mais fraude real.</div>
+    </div>
+
+    <div class="practice-card">
+      <span class="ptag">Cenário 2</span>
+      <p>"Identificamos um aumento de fraude do tipo card testing em produtos de baixo ticket. Como resolver sem prejudicar a conversão de clientes legítimos?"</p>
+      <div class="practice-hint">Pista: card testing tem padrão (várias tentativas, valores baixos, cartões diferentes, curto intervalo) — pensar em velocity check e regras específicas pra esse padrão, não em travar todo ticket baixo.</div>
+    </div>
+
+    <div class="practice-card">
+      <span class="ptag">Cenário 3</span>
+      <p>"Um produtor grande reclamou que vários clientes dele estão sendo negados na hora da compra e está ameaçando sair da plataforma. O que você faz esta semana?"</p>
+      <div class="practice-hint">Pista: aqui tem urgência + stakeholder específico — pensar em diagnóstico rápido (é geral ou só esse produtor/segmento?) e comunicação, não só na solução técnica.</div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
