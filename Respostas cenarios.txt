@@ -1,0 +1,49 @@
+Cenário 1
+"A taxa de aprovação caiu 8 pontos percentuais em um país específico nos últimos 2 meses, mas o volume de chargeback não mudou. Como você investigaria e o que proporia?"
+
+Como o chargeback não se moveu, minha hipótese principal é que não é fraude real — é algo interno (regra, score, ou até um problema técnico/de terceiro) barrando gente indevidamente. Esse é um caso de falso positivo (bloqueando cliente bom), então a correção tem baixo risco de aumentar fraude real.
+
+A piora de conversão tem sido gradativa ou aumentou inesperadamente?
+Houve alguma mudança de desing no checkout? Inclusão ou exclusão de preenchimento de campos?
+Isso aconteceu com somente um creator, somente em um produto?
+Houve algum report por lado dos clientes em estarem enfrentando dificuldade durante o checkout?
+Até o momento o que foi investigado? Quais tentativas foram feitas para mitigar o ocorrido?
+Existe alguma restrição como dependência de terceiros?
+Tem ocorrido so com um meio de pagamento especifico?
+
+Se confirmado que é uma regra/score barrando esse país de forma genérica demais, eu não reverteria tudo de uma vez — ajustaria o threshold só nesse segmento, ou trocaria a negativa direta por uma camada extra de verificação (3DS/step-up) antes de negar, recuperando aprovação sem abrir mão de segurança.
+
+Validaria a correção (rollout gradual, A/B por segmento) e o que acompanharia depois (aprovação, fraude e chargeback juntos, não só aprovação voltando a subir).
+
+
+Cenário 2
+"Identificamos um aumento de fraude do tipo card testing em produtos de baixo ticket. Como resolver sem prejudicar a conversão de clientes legítimos?"
+
+Pela identificação feita, a primeira ação a ser tomada pode ser pensar em algo que teste a velocidade que essas tentativas de pagamento estão acontecendo, tentando assim identificar um padrão das fraudes. Não podemos travar toda tentativa de compra de tickets baixo, mas criarmos certas regras que consigam identificar esse tipo de comportamento.
+
+Esse cenário está ocorrendo em somente um produto, em um só creator?
+Quando isso começou a acontecer e houve uma crescente nesse tipo de fraude?
+Está ocorrendo somente com uma moeda, com uma bandeira de cartão especifica ou com um meio de pagamento em especifico?
+Houve algum creator que tenha entrado em contato informando que clientes estão reclamando de tentarem realizar compra e não conseguirem?
+
+Caso seja confirmado que esteja ocorrendo somente em um produto, com um creator, pode ser um vazamento específico, ou simplesmente esse checkout ter menos validações e virar alvo.
+Neste caso não passaria a negar todo tipo de transação com tickets baixo, mas colocar possivelmente um novo step de validação, talvez um 2FA na parte de pagamentos.
+
+Acompanharia se após aplicação do que foi levantado, se houve diminuição deste comportamento e se os outros indicadores se mantiveram estáveis.
+
+Cenário 3
+
+"Um produtor grande reclamou que vários clientes dele estão sendo negados na hora da compra e está ameaçando sair da plataforma. O que você faz esta semana?"
+
+Primeiramente eu entro em contato com o gerente de conta do cliente, informando para ele acalmar o cliente que o time responsável já está atuando na possível solução e que algumas medidas já foram tomadas, como, oferecer um meio de pagamento alternativo para os quais estão tendo a compra negada e está sendo validado pontualmente todas as venda que foram negadas para entender o comportamento padrão que está ocorrendo, se não se tratam mesmo de fraudes reais que foram bloqueadas pelo nosso sistema. Atualizações rápidas serão passadas para o gerente de conta nas próximas horas, que poderá manter o creator atualizado e em 24h será passado um retorno estruturado.
+
+Tentaria entender se as vendas negada estão sendo somente em um produto e se é um produto novo?
+As vendas negadas estão sendo negadas em único meio de pagamento ou vários?
+Os clientes que reportaram ter tido a venda negada são da mesma região ou mesmo país?
+Somente esse creator informou sobre esse problema ou tiveram outros creators entrando em contato? Ou até clientes que estão tentando comprar outros produtos, informaram a mesma situação?
+
+Se for confirmado que está ocorrendo somente em um produto, investigaria aquele produto, o que pode ter de diferente no cadastro dele ou no checkout referente aos outros existentes. Tendo, faria alterações que levassem para o mais próximo de produtos que não estão tendo este problema.
+Sendo um único meio de pagamento que está tendo as vendas negada, tentaria entender se houve alguma atualização na comunicação em gerar aquele meio de pagamento, se houve uma quebra na comunicação.
+Se estiver ocorrendo em somente um país ou região, validaria se há algum possível bloqueio de segurança nesses locais que possam fazer que o pagamento não seja processado.
+
+Seguiria acompanhando e me comprometeria em dar um retorno mais estruturado em 24h, até para entender se houve outros reports sobre, e se retorna alguma mensagem de erro clara interna nessas vendas negadas.
